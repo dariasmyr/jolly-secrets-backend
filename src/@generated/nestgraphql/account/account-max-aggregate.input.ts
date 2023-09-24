@@ -17,11 +17,11 @@ export class AccountMaxAggregateInput {
     email?: true;
 
     @Field(() => Boolean, {nullable:true})
-    passwordHash?: true;
-
-    @Field(() => Boolean, {nullable:true})
     status?: true;
 
     @Field(() => Boolean, {nullable:true})
     avatarUrl?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    username?: true;
 }

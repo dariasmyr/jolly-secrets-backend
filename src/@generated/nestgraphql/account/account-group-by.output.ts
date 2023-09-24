@@ -1,7 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
-import { HideField } from '@nestjs/graphql';
 import { AccountRole } from '../prisma/account-role.enum';
 import { AccountStatus } from '../prisma/account-status.enum';
 import { AccountCountAggregate } from './account-count-aggregate.output';
@@ -22,11 +21,8 @@ export class AccountGroupBy {
     @Field(() => Date, {nullable:false})
     updatedAt!: Date | string;
 
-    @Field(() => String, {nullable:false})
-    email!: string;
-
-    @HideField()
-    passwordHash!: string;
+    @Field(() => String, {nullable:true})
+    email?: string;
 
     @Field(() => [AccountRole], {nullable:true})
     roles?: Array<keyof typeof AccountRole>;
@@ -36,6 +32,9 @@ export class AccountGroupBy {
 
     @Field(() => String, {nullable:true})
     avatarUrl?: string;
+
+    @Field(() => String, {nullable:false})
+    username!: string;
 
     @Field(() => AccountCountAggregate, {nullable:true})
     _count?: AccountCountAggregate;

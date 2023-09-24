@@ -19,5 +19,5 @@ export class AccountCreateNestedOneWithoutSessionsInput {
 
     @Field(() => AccountWhereUniqueInput, {nullable:true})
     @Type(() => AccountWhereUniqueInput)
-    connect?: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'email'>;
+    connect?: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'username'>;
 }

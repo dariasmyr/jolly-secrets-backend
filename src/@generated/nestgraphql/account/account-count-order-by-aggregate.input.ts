@@ -18,9 +18,6 @@ export class AccountCountOrderByAggregateInput {
     email?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    passwordHash?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
     roles?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
@@ -28,4 +25,7 @@ export class AccountCountOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
     avatarUrl?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    username?: keyof typeof SortOrder;
 }

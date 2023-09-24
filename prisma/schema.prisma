@@ -22,15 +22,54 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email        String        @unique
-  /// @HideField()
-  passwordHash String
-  roles        AccountRole[]
-  status       AccountStatus
+  email String?
+
+  roles  AccountRole[]
+  status AccountStatus
 
   avatarUrl String?
 
   sessions AccountSession[]
+
+  externalProfiles ExternalProfile[]
+
+  groupMembers      GroupMember[]
+  eventApplications EventApplication[]
+  notifications     Notification[]
+
+  username String @unique
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  title   String
+  message String
+  read    Boolean @default(false)
+}
+
+enum ExternalProfileProvider {
+  GOOGLE
+  TELEGRAM
+}
+
+model ExternalProfile {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  provider   ExternalProfileProvider
+  externalId String
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  @@unique([provider, externalId])
 }
 
 enum AccountStatus {
@@ -82,4 +121,137 @@ model AccountSession {
   ipAddr    String
   userAgent String?
   expiresAt DateTime
+}
+
+enum GroupType {
+  PUBLIC
+  PRIVATE
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pictureUrl String
+
+  name        String    @unique
+  description String
+  type        GroupType
+
+  members GroupMember[]
+
+  events       Event[]
+  groupInvites GroupInvite[]
+}
+
+model GroupInvite {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+
+  code String @unique
+}
+
+model GroupMember {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  role GroupMemberRole
+
+  @@unique([groupId, accountId])
+}
+
+enum GroupMemberRole {
+  ADMIN
+  MEMBER
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pictureUrl String
+
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+
+  name        String
+  description String
+
+  startsAt DateTime
+  endsAt   DateTime
+
+  applicationPairs EventApplicationPair[]
+
+  @@unique([groupId, name])
+}
+
+model EventApplicationPair {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event   Event @relation(fields: [eventId], references: [id])
+  eventId Int
+
+  applicationFirst        EventApplication @relation("EventApplicationFirstPairs", fields: [eventApplicationFirstId], references: [id])
+  eventApplicationFirstId Int
+
+  applicationSecond        EventApplication @relation("EventApplicationSecondPairs", fields: [eventApplicationSecondId], references: [id])
+  eventApplicationSecondId Int
+}
+
+enum EventApplicationStatus {
+  LOOKING_FOR_PAIR
+  PAIRED
+  GIFT_SENT
+  GIFT_RECEIVED
+}
+
+model EventApplication {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  status EventApplicationStatus
+
+  preferences                 Preference[]
+  eventApplicationFirstPairs  EventApplicationPair[] @relation("EventApplicationFirstPairs")
+  eventApplicationSecondPairs EventApplicationPair[] @relation("EventApplicationSecondPairs")
+}
+
+enum PriceRange {
+  MIN_0_MAX_10
+  MIN_10_MAX_20
+  MIN_20_MAX_30
+  NO_MATTER
+}
+
+model Preference {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  priceRange PriceRange
+  likes      String
+  dislikes   String
+  comment    String
+
+  application   EventApplication? @relation(fields: [applicationId], references: [id])
+  applicationId Int?
 }

@@ -10,7 +10,7 @@ export class AccountCreateOrConnectWithoutSessionsInput {
 
     @Field(() => AccountWhereUniqueInput, {nullable:false})
     @Type(() => AccountWhereUniqueInput)
-    where!: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'email'>;
+    where!: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'username'>;
 
     @Field(() => AccountCreateWithoutSessionsInput, {nullable:false})
     @Type(() => AccountCreateWithoutSessionsInput)

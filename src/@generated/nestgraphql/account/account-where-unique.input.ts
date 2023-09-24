@@ -3,11 +3,14 @@ import { InputType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
 import { AccountWhereInput } from './account-where.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
-import { StringFilter } from '../prisma/string-filter.input';
+import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { EnumAccountRoleNullableListFilter } from '../prisma/enum-account-role-nullable-list-filter.input';
 import { EnumAccountStatusFilter } from '../prisma/enum-account-status-filter.input';
-import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { AccountSessionListRelationFilter } from '../account-session/account-session-list-relation-filter.input';
+import { ExternalProfileListRelationFilter } from '../external-profile/external-profile-list-relation-filter.input';
+import { GroupMemberListRelationFilter } from '../group-member/group-member-list-relation-filter.input';
+import { EventApplicationListRelationFilter } from '../event-application/event-application-list-relation-filter.input';
+import { NotificationListRelationFilter } from '../notification/notification-list-relation-filter.input';
 
 @InputType()
 export class AccountWhereUniqueInput {
@@ -16,7 +19,7 @@ export class AccountWhereUniqueInput {
     id?: number;
 
     @Field(() => String, {nullable:true})
-    email?: string;
+    username?: string;
 
     @Field(() => [AccountWhereInput], {nullable:true})
     AND?: Array<AccountWhereInput>;
@@ -33,8 +36,8 @@ export class AccountWhereUniqueInput {
     @Field(() => DateTimeFilter, {nullable:true})
     updatedAt?: DateTimeFilter;
 
-    @Field(() => StringFilter, {nullable:true})
-    passwordHash?: StringFilter;
+    @Field(() => StringNullableFilter, {nullable:true})
+    email?: StringNullableFilter;
 
     @Field(() => EnumAccountRoleNullableListFilter, {nullable:true})
     roles?: EnumAccountRoleNullableListFilter;
@@ -47,4 +50,16 @@ export class AccountWhereUniqueInput {
 
     @Field(() => AccountSessionListRelationFilter, {nullable:true})
     sessions?: AccountSessionListRelationFilter;
+
+    @Field(() => ExternalProfileListRelationFilter, {nullable:true})
+    externalProfiles?: ExternalProfileListRelationFilter;
+
+    @Field(() => GroupMemberListRelationFilter, {nullable:true})
+    groupMembers?: GroupMemberListRelationFilter;
+
+    @Field(() => EventApplicationListRelationFilter, {nullable:true})
+    eventApplications?: EventApplicationListRelationFilter;
+
+    @Field(() => NotificationListRelationFilter, {nullable:true})
+    notifications?: NotificationListRelationFilter;
 }

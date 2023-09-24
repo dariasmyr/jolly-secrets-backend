@@ -19,9 +19,6 @@ export class AccountUncheckedUpdateManyInput {
     @Field(() => String, {nullable:true})
     email?: string;
 
-    @Field(() => String, {nullable:true})
-    passwordHash?: string;
-
     @Field(() => [AccountRole], {nullable:true})
     roles?: Array<keyof typeof AccountRole>;
 
@@ -30,4 +27,7 @@ export class AccountUncheckedUpdateManyInput {
 
     @Field(() => String, {nullable:true})
     avatarUrl?: string;
+
+    @Field(() => String, {nullable:true})
+    username?: string;
 }

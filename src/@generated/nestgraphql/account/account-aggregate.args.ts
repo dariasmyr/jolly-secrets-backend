@@ -23,7 +23,7 @@ export class AccountAggregateArgs {
     orderBy?: Array<AccountOrderByWithRelationInput>;
 
     @Field(() => AccountWhereUniqueInput, {nullable:true})
-    cursor?: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'email'>;
+    cursor?: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'username'>;
 
     @Field(() => Int, {nullable:true})
     take?: number;

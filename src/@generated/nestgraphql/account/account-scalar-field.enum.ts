@@ -5,10 +5,10 @@ export enum AccountScalarFieldEnum {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     email = "email",
-    passwordHash = "passwordHash",
     roles = "roles",
     status = "status",
-    avatarUrl = "avatarUrl"
+    avatarUrl = "avatarUrl",
+    username = "username"
 }
 
 

@@ -7,4 +7,16 @@ export class AccountCount {
 
     @Field(() => Int, {nullable:false})
     sessions?: number;
+
+    @Field(() => Int, {nullable:false})
+    externalProfiles?: number;
+
+    @Field(() => Int, {nullable:false})
+    groupMembers?: number;
+
+    @Field(() => Int, {nullable:false})
+    eventApplications?: number;
+
+    @Field(() => Int, {nullable:false})
+    notifications?: number;
 }

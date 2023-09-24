@@ -11,7 +11,7 @@ export class UpsertOneAccountArgs {
 
     @Field(() => AccountWhereUniqueInput, {nullable:false})
     @Type(() => AccountWhereUniqueInput)
-    where!: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'email'>;
+    where!: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'username'>;
 
     @Field(() => AccountCreateInput, {nullable:false})
     @Type(() => AccountCreateInput)

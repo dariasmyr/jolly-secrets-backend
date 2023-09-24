@@ -25,7 +25,7 @@ export class AccountUpdateOneRequiredWithoutSessionsNestedInput {
 
     @Field(() => AccountWhereUniqueInput, {nullable:true})
     @Type(() => AccountWhereUniqueInput)
-    connect?: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'email'>;
+    connect?: Prisma.AtLeast<AccountWhereUniqueInput, 'id' | 'username'>;
 
     @Field(() => AccountUpdateToOneWithWhereWithoutSessionsInput, {nullable:true})
     @Type(() => AccountUpdateToOneWithWhereWithoutSessionsInput)
