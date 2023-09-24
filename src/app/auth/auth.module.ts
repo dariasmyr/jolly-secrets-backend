@@ -10,6 +10,9 @@ import { CryptoModule } from '@/common/crypto/crypto.module';
 import { PrismaModule } from '@/common/prisma/prisma.module';
 
 import { AuthService } from './auth.service';
+import { ExternalProvidersModule } from './external-providers/external-providers.module';
+import { GoogleResolver } from './external-providers/google/google.resolver';
+import { GoogleService } from './external-providers/google/google.service';
 
 @Module({
   imports: [
@@ -20,8 +23,9 @@ import { AuthService } from './auth.service';
     AccountSessionModule,
     OneTimeCodeModule,
     EmailModule,
+    ExternalProvidersModule,
   ],
-  providers: [AuthService, AuthResolver],
+  providers: [AuthService, AuthResolver, GoogleService, GoogleResolver],
   exports: [AuthService, AuthResolver],
 })
 export class AuthModule {}

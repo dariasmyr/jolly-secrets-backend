@@ -34,6 +34,7 @@ import { PrismaStudioModule } from '@/common/prisma-studio/prisma-studio.module'
 
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { HealthModule } from './health/health.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { HealthModule } from './health/health.module';
         'i18n-types.ts',
       ),
     }),
+    ProfileModule,
   ],
   providers: [
     {
