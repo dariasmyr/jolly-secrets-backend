@@ -23,7 +23,7 @@ export class GroupMember {
     @Field(() => Int, {nullable:false})
     accountId!: number;
 
-    @Field(() => GroupMemberRole, {nullable:false})
+    @Field(() => GroupMemberRole, {nullable:false,defaultValue:'MEMBER'})
     role!: keyof typeof GroupMemberRole;
 
     @Field(() => Group, {nullable:false})

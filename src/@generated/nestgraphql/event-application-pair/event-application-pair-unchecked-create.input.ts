@@ -22,4 +22,7 @@ export class EventApplicationPairUncheckedCreateInput {
 
     @Field(() => Int, {nullable:false})
     eventApplicationSecondId!: number;
+
+    @Field(() => Int, {nullable:false})
+    chatId!: number;
 }

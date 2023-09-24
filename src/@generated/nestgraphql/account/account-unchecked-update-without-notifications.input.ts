@@ -7,6 +7,8 @@ import { AccountSessionUncheckedUpdateManyWithoutAccountNestedInput } from '../a
 import { ExternalProfileUncheckedUpdateManyWithoutAccountNestedInput } from '../external-profile/external-profile-unchecked-update-many-without-account-nested.input';
 import { GroupMemberUncheckedUpdateManyWithoutAccountNestedInput } from '../group-member/group-member-unchecked-update-many-without-account-nested.input';
 import { EventApplicationUncheckedUpdateManyWithoutAccountNestedInput } from '../event-application/event-application-unchecked-update-many-without-account-nested.input';
+import { ChatMemberUncheckedUpdateManyWithoutAccountNestedInput } from '../chat-member/chat-member-unchecked-update-many-without-account-nested.input';
+import { MessageUncheckedUpdateManyWithoutAccountNestedInput } from '../message/message-unchecked-update-many-without-account-nested.input';
 
 @InputType()
 export class AccountUncheckedUpdateWithoutNotificationsInput {
@@ -46,4 +48,10 @@ export class AccountUncheckedUpdateWithoutNotificationsInput {
 
     @Field(() => EventApplicationUncheckedUpdateManyWithoutAccountNestedInput, {nullable:true})
     eventApplications?: EventApplicationUncheckedUpdateManyWithoutAccountNestedInput;
+
+    @Field(() => ChatMemberUncheckedUpdateManyWithoutAccountNestedInput, {nullable:true})
+    chatMembers?: ChatMemberUncheckedUpdateManyWithoutAccountNestedInput;
+
+    @Field(() => MessageUncheckedUpdateManyWithoutAccountNestedInput, {nullable:true})
+    messages?: MessageUncheckedUpdateManyWithoutAccountNestedInput;
 }

@@ -15,4 +15,7 @@ export class EventApplicationPairAvgAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     eventApplicationSecondId?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    chatId?: true;
 }

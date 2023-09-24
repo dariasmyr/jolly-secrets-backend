@@ -7,6 +7,8 @@ import { ExternalProfileUpdateManyWithoutAccountNestedInput } from '../external-
 import { GroupMemberUpdateManyWithoutAccountNestedInput } from '../group-member/group-member-update-many-without-account-nested.input';
 import { EventApplicationUpdateManyWithoutAccountNestedInput } from '../event-application/event-application-update-many-without-account-nested.input';
 import { NotificationUpdateManyWithoutAccountNestedInput } from '../notification/notification-update-many-without-account-nested.input';
+import { ChatMemberUpdateManyWithoutAccountNestedInput } from '../chat-member/chat-member-update-many-without-account-nested.input';
+import { MessageUpdateManyWithoutAccountNestedInput } from '../message/message-update-many-without-account-nested.input';
 
 @InputType()
 export class AccountUpdateInput {
@@ -46,4 +48,10 @@ export class AccountUpdateInput {
 
     @Field(() => NotificationUpdateManyWithoutAccountNestedInput, {nullable:true})
     notifications?: NotificationUpdateManyWithoutAccountNestedInput;
+
+    @Field(() => ChatMemberUpdateManyWithoutAccountNestedInput, {nullable:true})
+    chatMembers?: ChatMemberUpdateManyWithoutAccountNestedInput;
+
+    @Field(() => MessageUpdateManyWithoutAccountNestedInput, {nullable:true})
+    messages?: MessageUpdateManyWithoutAccountNestedInput;
 }

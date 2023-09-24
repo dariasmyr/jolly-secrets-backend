@@ -11,6 +11,8 @@ import { ExternalProfileListRelationFilter } from '../external-profile/external-
 import { GroupMemberListRelationFilter } from '../group-member/group-member-list-relation-filter.input';
 import { EventApplicationListRelationFilter } from '../event-application/event-application-list-relation-filter.input';
 import { NotificationListRelationFilter } from '../notification/notification-list-relation-filter.input';
+import { ChatMemberListRelationFilter } from '../chat-member/chat-member-list-relation-filter.input';
+import { MessageListRelationFilter } from '../message/message-list-relation-filter.input';
 
 @InputType()
 export class AccountWhereUniqueInput {
@@ -62,4 +64,10 @@ export class AccountWhereUniqueInput {
 
     @Field(() => NotificationListRelationFilter, {nullable:true})
     notifications?: NotificationListRelationFilter;
+
+    @Field(() => ChatMemberListRelationFilter, {nullable:true})
+    chatMembers?: ChatMemberListRelationFilter;
+
+    @Field(() => MessageListRelationFilter, {nullable:true})
+    messages?: MessageListRelationFilter;
 }

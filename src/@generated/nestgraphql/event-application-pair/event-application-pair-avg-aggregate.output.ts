@@ -16,4 +16,7 @@ export class EventApplicationPairAvgAggregate {
 
     @Field(() => Float, {nullable:true})
     eventApplicationSecondId?: number;
+
+    @Field(() => Float, {nullable:true})
+    chatId?: number;
 }

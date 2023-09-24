@@ -3,6 +3,7 @@ import { ObjectType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
 import { Event } from '../event/event.model';
 import { EventApplication } from '../event-application/event-application.model';
+import { Chat } from '../chat/chat.model';
 
 @ObjectType()
 export class EventApplicationPair {
@@ -25,6 +26,9 @@ export class EventApplicationPair {
     @Field(() => Int, {nullable:false})
     eventApplicationSecondId!: number;
 
+    @Field(() => Int, {nullable:false})
+    chatId!: number;
+
     @Field(() => Event, {nullable:false})
     event?: Event;
 
@@ -33,4 +37,7 @@ export class EventApplicationPair {
 
     @Field(() => EventApplication, {nullable:false})
     applicationSecond?: EventApplication;
+
+    @Field(() => Chat, {nullable:false})
+    chat?: Chat;
 }

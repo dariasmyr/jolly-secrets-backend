@@ -19,4 +19,7 @@ export class EventApplicationPairUncheckedUpdateManyWithoutApplicationSecondInpu
 
     @Field(() => Int, {nullable:true})
     eventApplicationFirstId?: number;
+
+    @Field(() => Int, {nullable:true})
+    chatId?: number;
 }

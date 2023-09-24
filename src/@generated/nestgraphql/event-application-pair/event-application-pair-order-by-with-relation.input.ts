@@ -3,6 +3,7 @@ import { InputType } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
 import { EventOrderByWithRelationInput } from '../event/event-order-by-with-relation.input';
 import { EventApplicationOrderByWithRelationInput } from '../event-application/event-application-order-by-with-relation.input';
+import { ChatOrderByWithRelationInput } from '../chat/chat-order-by-with-relation.input';
 
 @InputType()
 export class EventApplicationPairOrderByWithRelationInput {
@@ -25,6 +26,9 @@ export class EventApplicationPairOrderByWithRelationInput {
     @Field(() => SortOrder, {nullable:true})
     eventApplicationSecondId?: keyof typeof SortOrder;
 
+    @Field(() => SortOrder, {nullable:true})
+    chatId?: keyof typeof SortOrder;
+
     @Field(() => EventOrderByWithRelationInput, {nullable:true})
     event?: EventOrderByWithRelationInput;
 
@@ -33,4 +37,7 @@ export class EventApplicationPairOrderByWithRelationInput {
 
     @Field(() => EventApplicationOrderByWithRelationInput, {nullable:true})
     applicationSecond?: EventApplicationOrderByWithRelationInput;
+
+    @Field(() => ChatOrderByWithRelationInput, {nullable:true})
+    chat?: ChatOrderByWithRelationInput;
 }

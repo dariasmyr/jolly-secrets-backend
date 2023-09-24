@@ -7,6 +7,8 @@ import { ExternalProfileOrderByRelationAggregateInput } from '../external-profil
 import { GroupMemberOrderByRelationAggregateInput } from '../group-member/group-member-order-by-relation-aggregate.input';
 import { EventApplicationOrderByRelationAggregateInput } from '../event-application/event-application-order-by-relation-aggregate.input';
 import { NotificationOrderByRelationAggregateInput } from '../notification/notification-order-by-relation-aggregate.input';
+import { ChatMemberOrderByRelationAggregateInput } from '../chat-member/chat-member-order-by-relation-aggregate.input';
+import { MessageOrderByRelationAggregateInput } from '../message/message-order-by-relation-aggregate.input';
 
 @InputType()
 export class AccountOrderByWithRelationInput {
@@ -49,4 +51,10 @@ export class AccountOrderByWithRelationInput {
 
     @Field(() => NotificationOrderByRelationAggregateInput, {nullable:true})
     notifications?: NotificationOrderByRelationAggregateInput;
+
+    @Field(() => ChatMemberOrderByRelationAggregateInput, {nullable:true})
+    chatMembers?: ChatMemberOrderByRelationAggregateInput;
+
+    @Field(() => MessageOrderByRelationAggregateInput, {nullable:true})
+    messages?: MessageOrderByRelationAggregateInput;
 }

@@ -12,8 +12,8 @@ export class GroupMemberCreateWithoutAccountInput {
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
 
-    @Field(() => GroupMemberRole, {nullable:false})
-    role!: keyof typeof GroupMemberRole;
+    @Field(() => GroupMemberRole, {nullable:true})
+    role?: keyof typeof GroupMemberRole;
 
     @Field(() => GroupCreateNestedOneWithoutMembersInput, {nullable:false})
     group!: GroupCreateNestedOneWithoutMembersInput;

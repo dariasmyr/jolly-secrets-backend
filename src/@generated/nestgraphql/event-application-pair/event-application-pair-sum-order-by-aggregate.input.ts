@@ -16,4 +16,7 @@ export class EventApplicationPairSumOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
     eventApplicationSecondId?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    chatId?: keyof typeof SortOrder;
 }

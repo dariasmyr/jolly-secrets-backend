@@ -18,6 +18,6 @@ export class GroupMemberUncheckedCreateWithoutAccountInput {
     @Field(() => Int, {nullable:false})
     groupId!: number;
 
-    @Field(() => GroupMemberRole, {nullable:false})
-    role!: keyof typeof GroupMemberRole;
+    @Field(() => GroupMemberRole, {nullable:true})
+    role?: keyof typeof GroupMemberRole;
 }

@@ -28,6 +28,9 @@ export class EventApplicationPairGroupBy {
     @Field(() => Int, {nullable:false})
     eventApplicationSecondId!: number;
 
+    @Field(() => Int, {nullable:false})
+    chatId!: number;
+
     @Field(() => EventApplicationPairCountAggregate, {nullable:true})
     _count?: EventApplicationPairCountAggregate;
 

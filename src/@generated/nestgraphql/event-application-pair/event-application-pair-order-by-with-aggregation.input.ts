@@ -28,6 +28,9 @@ export class EventApplicationPairOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     eventApplicationSecondId?: keyof typeof SortOrder;
 
+    @Field(() => SortOrder, {nullable:true})
+    chatId?: keyof typeof SortOrder;
+
     @Field(() => EventApplicationPairCountOrderByAggregateInput, {nullable:true})
     _count?: EventApplicationPairCountOrderByAggregateInput;
 

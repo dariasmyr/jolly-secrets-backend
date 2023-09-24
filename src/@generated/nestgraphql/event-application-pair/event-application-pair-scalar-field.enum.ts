@@ -6,7 +6,8 @@ export enum EventApplicationPairScalarFieldEnum {
     updatedAt = "updatedAt",
     eventId = "eventId",
     eventApplicationFirstId = "eventApplicationFirstId",
-    eventApplicationSecondId = "eventApplicationSecondId"
+    eventApplicationSecondId = "eventApplicationSecondId",
+    chatId = "chatId"
 }
 
 

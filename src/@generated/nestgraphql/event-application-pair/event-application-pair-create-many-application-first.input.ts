@@ -19,4 +19,7 @@ export class EventApplicationPairCreateManyApplicationFirstInput {
 
     @Field(() => Int, {nullable:false})
     eventApplicationSecondId!: number;
+
+    @Field(() => Int, {nullable:false})
+    chatId!: number;
 }

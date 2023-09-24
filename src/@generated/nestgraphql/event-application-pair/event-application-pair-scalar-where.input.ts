@@ -32,4 +32,7 @@ export class EventApplicationPairScalarWhereInput {
 
     @Field(() => IntFilter, {nullable:true})
     eventApplicationSecondId?: IntFilter;
+
+    @Field(() => IntFilter, {nullable:true})
+    chatId?: IntFilter;
 }

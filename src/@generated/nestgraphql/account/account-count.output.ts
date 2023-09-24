@@ -19,4 +19,10 @@ export class AccountCount {
 
     @Field(() => Int, {nullable:false})
     notifications?: number;
+
+    @Field(() => Int, {nullable:false})
+    chatMembers?: number;
+
+    @Field(() => Int, {nullable:false})
+    messages?: number;
 }

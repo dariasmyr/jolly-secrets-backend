@@ -4,6 +4,7 @@ import { IntFilter } from '../prisma/int-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { EventRelationFilter } from '../event/event-relation-filter.input';
 import { EventApplicationRelationFilter } from '../event-application/event-application-relation-filter.input';
+import { ChatRelationFilter } from '../chat/chat-relation-filter.input';
 
 @InputType()
 export class EventApplicationPairWhereInput {
@@ -35,6 +36,9 @@ export class EventApplicationPairWhereInput {
     @Field(() => IntFilter, {nullable:true})
     eventApplicationSecondId?: IntFilter;
 
+    @Field(() => IntFilter, {nullable:true})
+    chatId?: IntFilter;
+
     @Field(() => EventRelationFilter, {nullable:true})
     event?: EventRelationFilter;
 
@@ -43,4 +47,7 @@ export class EventApplicationPairWhereInput {
 
     @Field(() => EventApplicationRelationFilter, {nullable:true})
     applicationSecond?: EventApplicationRelationFilter;
+
+    @Field(() => ChatRelationFilter, {nullable:true})
+    chat?: ChatRelationFilter;
 }

@@ -6,6 +6,8 @@ import { ExternalProfileCreateNestedManyWithoutAccountInput } from '../external-
 import { GroupMemberCreateNestedManyWithoutAccountInput } from '../group-member/group-member-create-nested-many-without-account.input';
 import { EventApplicationCreateNestedManyWithoutAccountInput } from '../event-application/event-application-create-nested-many-without-account.input';
 import { NotificationCreateNestedManyWithoutAccountInput } from '../notification/notification-create-nested-many-without-account.input';
+import { ChatMemberCreateNestedManyWithoutAccountInput } from '../chat-member/chat-member-create-nested-many-without-account.input';
+import { MessageCreateNestedManyWithoutAccountInput } from '../message/message-create-nested-many-without-account.input';
 
 @InputType()
 export class AccountCreateWithoutSessionsInput {
@@ -42,4 +44,10 @@ export class AccountCreateWithoutSessionsInput {
 
     @Field(() => NotificationCreateNestedManyWithoutAccountInput, {nullable:true})
     notifications?: NotificationCreateNestedManyWithoutAccountInput;
+
+    @Field(() => ChatMemberCreateNestedManyWithoutAccountInput, {nullable:true})
+    chatMembers?: ChatMemberCreateNestedManyWithoutAccountInput;
+
+    @Field(() => MessageCreateNestedManyWithoutAccountInput, {nullable:true})
+    messages?: MessageCreateNestedManyWithoutAccountInput;
 }

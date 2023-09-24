@@ -8,6 +8,8 @@ import { ExternalProfile } from '../external-profile/external-profile.model';
 import { GroupMember } from '../group-member/group-member.model';
 import { EventApplication } from '../event-application/event-application.model';
 import { Notification } from '../notification/notification.model';
+import { ChatMember } from '../chat-member/chat-member.model';
+import { Message } from '../message/message.model';
 import { AccountCount } from './account-count.output';
 
 @ObjectType()
@@ -51,6 +53,12 @@ export class Account {
 
     @Field(() => [Notification], {nullable:true})
     notifications?: Array<Notification>;
+
+    @Field(() => [ChatMember], {nullable:true})
+    chatMembers?: Array<ChatMember>;
+
+    @Field(() => [Message], {nullable:true})
+    messages?: Array<Message>;
 
     @Field(() => AccountCount, {nullable:false})
     _count?: AccountCount;

@@ -32,4 +32,7 @@ export class EventApplicationPairScalarWhereWithAggregatesInput {
 
     @Field(() => IntWithAggregatesFilter, {nullable:true})
     eventApplicationSecondId?: IntWithAggregatesFilter;
+
+    @Field(() => IntWithAggregatesFilter, {nullable:true})
+    chatId?: IntWithAggregatesFilter;
 }

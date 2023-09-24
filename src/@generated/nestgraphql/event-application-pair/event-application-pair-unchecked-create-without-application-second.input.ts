@@ -19,4 +19,7 @@ export class EventApplicationPairUncheckedCreateWithoutApplicationSecondInput {
 
     @Field(() => Int, {nullable:false})
     eventApplicationFirstId!: number;
+
+    @Field(() => Int, {nullable:false})
+    chatId!: number;
 }

@@ -15,4 +15,7 @@ export class EventApplicationPairSumAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     eventApplicationSecondId?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    chatId?: true;
 }

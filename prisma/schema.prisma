@@ -38,6 +38,9 @@ model Account {
   notifications     Notification[]
 
   username String @unique
+
+  chatMembers ChatMember[]
+  messages    Message[]
 }
 
 model Notification {
@@ -167,7 +170,7 @@ model GroupMember {
   account   Account @relation(fields: [accountId], references: [id])
   accountId Int
 
-  role GroupMemberRole
+  role GroupMemberRole @default(MEMBER)
 
   @@unique([groupId, accountId])
 }
@@ -211,6 +214,9 @@ model EventApplicationPair {
 
   applicationSecond        EventApplication @relation("EventApplicationSecondPairs", fields: [eventApplicationSecondId], references: [id])
   eventApplicationSecondId Int
+
+  chat   Chat @relation(fields: [chatId], references: [id])
+  chatId Int
 }
 
 enum EventApplicationStatus {
@@ -254,4 +260,48 @@ model Preference {
 
   application   EventApplication? @relation(fields: [applicationId], references: [id])
   applicationId Int?
+}
+
+model Chat {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages Message[]
+  members  ChatMember[]
+
+  eventApplicationPair EventApplicationPair[]
+}
+
+model ChatMember {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  chat   Chat? @relation(fields: [chatId], references: [id])
+  chatId Int?
+
+  role ChatMemberRole @default(MEMBER)
+}
+
+enum ChatMemberRole {
+  ADMIN
+  MEMBER
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  chat   Chat? @relation(fields: [chatId], references: [id])
+  chatId Int?
+
+  text String
 }

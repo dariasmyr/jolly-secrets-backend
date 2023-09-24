@@ -7,6 +7,8 @@ import { AccountSessionUncheckedCreateNestedManyWithoutAccountInput } from '../a
 import { ExternalProfileUncheckedCreateNestedManyWithoutAccountInput } from '../external-profile/external-profile-unchecked-create-nested-many-without-account.input';
 import { GroupMemberUncheckedCreateNestedManyWithoutAccountInput } from '../group-member/group-member-unchecked-create-nested-many-without-account.input';
 import { NotificationUncheckedCreateNestedManyWithoutAccountInput } from '../notification/notification-unchecked-create-nested-many-without-account.input';
+import { ChatMemberUncheckedCreateNestedManyWithoutAccountInput } from '../chat-member/chat-member-unchecked-create-nested-many-without-account.input';
+import { MessageUncheckedCreateNestedManyWithoutAccountInput } from '../message/message-unchecked-create-nested-many-without-account.input';
 
 @InputType()
 export class AccountUncheckedCreateWithoutEventApplicationsInput {
@@ -46,4 +48,10 @@ export class AccountUncheckedCreateWithoutEventApplicationsInput {
 
     @Field(() => NotificationUncheckedCreateNestedManyWithoutAccountInput, {nullable:true})
     notifications?: NotificationUncheckedCreateNestedManyWithoutAccountInput;
+
+    @Field(() => ChatMemberUncheckedCreateNestedManyWithoutAccountInput, {nullable:true})
+    chatMembers?: ChatMemberUncheckedCreateNestedManyWithoutAccountInput;
+
+    @Field(() => MessageUncheckedCreateNestedManyWithoutAccountInput, {nullable:true})
+    messages?: MessageUncheckedCreateNestedManyWithoutAccountInput;
 }

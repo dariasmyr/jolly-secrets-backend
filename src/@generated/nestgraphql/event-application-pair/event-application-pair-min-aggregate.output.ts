@@ -22,4 +22,7 @@ export class EventApplicationPairMinAggregate {
 
     @Field(() => Int, {nullable:true})
     eventApplicationSecondId?: number;
+
+    @Field(() => Int, {nullable:true})
+    chatId?: number;
 }

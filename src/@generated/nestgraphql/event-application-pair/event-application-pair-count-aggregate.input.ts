@@ -23,5 +23,8 @@ export class EventApplicationPairCountAggregateInput {
     eventApplicationSecondId?: true;
 
     @Field(() => Boolean, {nullable:true})
+    chatId?: true;
+
+    @Field(() => Boolean, {nullable:true})
     _all?: true;
 }
