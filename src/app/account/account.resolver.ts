@@ -11,7 +11,6 @@ import { I18n, I18nContext, I18nService } from 'nestjs-i18n';
 
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountSession } from '@/@generated/nestgraphql/account-session/account-session.model';
-import { ExternalProfile } from '@/@generated/nestgraphql/external-profile/external-profile.model';
 import { ExternalProfileProvider } from '@/@generated/nestgraphql/prisma/external-profile-provider.enum';
 import { AccountService } from '@/app/account/account.service';
 import { UpdateAccountInput } from '@/app/account/types';
@@ -63,7 +62,7 @@ export class AccountResolver {
     return this.accountService.updateAccount(context.account!, input);
   }
 
-  @Mutation(() => ExternalProfile)
+  @Mutation(() => Account)
   @UseGuards(AuthGuard)
   async attachProfileToAccount(
     @Args('accountIdToLeave') accountIdToLeave: number,
@@ -71,7 +70,7 @@ export class AccountResolver {
     @Args('externalId') externalId: string,
     @Args('provider') provider: ExternalProfileProvider,
     @RequestContextDecorator() context: RequestContext,
-  ): Promise<[ExternalProfile, Account]> {
+  ): Promise<Account> {
     if (context.account?.id !== accountIdToRemove) {
       throw new Error(this.i18n.t('errors.unauthorized'));
     }

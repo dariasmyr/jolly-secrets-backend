@@ -78,10 +78,10 @@ export class ProfileService {
     accountIdToRemove: number,
     accountIdToLeave: number,
     profile: ExternalProfile,
-  ): Promise<[ExternalProfile, Account]> {
+  ): Promise<Account> {
     const { externalId, provider } = profile;
 
-    return this.prisma.$transaction([
+    const result = await this.prisma.$transaction([
       this.prisma.externalProfile.update({
         where: {
           // eslint-disable-next-line camelcase
@@ -101,5 +101,6 @@ export class ProfileService {
         },
       }),
     ]);
+    return result[1];
   }
 }
