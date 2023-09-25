@@ -11,7 +11,7 @@ export class OneTimeCodeUpdateInput {
     updatedAt?: Date | string;
 
     @Field(() => String, {nullable:true})
-    email?: string;
+    telegramId?: string;
 
     @Field(() => String, {nullable:true})
     code?: string;

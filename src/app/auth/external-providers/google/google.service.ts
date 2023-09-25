@@ -9,7 +9,6 @@ import { OAuth2Client, TokenPayload } from 'google-auth-library';
 
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountService } from '@/app/account/account.service';
-import { AccountSessionService } from '@/app/account-session/account-session.service';
 import { ExternalProviders } from '@/app/auth/external-providers/external-providers.module';
 import { ProfileService } from '@/app/profile/profile.service';
 import {
@@ -36,7 +35,6 @@ export class GoogleService {
   };
 
   constructor(
-    private readonly accountSessionService: AccountSessionService,
     private readonly accountService: AccountService,
     private readonly profileService: ProfileService,
     private readonly cryptoService: CryptoService,
@@ -124,12 +122,13 @@ export class GoogleService {
       account = await this.accountService.getAccountByProfile(profile);
     } else {
       console.log('Create profile');
-      profile = await this.profileService.createProfile(
-        googleId,
-        ExternalProfileProvider.GOOGLE,
+      profile = await this.profileService.createGoogleProfile({
+        externalId,
+        provider: ExternalProfileProvider.GOOGLE,
         username,
         email,
-      );
+      });
+      console.log('Create account');
       account = await this.accountService.getAccountByProfile(profile);
     }
 

@@ -15,7 +15,7 @@ export class OneTimeCodeMaxOrderByAggregateInput {
     updatedAt?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    email?: keyof typeof SortOrder;
+    telegramId?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
     code?: keyof typeof SortOrder;

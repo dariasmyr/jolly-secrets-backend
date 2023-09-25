@@ -7,7 +7,7 @@ import { PrismaService } from '@/common/prisma/prisma.service';
 export class OneTimeCodeService {
   constructor(private prismaService: PrismaService) {}
 
-  async createOneTimeCode(email: string): Promise<OneTimeCode> {
+  async createOneTimeCode(telegramId: string): Promise<OneTimeCode> {
     // 30 minutes
     // eslint-disable-next-line no-magic-numbers
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
@@ -16,15 +16,18 @@ export class OneTimeCodeService {
     const code = Math.floor(100_000 + Math.random() * 900_000).toString();
 
     return await this.prismaService.oneTimeCode.upsert({
-      where: { email },
+      where: { telegramId },
       update: { code, expiresAt },
-      create: { email, code, expiresAt },
+      create: { telegramId, code, expiresAt },
     });
   }
 
-  async validateOneTimeCode(email: string, code: string): Promise<boolean> {
+  async validateOneTimeCode(
+    telegramId: string,
+    code: string,
+  ): Promise<boolean> {
     const oneTimeCode = await this.prismaService.oneTimeCode.findUnique({
-      where: { email },
+      where: { telegramId },
     });
 
     if (!oneTimeCode) {
@@ -38,8 +41,8 @@ export class OneTimeCodeService {
     return oneTimeCode.expiresAt >= new Date();
   }
 
-  async deleteOneTimeCode(email: string): Promise<boolean> {
-    await this.prismaService.oneTimeCode.delete({ where: { email } });
+  async deleteOneTimeCode(telegramId: string): Promise<boolean> {
+    await this.prismaService.oneTimeCode.delete({ where: { telegramId } });
     return true;
   }
 }

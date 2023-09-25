@@ -26,7 +26,7 @@ export class OneTimeCodeWhereInput {
     updatedAt?: DateTimeFilter;
 
     @Field(() => StringFilter, {nullable:true})
-    email?: StringFilter;
+    telegramId?: StringFilter;
 
     @Field(() => StringFilter, {nullable:true})
     code?: StringFilter;

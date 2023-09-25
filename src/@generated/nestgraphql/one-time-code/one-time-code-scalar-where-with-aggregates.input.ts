@@ -26,7 +26,7 @@ export class OneTimeCodeScalarWhereWithAggregatesInput {
     updatedAt?: DateTimeWithAggregatesFilter;
 
     @Field(() => StringWithAggregatesFilter, {nullable:true})
-    email?: StringWithAggregatesFilter;
+    telegramId?: StringWithAggregatesFilter;
 
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     code?: StringWithAggregatesFilter;

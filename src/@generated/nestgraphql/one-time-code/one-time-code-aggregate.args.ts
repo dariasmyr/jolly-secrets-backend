@@ -23,7 +23,7 @@ export class OneTimeCodeAggregateArgs {
     orderBy?: Array<OneTimeCodeOrderByWithRelationInput>;
 
     @Field(() => OneTimeCodeWhereUniqueInput, {nullable:true})
-    cursor?: Prisma.AtLeast<OneTimeCodeWhereUniqueInput, 'id' | 'email'>;
+    cursor?: Prisma.AtLeast<OneTimeCodeWhereUniqueInput, 'id' | 'telegramId'>;
 
     @Field(() => Int, {nullable:true})
     take?: number;

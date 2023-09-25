@@ -14,5 +14,5 @@ export class UpdateOneOneTimeCodeArgs {
 
     @Field(() => OneTimeCodeWhereUniqueInput, {nullable:false})
     @Type(() => OneTimeCodeWhereUniqueInput)
-    where!: Prisma.AtLeast<OneTimeCodeWhereUniqueInput, 'id' | 'email'>;
+    where!: Prisma.AtLeast<OneTimeCodeWhereUniqueInput, 'id' | 'telegramId'>;
 }

@@ -12,7 +12,7 @@ export class OneTimeCodeWhereUniqueInput {
     id?: number;
 
     @Field(() => String, {nullable:true})
-    email?: string;
+    telegramId?: string;
 
     @Field(() => [OneTimeCodeWhereInput], {nullable:true})
     AND?: Array<OneTimeCodeWhereInput>;

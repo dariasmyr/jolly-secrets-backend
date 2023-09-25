@@ -8,6 +8,13 @@ import {
 
 import { PrismaService } from '@/common/prisma/prisma.service';
 
+export interface ICreateProfileInput {
+  externalId: string;
+  provider: ExternalProfileProvider;
+  username: string;
+  email?: string;
+}
+
 @Injectable()
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
@@ -27,12 +34,10 @@ export class ProfileService {
     });
   }
 
-  async createProfile(
-    externalId: string,
-    provider: ExternalProfileProvider,
-    username: string,
-    email: string,
+  async createGoogleProfile(
+    data: ICreateProfileInput,
   ): Promise<ExternalProfile> {
+    const { externalId, provider, username, email } = data;
     return this.prisma.externalProfile.create({
       data: {
         externalId,
@@ -43,6 +48,25 @@ export class ProfileService {
             status: AccountStatus.ACTIVE,
             roles: [AccountRole.USER],
             email: email,
+          },
+        },
+      },
+    });
+  }
+
+  async createTelegramProfile(
+    data: ICreateProfileInput,
+  ): Promise<ExternalProfile> {
+    const { externalId, provider, username } = data;
+    return this.prisma.externalProfile.create({
+      data: {
+        externalId,
+        provider,
+        account: {
+          create: {
+            username: username,
+            status: AccountStatus.ACTIVE,
+            roles: [AccountRole.USER],
           },
         },
       },

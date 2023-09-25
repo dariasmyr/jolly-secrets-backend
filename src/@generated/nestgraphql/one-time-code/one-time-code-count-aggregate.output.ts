@@ -15,7 +15,7 @@ export class OneTimeCodeCountAggregate {
     updatedAt!: number;
 
     @Field(() => Int, {nullable:false})
-    email!: number;
+    telegramId!: number;
 
     @Field(() => Int, {nullable:false})
     code!: number;

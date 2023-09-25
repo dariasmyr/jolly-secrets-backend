@@ -14,7 +14,7 @@ export class OneTimeCodeCountAggregateInput {
     updatedAt?: true;
 
     @Field(() => Boolean, {nullable:true})
-    email?: true;
+    telegramId?: true;
 
     @Field(() => Boolean, {nullable:true})
     code?: true;

@@ -6,6 +6,7 @@ import { AccountSessionModule } from '@/app/account-session/account-session.modu
 import { AuthResolver } from '@/app/auth/auth.resolver';
 import { EmailModule } from '@/app/email/email.module';
 import { OneTimeCodeModule } from '@/app/one-time-code/one-time-code.module';
+import { ProfileService } from '@/app/profile/profile.service';
 import { CryptoModule } from '@/common/crypto/crypto.module';
 import { PrismaModule } from '@/common/prisma/prisma.module';
 
@@ -25,7 +26,13 @@ import { GoogleService } from './external-providers/google/google.service';
     EmailModule,
     ExternalProvidersModule,
   ],
-  providers: [AuthService, AuthResolver, GoogleService, GoogleResolver],
+  providers: [
+    AuthService,
+    AuthResolver,
+    GoogleService,
+    GoogleResolver,
+    ProfileService,
+  ],
   exports: [AuthService, AuthResolver],
 })
 export class AuthModule {}

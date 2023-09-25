@@ -4,7 +4,7 @@ export enum OneTimeCodeScalarFieldEnum {
     id = "id",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
-    email = "email",
+    telegramId = "telegramId",
     code = "code",
     expiresAt = "expiresAt"
 }

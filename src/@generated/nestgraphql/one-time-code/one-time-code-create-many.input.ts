@@ -15,7 +15,7 @@ export class OneTimeCodeCreateManyInput {
     updatedAt?: Date | string;
 
     @Field(() => String, {nullable:false})
-    email!: string;
+    telegramId!: string;
 
     @Field(() => String, {nullable:false})
     code!: string;

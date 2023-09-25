@@ -11,7 +11,7 @@ export class UpsertOneOneTimeCodeArgs {
 
     @Field(() => OneTimeCodeWhereUniqueInput, {nullable:false})
     @Type(() => OneTimeCodeWhereUniqueInput)
-    where!: Prisma.AtLeast<OneTimeCodeWhereUniqueInput, 'id' | 'email'>;
+    where!: Prisma.AtLeast<OneTimeCodeWhereUniqueInput, 'id' | 'telegramId'>;
 
     @Field(() => OneTimeCodeCreateInput, {nullable:false})
     @Type(() => OneTimeCodeCreateInput)
