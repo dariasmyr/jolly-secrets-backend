@@ -38,14 +38,16 @@ export class TelegramService {
     this.bot.start(async (context) => {
       this.logger.log('Telegram auth bot started');
 
+      process.on('exit', (code) => {
+        this.bot.stop();
+        this.logger.log(`Bot stopped with code: ${code}`);
+      });
+
       // eslint-disable-next-line camelcase
       const { id } = context.from;
       const authlink = await this.generateTelegramAuthLink(id);
       await context.reply(authlink);
     });
-
-    this.bot.launch();
-    this.logger.log('Telegram bot started');
   }
   async generateTelegramAuthLink(userId: number): Promise<string> {
     const oneTimeCode = await this.oneTimeCodeService.createOneTimeCode(

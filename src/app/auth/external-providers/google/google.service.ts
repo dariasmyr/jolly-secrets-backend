@@ -9,6 +9,7 @@ import { OAuth2Client, TokenPayload } from 'google-auth-library';
 
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountService } from '@/app/account/account.service';
+import { AuthResponse } from '@/app/account/types';
 import { ExternalProviders } from '@/app/auth/external-providers/external-providers.module';
 import { ProfileService } from '@/app/profile/profile.service';
 import {
@@ -105,9 +106,7 @@ export class GoogleService {
     return payload;
   }
 
-  async logInWithGoogle(
-    userInfo: TokenPayload,
-  ): Promise<{ account: Account; token: string }> {
+  async logInWithGoogle(userInfo: TokenPayload): Promise<AuthResponse> {
     const username = userInfo.name!;
     const externalId = userInfo.sub;
     const email = userInfo.email!;
