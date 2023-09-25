@@ -69,7 +69,7 @@ export class TelegramService {
     );
   }
 
-  async signInWithTelegram(
+  async logInWithTelegram(
     userId: string,
   ): Promise<{ account: Account; token: string }> {
     const telegramId = `${ExternalProviders.TELEGRAM}_${userId}`;

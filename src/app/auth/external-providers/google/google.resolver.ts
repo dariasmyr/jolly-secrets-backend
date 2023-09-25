@@ -30,10 +30,10 @@ export class GoogleResolver {
     try {
       const accessToken = await this.googleService.getAccessToken(code);
       const userInfo = await this.googleService.getUserInfo(accessToken);
-      return await this.googleService.signInWithGoogle(userInfo);
+      return await this.googleService.logInWithGoogle(userInfo);
     } catch (error) {
       throw new Error(
-        `Failed to sign in with Google: ${(error as Error).message}`,
+        `Failed to log in with Google: ${(error as Error).message}`,
       );
     }
   }

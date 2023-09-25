@@ -105,7 +105,7 @@ export class GoogleService {
     return payload;
   }
 
-  async signInWithGoogle(
+  async logInWithGoogle(
     userInfo: TokenPayload,
   ): Promise<{ account: Account; token: string }> {
     const username = userInfo.name!;

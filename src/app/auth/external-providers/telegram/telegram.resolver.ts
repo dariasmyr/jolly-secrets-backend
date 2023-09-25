@@ -1,6 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AuthResponse } from '@/app/account/types';
 
 import { TelegramService } from './telegram.service';
@@ -22,10 +21,16 @@ export class TelegramResolver {
     return this.telegramService.validateTelegramAuthCode(userId, oneTimeCode);
   }
 
-  @Mutation(() => AuthResponse, { name: 'signInWithTelegram' })
-  async signInWithTelegram(
+  @Mutation(() => AuthResponse, { name: 'logInWithTelegram' })
+  async logInWithTelegram(
     @Args('userId') userId: string,
-  ): Promise<{ account: Account; token: string }> {
-    return this.telegramService.signInWithTelegram(userId);
+  ): Promise<AuthResponse> {
+    try {
+      return this.telegramService.logInWithTelegram(userId);
+    } catch (error) {
+      throw new Error(
+        `Failed to log in with Telegram: ${(error as Error).message}`,
+      );
+    }
   }
 }
