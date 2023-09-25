@@ -1,6 +1,7 @@
 import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import {
   Account,
   ExternalProfile,
@@ -9,7 +10,9 @@ import {
 import { Telegraf } from 'telegraf';
 
 import { AccountService } from '@/app/account/account.service';
-import { ExternalProviders } from '@/app/auth/external-providers/external-providers.module';
+import { AuthResponse } from '@/app/account/types';
+import { AccountSessionService } from '@/app/account-session/account-session.service';
+import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
 import { OneTimeCodeService } from '@/app/one-time-code/one-time-code.service';
 import { ProfileService } from '@/app/profile/profile.service';
 import {
@@ -21,14 +24,16 @@ import { Logger } from '@/common/logger/logger';
 @Injectable()
 export class TelegramService {
   private readonly logger = new Logger(TelegramService.name);
-  private botToken: string;
+  private readonly botToken: string;
   private bot: Telegraf;
 
   constructor(
     private readonly oneTimeCodeService: OneTimeCodeService,
     private readonly accountService: AccountService,
+    private readonly accountSessionService: AccountSessionService,
     private readonly profileService: ProfileService,
     private readonly cryptoService: CryptoService,
+    private readonly jwtService: JwtService,
   ) {
     this.botToken = process.env.TELEGRAM_BOT_TOKEN as string;
     this.bot = new Telegraf(this.botToken);
@@ -44,52 +49,56 @@ export class TelegramService {
       });
 
       // eslint-disable-next-line camelcase
-      const { id } = context.from;
-      const authlink = await this.generateTelegramAuthLink(id);
+      const { id, username } = context.from;
+      if (!id || !username) {
+        this.logger.error('Telegram auth bot started with invalid user');
+        return;
+      }
+      this.logger.log('Telegram auth bot started with user', id, username);
+      const authlink = await this.generateTelegramAuthLink(id, username);
       await context.reply(authlink);
     });
   }
-  async generateTelegramAuthLink(userId: number): Promise<string> {
-    const oneTimeCode = await this.oneTimeCodeService.createOneTimeCode(
-      userId.toString(),
-    );
-
-    return `https://site.com/auth/telegram?code=${oneTimeCode}`;
+  async generateTelegramAuthLink(
+    telegramId: number,
+    username: string,
+  ): Promise<string> {
+    const jwt = await this.jwtService.signAsync({ telegramId, username });
+    return `Go by the link: https://site.com/auth/telegram?token=${jwt}`;
   }
 
   async generateTelegramBotLink(): Promise<string> {
     return 'https://t.me/secretSantaAuthBot';
   }
 
-  async validateTelegramAuthCode(
-    userId: string,
-    oneTimeCode: string,
-  ): Promise<boolean> {
-    return await this.oneTimeCodeService.validateOneTimeCode(
-      userId,
-      oneTimeCode,
-    );
-  }
+  async loginWithTelegram(
+    jwt: string,
+    context: RequestContext,
+    ip: string,
+  ): Promise<AuthResponse> {
+    const { telegramId, username } = await this.jwtService.verifyAsync(jwt);
 
-  async logInWithTelegram(
-    userId: string,
-  ): Promise<{ account: Account; token: string }> {
-    const telegramId = `${ExternalProviders.TELEGRAM}_${userId}`;
+    if (!telegramId || !username) {
+      throw new Error('Invalid token');
+    }
 
     let account: Account | null;
     let profile: ExternalProfile | null =
       await this.profileService.searchProfileByExternalId(
-        telegramId,
+        telegramId.toString(),
         ExternalProfileProvider.TELEGRAM,
       );
     if (profile) {
+      this.logger.log('Profile found, get account');
       account = await this.accountService.getAccountByProfile(profile);
     } else {
+      this.logger.log('Profile not found, create profile');
       profile = await this.profileService.createTelegramProfile({
-        externalId: userId,
+        externalId: telegramId,
         provider: ExternalProfileProvider.TELEGRAM,
-        username: userId,
+        username,
       });
+      this.logger.log('Get account');
       account = await this.accountService.getAccountByProfile(profile);
     }
 
@@ -99,6 +108,13 @@ export class TelegramService {
 
     const token = await this.cryptoService.generateRandomString(
       RandomStringType.ACCESS_TOKEN,
+    );
+
+    await this.accountSessionService.createAccountSession(
+      account.id,
+      token,
+      ip,
+      context.req.headers['user-agent'],
     );
 
     return {

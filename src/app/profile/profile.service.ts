@@ -74,7 +74,7 @@ export class ProfileService {
     });
   }
 
-  async attachProfileToAccount(
+  async mergeProfileToAccount(
     accountIdToRemove: number,
     accountIdToLeave: number,
     profile: ExternalProfile,

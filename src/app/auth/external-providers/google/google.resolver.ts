@@ -1,7 +1,9 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { AuthResponse } from '@/app/account/types';
+import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
 import { Logger } from '@/common/logger/logger';
+import { RealIp } from '@/common/real-ip/real-ip.decorator';
 
 import { GoogleService } from './google.service';
 
@@ -26,11 +28,15 @@ export class GoogleResolver {
   @Mutation(() => AuthResponse, {
     name: 'loginWithGoogle',
   })
-  async loginWithGoogle(@Args('code') code: string): Promise<AuthResponse> {
+  async loginWithGoogle(
+    @Args('code') code: string,
+    @Context() context: RequestContext,
+    @RealIp() ip: string,
+  ): Promise<AuthResponse> {
     try {
       const accessToken = await this.googleService.getAccessToken(code);
       const userInfo = await this.googleService.getUserInfo(accessToken);
-      return await this.googleService.logInWithGoogle(userInfo);
+      return await this.googleService.logInWithGoogle(userInfo, context, ip);
     } catch (error) {
       throw new Error(
         `Failed to log in with Google: ${(error as Error).message}`,

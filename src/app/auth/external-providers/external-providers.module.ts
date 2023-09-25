@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 import { AccountModule } from '@/app/account/account.module';
 import { AccountSessionModule } from '@/app/account-session/account-session.module';
@@ -19,7 +21,20 @@ export enum ExternalProviders {
 }
 
 @Module({
-  imports: [AccountSessionModule, AccountModule, ProfileModule, CryptoModule],
+  imports: [
+    AccountSessionModule,
+    AccountModule,
+    ProfileModule,
+    CryptoModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.getOrThrow<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '5m' },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
   providers: [
     GoogleResolver,
     GoogleService,

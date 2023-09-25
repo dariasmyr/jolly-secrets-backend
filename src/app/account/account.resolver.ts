@@ -84,7 +84,7 @@ export class AccountResolver {
       throw new Error(this.i18n.t('errors.profile_not_found'));
     }
 
-    return await this.profileService.attachProfileToAccount(
+    return await this.profileService.mergeProfileToAccount(
       accountIdToRemove,
       accountIdToLeave,
       profile,

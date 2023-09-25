@@ -1,6 +1,8 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { AuthResponse } from '@/app/account/types';
+import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
+import { RealIp } from '@/common/real-ip/real-ip.decorator';
 
 import { TelegramService } from './telegram.service';
 
@@ -8,25 +10,19 @@ import { TelegramService } from './telegram.service';
 export class TelegramResolver {
   constructor(private readonly telegramService: TelegramService) {}
 
-  @Query(() => String, { name: 'generateBotLinkTelegram' })
-  async generateBotLink(): Promise<string> {
+  @Query(() => String, { name: 'generateTelegramBotLink' })
+  async generateTelegramBotLink(): Promise<string> {
     return this.telegramService.generateTelegramBotLink();
   }
 
-  @Mutation(() => Boolean, { name: 'validateTelegramAuthCode' })
-  async validateTelegramAuthCode(
-    @Args('userId') userId: string,
-    @Args('oneTimeCode') oneTimeCode: string,
-  ): Promise<boolean> {
-    return this.telegramService.validateTelegramAuthCode(userId, oneTimeCode);
-  }
-
-  @Mutation(() => AuthResponse, { name: 'logInWithTelegram' })
-  async logInWithTelegram(
-    @Args('userId') userId: string,
+  @Mutation(() => AuthResponse, { name: 'loginWithTelegram' })
+  async loginWithTelegram(
+    @Args('token') token: string,
+    @Context() context: RequestContext,
+    @RealIp() ip: string,
   ): Promise<AuthResponse> {
     try {
-      return this.telegramService.logInWithTelegram(userId);
+      return this.telegramService.loginWithTelegram(token, context, ip);
     } catch (error) {
       throw new Error(
         `Failed to log in with Telegram: ${(error as Error).message}`,

@@ -10,7 +10,8 @@ import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountService } from '@/app/account/account.service';
 import { AuthResponse } from '@/app/account/types';
-import { ExternalProviders } from '@/app/auth/external-providers/external-providers.module';
+import { AccountSessionService } from '@/app/account-session/account-session.service';
+import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
 import { ProfileService } from '@/app/profile/profile.service';
 import {
   CryptoService,
@@ -37,6 +38,7 @@ export class GoogleService {
 
   constructor(
     private readonly accountService: AccountService,
+    private readonly accountSessionService: AccountSessionService,
     private readonly profileService: ProfileService,
     private readonly cryptoService: CryptoService,
   ) {
@@ -106,17 +108,21 @@ export class GoogleService {
     return payload;
   }
 
-  async logInWithGoogle(userInfo: TokenPayload): Promise<AuthResponse> {
+  async logInWithGoogle(
+    userInfo: TokenPayload,
+    context: RequestContext,
+    ip: string,
+  ): Promise<AuthResponse> {
     const username = userInfo.name!;
     const externalId = userInfo.sub;
     const email = userInfo.email!;
-    const googleId = `${ExternalProviders.GOOGLE}_${externalId}`;
     let account: Account | null;
     let profile: ExternalProfile | null =
       await this.profileService.searchProfileByExternalId(
-        googleId,
+        externalId,
         ExternalProfileProvider.GOOGLE,
       );
+    console.log('profile', { profile });
     if (profile) {
       account = await this.accountService.getAccountByProfile(profile);
     } else {
@@ -137,6 +143,13 @@ export class GoogleService {
 
     const token = await this.cryptoService.generateRandomString(
       RandomStringType.ACCESS_TOKEN,
+    );
+
+    await this.accountSessionService.createAccountSession(
+      account.id,
+      token,
+      ip,
+      context.req.headers['user-agent'],
     );
 
     return {
