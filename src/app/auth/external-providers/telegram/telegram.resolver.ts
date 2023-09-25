@@ -1,16 +1,31 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { TelegramService } from '@/app/auth/external-providers/telegram/telegram.service';
-import { Logger } from '@/common/logger/logger';
+import { Account } from '@/@generated/nestgraphql/account/account.model';
+import { AuthResponse } from '@/app/account/types';
 
-@Resolver()
+import { TelegramService } from './telegram.service';
+
+@Resolver('TelegramAuth')
 export class TelegramResolver {
-  private readonly logger = new Logger(TelegramResolver.name);
-
   constructor(private readonly telegramService: TelegramService) {}
 
-  @Query(() => String, { name: 'generateUrlTelegram' })
-  async generateUrl(): Promise<string> {
+  @Query(() => String, { name: 'generateBotLinkTelegram' })
+  async generateBotLink(): Promise<string> {
     return this.telegramService.generateTelegramBotLink();
+  }
+
+  @Mutation(() => Boolean, { name: 'validateTelegramAuthCode' })
+  async validateTelegramAuthCode(
+    @Args('userId') userId: string,
+    @Args('oneTimeCode') oneTimeCode: string,
+  ): Promise<boolean> {
+    return this.telegramService.validateTelegramAuthCode(userId, oneTimeCode);
+  }
+
+  @Mutation(() => AuthResponse, { name: 'signInWithTelegram' })
+  async signInWithTelegram(
+    @Args('userId') userId: string,
+  ): Promise<{ account: Account; token: string }> {
+    return this.telegramService.signInWithTelegram(userId);
   }
 }

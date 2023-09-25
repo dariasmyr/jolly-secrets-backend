@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  Account,
   AccountRole,
   AccountStatus,
   ExternalProfile,
@@ -71,5 +72,34 @@ export class ProfileService {
         },
       },
     });
+  }
+
+  async attachProfileToAccount(
+    accountIdToRemove: number,
+    accountIdToLeave: number,
+    profile: ExternalProfile,
+  ): Promise<[ExternalProfile, Account]> {
+    const { externalId, provider } = profile;
+
+    return this.prisma.$transaction([
+      this.prisma.externalProfile.update({
+        where: {
+          // eslint-disable-next-line camelcase
+          provider_externalId: {
+            externalId,
+            provider,
+          },
+        },
+
+        data: {
+          accountId: accountIdToLeave,
+        },
+      }),
+      this.prisma.account.delete({
+        where: {
+          id: accountIdToRemove,
+        },
+      }),
+    ]);
   }
 }

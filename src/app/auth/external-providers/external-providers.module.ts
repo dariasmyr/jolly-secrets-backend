@@ -4,6 +4,7 @@ import { AccountModule } from '@/app/account/account.module';
 import { AccountSessionModule } from '@/app/account-session/account-session.module';
 import { GoogleResolver } from '@/app/auth/external-providers/google/google.resolver';
 import { GoogleService } from '@/app/auth/external-providers/google/google.service';
+import { OneTimeCodeService } from '@/app/one-time-code/one-time-code.service';
 import { ProfileModule } from '@/app/profile/profile.module';
 import { ProfileService } from '@/app/profile/profile.service';
 import { CryptoModule } from '@/common/crypto/crypto.module';
@@ -26,6 +27,7 @@ export enum ExternalProviders {
     TelegramResolver,
     ProfileService,
     PrismaService,
+    OneTimeCodeService,
   ],
 })
 export class ExternalProvidersModule {}
