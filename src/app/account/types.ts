@@ -22,5 +22,5 @@ export class GenerateEmailCodeResponse {
 @InputType()
 export class UpdateAccountInput {
   @Field()
-  avatarUrl: string;
+  username: string;
 }

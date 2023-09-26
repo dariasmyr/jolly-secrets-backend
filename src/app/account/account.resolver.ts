@@ -62,9 +62,43 @@ export class AccountResolver {
     return this.accountService.updateAccount(context.account!, input);
   }
 
+  // enable notifications mutation
   @Mutation(() => Account)
   @UseGuards(AuthGuard)
-  async attachProfileToAccount(
+  async enableNotifications(
+    @RequestContextDecorator() context: RequestContext,
+    @Args('email') email: string,
+  ): Promise<Account> {
+    // Should be because AuthGuard is used
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.accountService.enableNotifications(context.account!, email);
+  }
+
+  // disable notifications mutation
+  @Mutation(() => Account)
+  @UseGuards(AuthGuard)
+  async disableNotifications(
+    @RequestContextDecorator() context: RequestContext,
+  ): Promise<Account> {
+    // Should be because AuthGuard is used
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.accountService.disableNotifications(context.account!);
+  }
+
+  // delete account mutation
+  @Mutation(() => Account)
+  @UseGuards(AuthGuard)
+  async deleteAccount(
+    @RequestContextDecorator() context: RequestContext,
+  ): Promise<Account> {
+    // Should be because AuthGuard is used
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.accountService.deleteAccount(context.account!);
+  }
+
+  @Mutation(() => Account)
+  @UseGuards(AuthGuard)
+  async mergeProfileToAccount(
     @Args('accountIdToLeave') accountIdToLeave: number,
     @Args('accountIdToRemove') accountIdToRemove: number,
     @Args('externalId') externalId: string,

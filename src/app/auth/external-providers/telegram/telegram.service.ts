@@ -91,7 +91,7 @@ export class TelegramService {
       account = await this.accountService.getAccountByProfile(profile);
     } else {
       this.logger.log('Profile not found, create profile');
-      profile = await this.profileService.createTelegramProfile({
+      profile = await this.profileService.createProfile({
         externalId: telegramId,
         provider: ExternalProfileProvider.TELEGRAM,
         username,

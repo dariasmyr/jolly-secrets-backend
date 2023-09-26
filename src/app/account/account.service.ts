@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable unicorn/no-null */
 import { Injectable } from '@nestjs/common';
 import { ExternalProfile } from '@prisma/client';
 
@@ -35,6 +37,39 @@ export class AccountService {
         id: account.id,
       },
       data: input,
+    });
+  }
+
+  async enableNotifications(account: Account, email: string): Promise<Account> {
+    return this.prisma.account.update({
+      where: {
+        id: account.id,
+      },
+      data: {
+        email,
+      },
+    });
+  }
+
+  async disableNotifications(account: Account): Promise<Account> {
+    return this.prisma.account.update({
+      where: {
+        id: account.id,
+      },
+      data: {
+        email: null,
+      },
+    });
+  }
+
+  async deleteAccount(account: Account): Promise<Account> {
+    return this.prisma.account.update({
+      where: {
+        id: account.id,
+      },
+      data: {
+        status: 'DELETED',
+      },
     });
   }
 }

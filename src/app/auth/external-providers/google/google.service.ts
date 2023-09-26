@@ -115,7 +115,6 @@ export class GoogleService {
   ): Promise<AuthResponse> {
     const username = userInfo.name!;
     const externalId = userInfo.sub;
-    const email = userInfo.email!;
     let account: Account | null;
     let profile: ExternalProfile | null =
       await this.profileService.searchProfileByExternalId(
@@ -127,11 +126,10 @@ export class GoogleService {
       account = await this.accountService.getAccountByProfile(profile);
     } else {
       console.log('Create profile');
-      profile = await this.profileService.createGoogleProfile({
+      profile = await this.profileService.createProfile({
         externalId,
         provider: ExternalProfileProvider.GOOGLE,
         username,
-        email,
       });
       console.log('Create account');
       account = await this.accountService.getAccountByProfile(profile);
