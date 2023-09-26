@@ -1,13 +1,5 @@
 # Todo
 
-- [ ] Add rate limiter
-- [ ] Add rate limiter for /studio
-- [ ] GraphQL integration tests
-- [ ] Add verification types, ex.: Email
-- [ ] Add logger
-  - [ ] Implement logging to DB, files or remote service
-  - [ ] OR:
-  - [ ] Implement online log viewer like http://logio.org
-- [ ] (Maybe) Implement simple mock service module
-- [ ] Improve readme file (add more info about project, add more examples, etc.)
-- [ ] DELETE THIS FILE
+- [ ] Decide on where should I place the resolver for the nested object
+
+
