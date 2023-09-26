@@ -13,7 +13,6 @@ import { AccountService } from '@/app/account/account.service';
 import { AuthResponse } from '@/app/account/types';
 import { AccountSessionService } from '@/app/account-session/account-session.service';
 import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
-import { OneTimeCodeService } from '@/app/one-time-code/one-time-code.service';
 import { ProfileService } from '@/app/profile/profile.service';
 import {
   CryptoService,
@@ -28,7 +27,6 @@ export class TelegramService {
   private bot: Telegraf;
 
   constructor(
-    private readonly oneTimeCodeService: OneTimeCodeService,
     private readonly accountService: AccountService,
     private readonly accountSessionService: AccountSessionService,
     private readonly profileService: ProfileService,
