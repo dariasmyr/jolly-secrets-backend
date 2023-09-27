@@ -96,6 +96,7 @@ export class AccountResolver {
     return this.accountService.deleteAccount(context.account!);
   }
 
+  // TODO Fix mergeProfileToAccount function (+logic)
   @Mutation(() => Account)
   @UseGuards(AuthGuard)
   async mergeProfileToAccount(
