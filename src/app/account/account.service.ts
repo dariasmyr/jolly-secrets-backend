@@ -72,4 +72,44 @@ export class AccountService {
       },
     });
   }
+
+  async getAccountByGroupMemberId(
+    groupMemberId: number,
+  ): Promise<Account | null> {
+    return this.prisma.account.findFirst({
+      where: {
+        groupMembers: {
+          some: {
+            id: groupMemberId,
+          },
+        },
+      },
+    });
+  }
+
+  async getAccountByMessageId(messageId: number): Promise<Account | null> {
+    return this.prisma.account.findFirst({
+      where: {
+        messages: {
+          some: {
+            id: messageId,
+          },
+        },
+      },
+    });
+  }
+
+  async getAccountByChatMemberId(
+    chatMemberId: number,
+  ): Promise<Account | null> {
+    return this.prisma.account.findFirst({
+      where: {
+        chatMembers: {
+          some: {
+            id: chatMemberId,
+          },
+        },
+      },
+    });
+  }
 }
