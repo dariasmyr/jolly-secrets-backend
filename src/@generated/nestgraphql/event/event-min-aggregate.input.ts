@@ -17,6 +17,9 @@ export class EventMinAggregateInput {
     pictureUrl?: true;
 
     @Field(() => Boolean, {nullable:true})
+    status?: true;
+
+    @Field(() => Boolean, {nullable:true})
     groupId?: true;
 
     @Field(() => Boolean, {nullable:true})

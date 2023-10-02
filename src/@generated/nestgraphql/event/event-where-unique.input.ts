@@ -5,6 +5,7 @@ import { EventGroupIdNameCompoundUniqueInput } from './event-group-id-name-compo
 import { EventWhereInput } from './event-where.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { StringFilter } from '../prisma/string-filter.input';
+import { EnumEventStatusFilter } from '../prisma/enum-event-status-filter.input';
 import { IntFilter } from '../prisma/int-filter.input';
 import { GroupRelationFilter } from '../group/group-relation-filter.input';
 import { EventApplicationPairListRelationFilter } from '../event-application-pair/event-application-pair-list-relation-filter.input';
@@ -35,6 +36,9 @@ export class EventWhereUniqueInput {
 
     @Field(() => StringFilter, {nullable:true})
     pictureUrl?: StringFilter;
+
+    @Field(() => EnumEventStatusFilter, {nullable:true})
+    status?: EnumEventStatusFilter;
 
     @Field(() => IntFilter, {nullable:true})
     groupId?: IntFilter;

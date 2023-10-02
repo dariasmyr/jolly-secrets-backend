@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
 import { GroupType } from '../prisma/group-type.enum';
+import { GroupStatus } from '../prisma/group-status.enum';
 import { GroupCountAggregate } from './group-count-aggregate.output';
 import { GroupAvgAggregate } from './group-avg-aggregate.output';
 import { GroupSumAggregate } from './group-sum-aggregate.output';
@@ -31,6 +32,9 @@ export class GroupGroupBy {
 
     @Field(() => GroupType, {nullable:false})
     type!: keyof typeof GroupType;
+
+    @Field(() => GroupStatus, {nullable:false})
+    status!: keyof typeof GroupStatus;
 
     @Field(() => GroupCountAggregate, {nullable:true})
     _count?: GroupCountAggregate;

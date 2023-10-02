@@ -5,6 +5,7 @@ import { GroupWhereInput } from './group-where.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { StringFilter } from '../prisma/string-filter.input';
 import { EnumGroupTypeFilter } from '../prisma/enum-group-type-filter.input';
+import { EnumGroupStatusFilter } from '../prisma/enum-group-status-filter.input';
 import { GroupMemberListRelationFilter } from '../group-member/group-member-list-relation-filter.input';
 import { EventListRelationFilter } from '../event/event-list-relation-filter.input';
 import { GroupInviteListRelationFilter } from '../group-invite/group-invite-list-relation-filter.input';
@@ -41,6 +42,9 @@ export class GroupWhereUniqueInput {
 
     @Field(() => EnumGroupTypeFilter, {nullable:true})
     type?: EnumGroupTypeFilter;
+
+    @Field(() => EnumGroupStatusFilter, {nullable:true})
+    status?: EnumGroupStatusFilter;
 
     @Field(() => GroupMemberListRelationFilter, {nullable:true})
     members?: GroupMemberListRelationFilter;

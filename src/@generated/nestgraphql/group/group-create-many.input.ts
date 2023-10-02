@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
 import { GroupType } from '../prisma/group-type.enum';
+import { GroupStatus } from '../prisma/group-status.enum';
 
 @InputType()
 export class GroupCreateManyInput {
@@ -26,4 +27,7 @@ export class GroupCreateManyInput {
 
     @Field(() => GroupType, {nullable:false})
     type!: keyof typeof GroupType;
+
+    @Field(() => GroupStatus, {nullable:false})
+    status!: keyof typeof GroupStatus;
 }

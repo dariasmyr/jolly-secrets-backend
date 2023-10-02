@@ -27,5 +27,8 @@ export class GroupCountAggregate {
     type!: number;
 
     @Field(() => Int, {nullable:false})
+    status!: number;
+
+    @Field(() => Int, {nullable:false})
     _all!: number;
 }

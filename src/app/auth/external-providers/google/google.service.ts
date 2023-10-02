@@ -117,7 +117,7 @@ export class GoogleService {
     const externalId = userInfo.sub;
     let account: Account | null;
     let profile: ExternalProfile | null =
-      await this.profileService.searchProfileByExternalId(
+      await this.profileService.getProfileByExternalId(
         externalId,
         ExternalProfileProvider.GOOGLE,
       );

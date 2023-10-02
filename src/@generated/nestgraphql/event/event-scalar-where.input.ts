@@ -3,6 +3,7 @@ import { InputType } from '@nestjs/graphql';
 import { IntFilter } from '../prisma/int-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { StringFilter } from '../prisma/string-filter.input';
+import { EnumEventStatusFilter } from '../prisma/enum-event-status-filter.input';
 
 @InputType()
 export class EventScalarWhereInput {
@@ -27,6 +28,9 @@ export class EventScalarWhereInput {
 
     @Field(() => StringFilter, {nullable:true})
     pictureUrl?: StringFilter;
+
+    @Field(() => EnumEventStatusFilter, {nullable:true})
+    status?: EnumEventStatusFilter;
 
     @Field(() => IntFilter, {nullable:true})
     groupId?: IntFilter;

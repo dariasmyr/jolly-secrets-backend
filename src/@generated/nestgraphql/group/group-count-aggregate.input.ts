@@ -26,5 +26,8 @@ export class GroupCountAggregateInput {
     type?: true;
 
     @Field(() => Boolean, {nullable:true})
+    status?: true;
+
+    @Field(() => Boolean, {nullable:true})
     _all?: true;
 }

@@ -11,6 +11,7 @@ import { I18n, I18nContext, I18nService } from 'nestjs-i18n';
 
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountSession } from '@/@generated/nestgraphql/account-session/account-session.model';
+import { ExternalProfile } from '@/@generated/nestgraphql/external-profile/external-profile.model';
 import { ExternalProfileProvider } from '@/@generated/nestgraphql/prisma/external-profile-provider.enum';
 import { AccountService } from '@/app/account/account.service';
 import { UpdateAccountInput } from '@/app/account/types';
@@ -45,9 +46,24 @@ export class AccountResolver {
     @I18n() i18n: I18nContext,
   ): Promise<Array<AccountSession>> {
     if (context.account?.id !== account.id) {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
       throw new Error(i18n.t('errors.unauthorized'));
     }
     return this.accountSessionService.getSessions(account);
+  }
+
+  @ResolveField(() => [AccountSession])
+  @UseGuards(AuthGuard)
+  async externalProfiles(
+    @Parent() account: Account,
+    @RequestContextDecorator() context: RequestContext,
+    @I18n() i18n: I18nContext,
+  ): Promise<ExternalProfile[] | null> {
+    if (context.account?.id !== account.id) {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      throw new Error(i18n.t('errors.unauthorized'));
+    }
+    return this.profileService.getExternalProfileByAccountId(account.id);
   }
 
   // update account mutation
@@ -110,7 +126,7 @@ export class AccountResolver {
       throw new Error(this.i18n.t('errors.unauthorized'));
     }
 
-    const profile = await this.profileService.searchProfileByExternalId(
+    const profile = await this.profileService.getProfileByExternalId(
       externalId,
       provider,
     );

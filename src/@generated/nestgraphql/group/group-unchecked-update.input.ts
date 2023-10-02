@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
 import { GroupType } from '../prisma/group-type.enum';
+import { GroupStatus } from '../prisma/group-status.enum';
 import { GroupMemberUncheckedUpdateManyWithoutGroupNestedInput } from '../group-member/group-member-unchecked-update-many-without-group-nested.input';
 import { EventUncheckedUpdateManyWithoutGroupNestedInput } from '../event/event-unchecked-update-many-without-group-nested.input';
 import { GroupInviteUncheckedUpdateManyWithoutGroupNestedInput } from '../group-invite/group-invite-unchecked-update-many-without-group-nested.input';
@@ -29,6 +30,9 @@ export class GroupUncheckedUpdateInput {
 
     @Field(() => GroupType, {nullable:true})
     type?: keyof typeof GroupType;
+
+    @Field(() => GroupStatus, {nullable:true})
+    status?: keyof typeof GroupStatus;
 
     @Field(() => GroupMemberUncheckedUpdateManyWithoutGroupNestedInput, {nullable:true})
     members?: GroupMemberUncheckedUpdateManyWithoutGroupNestedInput;

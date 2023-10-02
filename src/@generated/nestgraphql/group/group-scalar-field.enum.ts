@@ -7,7 +7,8 @@ export enum GroupScalarFieldEnum {
     pictureUrl = "pictureUrl",
     name = "name",
     description = "description",
-    type = "type"
+    type = "type",
+    status = "status"
 }
 
 

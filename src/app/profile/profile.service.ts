@@ -19,7 +19,7 @@ export interface ICreateProfileInput {
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async searchProfileByExternalId(
+  async getProfileByExternalId(
     externalId: string,
     provider: ExternalProfileProvider,
   ): Promise<ExternalProfile | null> {
@@ -79,5 +79,15 @@ export class ProfileService {
       }),
     ]);
     return result[1];
+  }
+
+  async getExternalProfileByAccountId(
+    accountId: number,
+  ): Promise<ExternalProfile[] | null> {
+    return this.prisma.externalProfile.findMany({
+      where: {
+        accountId,
+      },
+    });
   }
 }

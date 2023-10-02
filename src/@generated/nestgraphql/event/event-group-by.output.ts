@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
+import { EventStatus } from '../prisma/event-status.enum';
 import { EventCountAggregate } from './event-count-aggregate.output';
 import { EventAvgAggregate } from './event-avg-aggregate.output';
 import { EventSumAggregate } from './event-sum-aggregate.output';
@@ -21,6 +22,9 @@ export class EventGroupBy {
 
     @Field(() => String, {nullable:false})
     pictureUrl!: string;
+
+    @Field(() => EventStatus, {nullable:false})
+    status!: keyof typeof EventStatus;
 
     @Field(() => Int, {nullable:false})
     groupId!: number;

@@ -3,6 +3,7 @@ import { InputType } from '@nestjs/graphql';
 import { IntFilter } from '../prisma/int-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { StringFilter } from '../prisma/string-filter.input';
+import { EnumEventStatusFilter } from '../prisma/enum-event-status-filter.input';
 import { GroupRelationFilter } from '../group/group-relation-filter.input';
 import { EventApplicationPairListRelationFilter } from '../event-application-pair/event-application-pair-list-relation-filter.input';
 
@@ -29,6 +30,9 @@ export class EventWhereInput {
 
     @Field(() => StringFilter, {nullable:true})
     pictureUrl?: StringFilter;
+
+    @Field(() => EnumEventStatusFilter, {nullable:true})
+    status?: EnumEventStatusFilter;
 
     @Field(() => IntFilter, {nullable:true})
     groupId?: IntFilter;

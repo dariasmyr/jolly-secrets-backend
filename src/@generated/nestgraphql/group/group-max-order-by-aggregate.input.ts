@@ -25,4 +25,7 @@ export class GroupMaxOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
     type?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    status?: keyof typeof SortOrder;
 }

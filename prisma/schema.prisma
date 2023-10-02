@@ -131,6 +131,11 @@ enum GroupType {
   PRIVATE
 }
 
+enum GroupStatus {
+  OPEN
+  CLOSED
+}
+
 model Group {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -138,9 +143,10 @@ model Group {
 
   pictureUrl String
 
-  name        String    @unique
+  name        String      @unique
   description String
   type        GroupType
+  status      GroupStatus
 
   members GroupMember[]
 
@@ -180,12 +186,20 @@ enum GroupMemberRole {
   MEMBER
 }
 
+enum EventStatus {
+  OPEN
+  EXPIRED
+  CLOSED
+}
+
 model Event {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   pictureUrl String
+
+  status EventStatus
 
   group   Group @relation(fields: [groupId], references: [id])
   groupId Int

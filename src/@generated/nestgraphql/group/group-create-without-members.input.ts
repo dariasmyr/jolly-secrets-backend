@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { GroupType } from '../prisma/group-type.enum';
+import { GroupStatus } from '../prisma/group-status.enum';
 import { EventCreateNestedManyWithoutGroupInput } from '../event/event-create-nested-many-without-group.input';
 import { GroupInviteCreateNestedManyWithoutGroupInput } from '../group-invite/group-invite-create-nested-many-without-group.input';
 
@@ -24,6 +25,9 @@ export class GroupCreateWithoutMembersInput {
 
     @Field(() => GroupType, {nullable:false})
     type!: keyof typeof GroupType;
+
+    @Field(() => GroupStatus, {nullable:false})
+    status!: keyof typeof GroupStatus;
 
     @Field(() => EventCreateNestedManyWithoutGroupInput, {nullable:true})
     events?: EventCreateNestedManyWithoutGroupInput;

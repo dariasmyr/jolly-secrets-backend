@@ -18,6 +18,9 @@ export class EventCountAggregate {
     pictureUrl!: number;
 
     @Field(() => Int, {nullable:false})
+    status!: number;
+
+    @Field(() => Int, {nullable:false})
     groupId!: number;
 
     @Field(() => Int, {nullable:false})

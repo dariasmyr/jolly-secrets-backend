@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import { EventStatus } from '../prisma/event-status.enum';
 import { EventApplicationPairCreateNestedManyWithoutEventInput } from '../event-application-pair/event-application-pair-create-nested-many-without-event.input';
 
 @InputType()
@@ -13,6 +14,9 @@ export class EventCreateWithoutGroupInput {
 
     @Field(() => String, {nullable:false})
     pictureUrl!: string;
+
+    @Field(() => EventStatus, {nullable:false})
+    status!: keyof typeof EventStatus;
 
     @Field(() => String, {nullable:false})
     name!: string;

@@ -29,6 +29,9 @@ export class GroupOrderByWithRelationInput {
     @Field(() => SortOrder, {nullable:true})
     type?: keyof typeof SortOrder;
 
+    @Field(() => SortOrder, {nullable:true})
+    status?: keyof typeof SortOrder;
+
     @Field(() => GroupMemberOrderByRelationAggregateInput, {nullable:true})
     members?: GroupMemberOrderByRelationAggregateInput;
 

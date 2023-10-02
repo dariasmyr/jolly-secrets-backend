@@ -82,7 +82,7 @@ export class TelegramService {
 
     let account: Account | null;
     let profile: ExternalProfile | null =
-      await this.profileService.searchProfileByExternalId(
+      await this.profileService.getProfileByExternalId(
         telegramId.toString(),
         ExternalProfileProvider.TELEGRAM,
       );

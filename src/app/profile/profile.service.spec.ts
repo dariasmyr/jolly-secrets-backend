@@ -24,7 +24,7 @@ describe('ProfileService', () => {
       provider: ExternalProfileProvider.GOOGLE,
     };
 
-    const result = await service.searchProfileByExternalId(
+    const result = await service.getProfileByExternalId(
       profile.id,
       profile.provider,
     );

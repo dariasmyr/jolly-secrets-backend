@@ -5,6 +5,7 @@ export enum EventScalarFieldEnum {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     pictureUrl = "pictureUrl",
+    status = "status",
     groupId = "groupId",
     name = "name",
     description = "description",

@@ -18,6 +18,9 @@ export class EventMaxOrderByAggregateInput {
     pictureUrl?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
+    status?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
     groupId?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})

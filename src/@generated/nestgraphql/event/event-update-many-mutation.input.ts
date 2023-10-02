@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import { EventStatus } from '../prisma/event-status.enum';
 
 @InputType()
 export class EventUpdateManyMutationInput {
@@ -12,6 +13,9 @@ export class EventUpdateManyMutationInput {
 
     @Field(() => String, {nullable:true})
     pictureUrl?: string;
+
+    @Field(() => EventStatus, {nullable:true})
+    status?: keyof typeof EventStatus;
 
     @Field(() => String, {nullable:true})
     name?: string;
