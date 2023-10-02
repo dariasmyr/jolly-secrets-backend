@@ -3,7 +3,6 @@
 import { Injectable } from '@nestjs/common';
 import { Group } from '@prisma/client';
 
-import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { GroupStatus } from '@/@generated/nestgraphql/prisma/group-status.enum';
 import { CreateOrUpdateGroupInput } from '@/app/group/group.resolver';
 import { PrismaService } from '@/common/prisma/prisma.service';
@@ -23,7 +22,7 @@ export class GroupService {
   }
 
   async getPrivateGroups(
-    account: Account,
+    accountId: number,
     offset: number,
     limit: number,
   ): Promise<Array<Group>> {
@@ -32,7 +31,7 @@ export class GroupService {
         type: 'PRIVATE',
         members: {
           some: {
-            id: account.id,
+            id: accountId,
           },
         },
       },
@@ -41,7 +40,7 @@ export class GroupService {
     });
   }
 
-  async getGroupById(account: Account, id: number): Promise<Group | null> {
+  async getGroupById(accountId: number, id: number): Promise<Group | null> {
     const group = await this.prisma.group.findUnique({
       where: {
         id,
@@ -53,7 +52,7 @@ export class GroupService {
       const member = await this.prisma.groupMember.findFirst({
         where: {
           groupId: id,
-          accountId: account.id,
+          accountId: accountId,
         },
       });
       return member ? group : null;
@@ -63,7 +62,7 @@ export class GroupService {
   }
 
   async ifAccountAdminOfGroup(
-    account: Account,
+    accountId: number,
     id: number,
   ): Promise<boolean | null> {
     const group = await this.prisma.group.findUnique({
@@ -77,7 +76,7 @@ export class GroupService {
       const member = await this.prisma.groupMember.findFirst({
         where: {
           groupId: id,
-          accountId: account.id,
+          accountId: accountId,
         },
       });
       return member?.role === 'ADMIN';
@@ -87,7 +86,7 @@ export class GroupService {
   }
 
   async createGroup(
-    account: Account,
+    accountId: number,
     input: CreateOrUpdateGroupInput,
   ): Promise<Group> {
     return this.prisma.group.create({
@@ -97,7 +96,7 @@ export class GroupService {
         status: GroupStatus.OPEN,
         members: {
           create: {
-            accountId: account.id,
+            accountId: accountId,
           },
         },
       },
@@ -105,11 +104,11 @@ export class GroupService {
   }
 
   async updateGroup(
-    account: Account,
+    accountId: number,
     id: number,
     input: CreateOrUpdateGroupInput,
   ): Promise<Group> {
-    const group = await this.getGroupById(account, id);
+    const group = await this.getGroupById(accountId, id);
     if (!group) {
       throw new Error('Group not found');
     }
@@ -121,13 +120,16 @@ export class GroupService {
     });
   }
 
-  async deleteGroup(account: Account, id: number): Promise<Group> {
-    const group = await this.getGroupById(account, id);
+  async deleteGroup(accountId: number, id: number): Promise<Group> {
+    const group = await this.getGroupById(accountId, id);
     if (!group) {
       throw new Error('Group not found');
     }
 
-    const isAccountAdminOfGroup = await this.ifAccountAdminOfGroup(account, id);
+    const isAccountAdminOfGroup = await this.ifAccountAdminOfGroup(
+      accountId,
+      id,
+    );
     if (isAccountAdminOfGroup) {
       return this.prisma.group.update({
         where: {

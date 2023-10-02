@@ -4,14 +4,18 @@ import {
   Field,
   InputType,
   Mutation,
+  Parent,
   Query,
+  ResolveField,
   Resolver,
 } from '@nestjs/graphql';
 
 import { Group } from '@/@generated/nestgraphql/group/group.model';
+import { GroupMember } from '@/@generated/nestgraphql/group-member/group-member.model';
 import { GroupType } from '@/@generated/nestgraphql/prisma/group-type.enum';
 import { AuthGuard } from '@/app/auth/auth-guard/auth.guard';
 import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
+import { GroupMemberService } from '@/app/group/group-member/group-member.service';
 import { RequestContextDecorator } from '@/app/request-context.decorator';
 
 import { GroupService } from './group.service';
@@ -30,7 +34,10 @@ export class CreateOrUpdateGroupInput {
 
 @Resolver()
 export class GroupResolver {
-  constructor(private readonly groupService: GroupService) {}
+  constructor(
+    private readonly groupService: GroupService,
+    private readonly groupMemberService: GroupMemberService,
+  ) {}
 
   @Query(() => [Group], { name: 'publicGroups' })
   @UseGuards(AuthGuard)
@@ -48,7 +55,11 @@ export class GroupResolver {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<Array<Group>> {
-    return this.groupService.getPrivateGroups(context.account!, offset, limit);
+    return this.groupService.getPrivateGroups(
+      context.account!.id,
+      offset,
+      limit,
+    );
   }
 
   @Query(() => Group, { name: 'group' })
@@ -57,7 +68,7 @@ export class GroupResolver {
     @RequestContextDecorator() context: RequestContext,
     @Args('id') id: number,
   ): Promise<Group | null> {
-    return this.groupService.getGroupById(context.account!, id);
+    return this.groupService.getGroupById(context.account!.id, id);
   }
 
   @Mutation(() => Group, { name: 'createGroup' })
@@ -66,7 +77,7 @@ export class GroupResolver {
     @RequestContextDecorator() context: RequestContext,
     @Args('input') input: CreateOrUpdateGroupInput,
   ): Promise<Group> {
-    return this.groupService.createGroup(context.account!, input);
+    return this.groupService.createGroup(context.account!.id, input);
   }
 
   @Mutation(() => Group, { name: 'updateGroup' })
@@ -76,7 +87,7 @@ export class GroupResolver {
     @Args('id') id: number,
     @Args('input') input: CreateOrUpdateGroupInput,
   ): Promise<Group> {
-    return this.groupService.updateGroup(context.account!, id, input);
+    return this.groupService.updateGroup(context.account!.id, id, input);
   }
 
   @Mutation(() => Group, { name: 'deleteGroup' })
@@ -85,6 +96,12 @@ export class GroupResolver {
     @RequestContextDecorator() context: RequestContext,
     @Args('id') id: number,
   ): Promise<Group> {
-    return this.groupService.deleteGroup(context.account!, id);
+    return this.groupService.deleteGroup(context.account!.id, id);
+  }
+
+  @ResolveField(() => [Group])
+  @UseGuards(AuthGuard)
+  async members(@Parent() group: Group): Promise<Array<GroupMember> | null> {
+    return this.groupMemberService.getGroupMember(group.id);
   }
 }
