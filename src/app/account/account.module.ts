@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AccountSessionModule } from '@/app/account-session/account-session.module';
 import { GroupModule } from '@/app/group/group.module';
-import { ProfileService } from '@/app/profile/profile.service';
+import { ProfileModule } from '@/app/profile/profile.module';
 import { CryptoModule } from '@/common/crypto/crypto.module';
 import { PrismaModule } from '@/common/prisma/prisma.module';
 
@@ -17,9 +17,10 @@ import { AccountService } from './account.service';
     CryptoModule,
     AccountSessionModule,
     ConfigModule,
-    GroupModule,
+    forwardRef(() => GroupModule),
+    ProfileModule,
   ],
-  providers: [AccountService, AccountResolver, AccountGateway, ProfileService],
+  providers: [AccountService, AccountResolver, AccountGateway],
   exports: [AccountService, AccountResolver, AccountGateway],
 })
 export class AccountModule {}

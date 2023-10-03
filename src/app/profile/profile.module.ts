@@ -7,5 +7,6 @@ import { ProfileService } from './profile.service';
 @Module({
   imports: [PrismaModule],
   providers: [ProfileService],
+  exports: [ProfileService],
 })
 export class ProfileModule {}

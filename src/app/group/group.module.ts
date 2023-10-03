@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 
 import { AccountModule } from '@/app/account/account.module';
 import { AccountSessionModule } from '@/app/account-session/account-session.module';
@@ -13,7 +13,10 @@ import { GroupMemberResolver } from './group-member/group-member.resolver';
 import { GroupMemberService } from './group-member/group-member.service';
 
 @Module({
-  imports: [AccountModule, AccountSessionModule],
+  imports: [
+    forwardRef(() => AccountModule),
+    forwardRef(() => AccountSessionModule),
+  ],
   providers: [
     GroupResolver,
     GroupService,
