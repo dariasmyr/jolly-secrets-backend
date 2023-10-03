@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { AccountGateway } from '@/app/account/account.gateway';
-import { AccountService } from '@/app/account/account.service';
-import { AccountSessionService } from '@/app/account-session/account-session.service';
+import { AccountModule } from '@/app/account/account.module';
+import { AccountSessionModule } from '@/app/account-session/account-session.module';
 import { CryptoService } from '@/common/crypto/crypto.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
@@ -14,6 +13,7 @@ import { GroupMemberResolver } from './group-member/group-member.resolver';
 import { GroupMemberService } from './group-member/group-member.service';
 
 @Module({
+  imports: [AccountModule, AccountSessionModule],
   providers: [
     GroupResolver,
     GroupService,
@@ -22,10 +22,15 @@ import { GroupMemberService } from './group-member/group-member.service';
     GroupInviteService,
     GroupInviteResolver,
     PrismaService,
-    AccountService,
     CryptoService,
-    AccountGateway,
-    AccountSessionService,
+  ],
+  exports: [
+    GroupResolver,
+    GroupService,
+    GroupMemberService,
+    GroupMemberResolver,
+    GroupInviteService,
+    GroupInviteResolver,
   ],
 })
 export class GroupModule {}
