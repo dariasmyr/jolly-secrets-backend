@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 
 export enum RandomStringType {
   ACCESS_TOKEN = 'at_',
+  CODE = 'c_',
 }
 
 @Injectable()

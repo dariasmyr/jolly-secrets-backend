@@ -32,7 +32,7 @@ export class CreateOrUpdateGroupInput {
   type: GroupType;
 }
 
-@Resolver()
+@Resolver(() => Group)
 export class GroupResolver {
   constructor(
     private readonly groupService: GroupService,

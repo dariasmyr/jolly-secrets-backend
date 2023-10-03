@@ -12,12 +12,14 @@ import { I18n, I18nContext, I18nService } from 'nestjs-i18n';
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountSession } from '@/@generated/nestgraphql/account-session/account-session.model';
 import { ExternalProfile } from '@/@generated/nestgraphql/external-profile/external-profile.model';
+import { GroupMember } from '@/@generated/nestgraphql/group-member/group-member.model';
 import { ExternalProfileProvider } from '@/@generated/nestgraphql/prisma/external-profile-provider.enum';
 import { AccountService } from '@/app/account/account.service';
 import { UpdateAccountInput } from '@/app/account/types';
 import { AccountSessionService } from '@/app/account-session/account-session.service';
 import { AuthGuard } from '@/app/auth/auth-guard/auth.guard';
 import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
+import { GroupMemberService } from '@/app/group/group-member/group-member.service';
 import { ProfileService } from '@/app/profile/profile.service';
 import { RequestContextDecorator } from '@/app/request-context.decorator';
 
@@ -27,6 +29,7 @@ export class AccountResolver {
     private accountSessionService: AccountSessionService,
     private accountService: AccountService,
     private profileService: ProfileService,
+    private groupMemberService: GroupMemberService,
     private i18n: I18nService,
   ) {}
 
@@ -50,6 +53,20 @@ export class AccountResolver {
       throw new Error(i18n.t('errors.unauthorized'));
     }
     return this.accountSessionService.getSessions(account);
+  }
+
+  @ResolveField(() => [GroupMember])
+  @UseGuards(AuthGuard)
+  async groupMembers(
+    @Parent() account: Account,
+    @RequestContextDecorator() context: RequestContext,
+    @I18n() i18n: I18nContext,
+  ): Promise<Array<GroupMember> | null> {
+    if (context.account?.id !== account.id) {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      throw new Error(i18n.t('errors.unauthorized'));
+    }
+    return this.groupMemberService.getGroupMemberByAccountId(account.id);
   }
 
   @ResolveField(() => [AccountSession])

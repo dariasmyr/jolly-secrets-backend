@@ -29,7 +29,7 @@ export class CreateGroupMemberInput {
   code?: string;
 }
 
-@Resolver()
+@Resolver(() => GroupMember)
 export class GroupMemberResolver {
   constructor(
     private readonly groupMemberService: GroupMemberService,
