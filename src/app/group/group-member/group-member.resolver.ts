@@ -3,6 +3,7 @@ import {
   Args,
   Field,
   InputType,
+  Mutation,
   Parent,
   Query,
   ResolveField,
@@ -20,13 +21,10 @@ import { GroupMemberService } from '@/app/group/group-member/group-member.servic
 @InputType()
 export class CreateGroupMemberInput {
   @Field()
-  groupId: number;
-
-  @Field()
   accountId: number;
 
   @Field()
-  code?: string;
+  link?: string;
 }
 
 @Resolver(() => GroupMember)
@@ -55,5 +53,13 @@ export class GroupMemberResolver {
   @UseGuards(AuthGuard)
   async group(@Parent() groupMember: GroupMember): Promise<Group | null> {
     return this.groupService.getGroupById(groupMember.id, groupMember.groupId);
+  }
+
+  @Mutation(() => GroupMember)
+  @UseGuards(AuthGuard)
+  async createGroupMember(
+    @Args('input') input: CreateGroupMemberInput,
+  ): Promise<GroupMember | null> {
+    return this.groupMemberService.createGroupMember(input);
   }
 }
