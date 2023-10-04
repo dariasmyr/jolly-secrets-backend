@@ -238,6 +238,7 @@ enum EventApplicationStatus {
   PAIRED
   GIFT_SENT
   GIFT_RECEIVED
+  GIFT_NOT_RECEIVED
 }
 
 model EventApplication {
