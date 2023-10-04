@@ -31,6 +31,14 @@ export class EventService {
     });
   }
 
+  async getEventsByGroupId(groupId: number): Promise<Array<Event> | null> {
+    return this.prismaService.event.findMany({
+      where: {
+        groupId,
+      },
+    });
+  }
+
   async isEventDeletable(id: number): Promise<boolean> {
     const eventApplicationPairs =
       await this.prismaService.eventApplicationPair.findMany({
