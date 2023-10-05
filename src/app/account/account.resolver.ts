@@ -13,6 +13,7 @@ import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountSession } from '@/@generated/nestgraphql/account-session/account-session.model';
 import { ExternalProfile } from '@/@generated/nestgraphql/external-profile/external-profile.model';
 import { GroupMember } from '@/@generated/nestgraphql/group-member/group-member.model';
+import { Notification } from '@/@generated/nestgraphql/notification/notification.model';
 import { ExternalProfileProvider } from '@/@generated/nestgraphql/prisma/external-profile-provider.enum';
 import { AccountService } from '@/app/account/account.service';
 import { UpdateAccountInput } from '@/app/account/types';
@@ -20,6 +21,7 @@ import { AccountSessionService } from '@/app/account-session/account-session.ser
 import { AuthGuard } from '@/app/auth/auth-guard/auth.guard';
 import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
 import { GroupMemberService } from '@/app/group/group-member/group-member.service';
+import { NotificationService } from '@/app/notification/notification.service';
 import { ProfileService } from '@/app/profile/profile.service';
 import { RequestContextDecorator } from '@/app/request-context.decorator';
 
@@ -30,6 +32,7 @@ export class AccountResolver {
     private accountService: AccountService,
     private profileService: ProfileService,
     private groupMemberService: GroupMemberService,
+    private notificationService: NotificationService,
     private i18n: I18nService,
   ) {}
 
@@ -81,6 +84,20 @@ export class AccountResolver {
       throw new Error(i18n.t('errors.unauthorized'));
     }
     return this.profileService.getExternalProfileByAccountId(account.id);
+  }
+
+  @ResolveField(() => [Notification])
+  @UseGuards(AuthGuard)
+  async notifications(
+    @Parent() account: Account,
+    @RequestContextDecorator() context: RequestContext,
+    @I18n() i18n: I18nContext,
+  ): Promise<Notification[] | null> {
+    if (context.account?.id !== account.id) {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      throw new Error(i18n.t('errors.unauthorized'));
+    }
+    return this.notificationService.getNotificationsByAccountId(account.id);
   }
 
   // update account mutation

@@ -22,6 +22,7 @@ import { RequestContext } from '@/app/auth/request-context-extractor/interfaces'
 import { RequestContextExtractorMiddleware } from '@/app/auth/request-context-extractor/request-context-extractor.middleware';
 import { DebugModule } from '@/app/debug/debug.module';
 import { EmailModule } from '@/app/email/email.module';
+import { NotificationModule } from '@/app/notification/notification.module';
 import { OneTimeCodeModule } from '@/app/one-time-code/one-time-code.module';
 import { Page404Filter } from '@/app/page-404/page-404.filter';
 import { CryptoModule } from '@/common/crypto/crypto.module';
@@ -37,7 +38,6 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { GroupModule } from './group/group.module';
 import { HealthModule } from './health/health.module';
 import { ProfileModule } from './profile/profile.module';
-
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -100,6 +100,7 @@ import { ProfileModule } from './profile/profile.module';
     ProfileModule,
     GroupModule,
     EventModule,
+    NotificationModule,
   ],
   providers: [
     {
