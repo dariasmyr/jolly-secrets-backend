@@ -34,6 +34,7 @@ import { PrismaModule } from '@/common/prisma/prisma.module';
 import { PrismaStudioModule } from '@/common/prisma-studio/prisma-studio.module';
 
 import { EventModule } from './event/event.module';
+import { EventApplicationModule } from './event-application/event-application.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { GroupModule } from './group/group.module';
 import { HealthModule } from './health/health.module';
@@ -101,6 +102,7 @@ import { ProfileModule } from './profile/profile.module';
     GroupModule,
     EventModule,
     NotificationModule,
+    EventApplicationModule,
   ],
   providers: [
     {
