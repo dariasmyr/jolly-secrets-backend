@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
+import { SortOrderInput } from '../prisma/sort-order.input';
 import { EventApplicationPairCountOrderByAggregateInput } from './event-application-pair-count-order-by-aggregate.input';
 import { EventApplicationPairAvgOrderByAggregateInput } from './event-application-pair-avg-order-by-aggregate.input';
 import { EventApplicationPairMaxOrderByAggregateInput } from './event-application-pair-max-order-by-aggregate.input';
@@ -25,11 +26,11 @@ export class EventApplicationPairOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     eventApplicationFirstId?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
-    eventApplicationSecondId?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    eventApplicationSecondId?: SortOrderInput;
 
-    @Field(() => SortOrder, {nullable:true})
-    chatId?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    chatId?: SortOrderInput;
 
     @Field(() => EventApplicationPairCountOrderByAggregateInput, {nullable:true})
     _count?: EventApplicationPairCountOrderByAggregateInput;

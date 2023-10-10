@@ -226,11 +226,11 @@ model EventApplicationPair {
   applicationFirst        EventApplication @relation("EventApplicationFirstPairs", fields: [eventApplicationFirstId], references: [id])
   eventApplicationFirstId Int
 
-  applicationSecond        EventApplication @relation("EventApplicationSecondPairs", fields: [eventApplicationSecondId], references: [id])
-  eventApplicationSecondId Int
+  applicationSecond        EventApplication? @relation("EventApplicationSecondPairs", fields: [eventApplicationSecondId], references: [id])
+  eventApplicationSecondId Int?
 
-  chat   Chat @relation(fields: [chatId], references: [id])
-  chatId Int
+  chat   Chat? @relation(fields: [chatId], references: [id])
+  chatId Int?
 }
 
 enum EventApplicationStatus {

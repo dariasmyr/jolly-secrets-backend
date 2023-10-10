@@ -1,8 +1,8 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { EventUpdateOneRequiredWithoutApplicationPairsNestedInput } from '../event/event-update-one-required-without-application-pairs-nested.input';
-import { EventApplicationUpdateOneRequiredWithoutEventApplicationSecondPairsNestedInput } from '../event-application/event-application-update-one-required-without-event-application-second-pairs-nested.input';
-import { ChatUpdateOneRequiredWithoutEventApplicationPairNestedInput } from '../chat/chat-update-one-required-without-event-application-pair-nested.input';
+import { EventApplicationUpdateOneWithoutEventApplicationSecondPairsNestedInput } from '../event-application/event-application-update-one-without-event-application-second-pairs-nested.input';
+import { ChatUpdateOneWithoutEventApplicationPairNestedInput } from '../chat/chat-update-one-without-event-application-pair-nested.input';
 
 @InputType()
 export class EventApplicationPairUpdateWithoutApplicationFirstInput {
@@ -16,9 +16,9 @@ export class EventApplicationPairUpdateWithoutApplicationFirstInput {
     @Field(() => EventUpdateOneRequiredWithoutApplicationPairsNestedInput, {nullable:true})
     event?: EventUpdateOneRequiredWithoutApplicationPairsNestedInput;
 
-    @Field(() => EventApplicationUpdateOneRequiredWithoutEventApplicationSecondPairsNestedInput, {nullable:true})
-    applicationSecond?: EventApplicationUpdateOneRequiredWithoutEventApplicationSecondPairsNestedInput;
+    @Field(() => EventApplicationUpdateOneWithoutEventApplicationSecondPairsNestedInput, {nullable:true})
+    applicationSecond?: EventApplicationUpdateOneWithoutEventApplicationSecondPairsNestedInput;
 
-    @Field(() => ChatUpdateOneRequiredWithoutEventApplicationPairNestedInput, {nullable:true})
-    chat?: ChatUpdateOneRequiredWithoutEventApplicationPairNestedInput;
+    @Field(() => ChatUpdateOneWithoutEventApplicationPairNestedInput, {nullable:true})
+    chat?: ChatUpdateOneWithoutEventApplicationPairNestedInput;
 }

@@ -3,6 +3,7 @@ import {
   EventApplication,
   EventApplicationStatus,
   Preference,
+  PriceRange,
 } from '@prisma/client';
 
 import { PrismaService } from '@/common/prisma/prisma.service';
@@ -70,6 +71,27 @@ export class EventApplicationService {
         preferences: {
           some: {
             id: preferenceId,
+          },
+        },
+      },
+    });
+  }
+
+  async findEventApplicationByCommonPriceRange(
+    priceRange: PriceRange,
+    eventId: number,
+  ): Promise<EventApplication | null> {
+    return this.prismaService.eventApplication.findFirst({
+      where: {
+        preferences: {
+          some: {
+            priceRange,
+          },
+        },
+        status: EventApplicationStatus.LOOKING_FOR_PAIR,
+        eventApplicationFirstPairs: {
+          some: {
+            eventId,
           },
         },
       },

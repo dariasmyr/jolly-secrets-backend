@@ -11,18 +11,41 @@ export class EventApplicationPairService {
   ) {}
 
   async createEventApplicationPair(
+    eventApplicationFirstId: number,
+    eventId: number,
+  ): Promise<EventApplicationPair> {
+    return this.prismaService.eventApplicationPair.create({
+      data: {
+        eventApplicationFirstId,
+        eventId,
+      },
+    });
+  }
+
+  async updateEventApplicationPair(
     eventId: number,
     eventApplicationFirstId: number,
     eventApplicationSecondId: number,
     chatId: number,
-  ): Promise<EventApplicationPair> {
-    return this.prismaService.eventApplicationPair.create({
-      data: {
-        eventId,
-        eventApplicationFirstId,
-        eventApplicationSecondId,
-        chatId,
-      },
-    });
+  ): Promise<EventApplicationPair | undefined> {
+    //find the eventApplicationPair by first eventApplicationId and eventId
+    const eventApplicationPair =
+      await this.prismaService.eventApplicationPair.findFirst({
+        where: {
+          eventApplicationFirstId,
+          eventId,
+        },
+      });
+
+    //if the eventApplicationPair is found, update it
+    return eventApplicationPair
+      ? this.prismaService.eventApplicationPair.update({
+          where: { id: eventApplicationPair.id },
+          data: {
+            eventApplicationSecondId,
+            chatId,
+          },
+        })
+      : undefined;
   }
 }

@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { IntFilter } from '../prisma/int-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { IntNullableFilter } from '../prisma/int-nullable-filter.input';
 
 @InputType()
 export class EventApplicationPairScalarWhereInput {
@@ -30,9 +31,9 @@ export class EventApplicationPairScalarWhereInput {
     @Field(() => IntFilter, {nullable:true})
     eventApplicationFirstId?: IntFilter;
 
-    @Field(() => IntFilter, {nullable:true})
-    eventApplicationSecondId?: IntFilter;
+    @Field(() => IntNullableFilter, {nullable:true})
+    eventApplicationSecondId?: IntNullableFilter;
 
-    @Field(() => IntFilter, {nullable:true})
-    chatId?: IntFilter;
+    @Field(() => IntNullableFilter, {nullable:true})
+    chatId?: IntNullableFilter;
 }

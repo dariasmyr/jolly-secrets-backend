@@ -23,11 +23,11 @@ export class EventApplicationPair {
     @Field(() => Int, {nullable:false})
     eventApplicationFirstId!: number;
 
-    @Field(() => Int, {nullable:false})
-    eventApplicationSecondId!: number;
+    @Field(() => Int, {nullable:true})
+    eventApplicationSecondId!: number | null;
 
-    @Field(() => Int, {nullable:false})
-    chatId!: number;
+    @Field(() => Int, {nullable:true})
+    chatId!: number | null;
 
     @Field(() => Event, {nullable:false})
     event?: Event;
@@ -35,9 +35,9 @@ export class EventApplicationPair {
     @Field(() => EventApplication, {nullable:false})
     applicationFirst?: EventApplication;
 
-    @Field(() => EventApplication, {nullable:false})
-    applicationSecond?: EventApplication;
+    @Field(() => EventApplication, {nullable:true})
+    applicationSecond?: EventApplication | null;
 
-    @Field(() => Chat, {nullable:false})
-    chat?: Chat;
+    @Field(() => Chat, {nullable:true})
+    chat?: Chat | null;
 }

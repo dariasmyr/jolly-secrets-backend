@@ -17,9 +17,9 @@ export class EventApplicationPairUncheckedCreateWithoutApplicationFirstInput {
     @Field(() => Int, {nullable:false})
     eventId!: number;
 
-    @Field(() => Int, {nullable:false})
-    eventApplicationSecondId!: number;
+    @Field(() => Int, {nullable:true})
+    eventApplicationSecondId?: number;
 
-    @Field(() => Int, {nullable:false})
-    chatId!: number;
+    @Field(() => Int, {nullable:true})
+    chatId?: number;
 }

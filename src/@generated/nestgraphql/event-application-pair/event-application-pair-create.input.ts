@@ -20,9 +20,9 @@ export class EventApplicationPairCreateInput {
     @Field(() => EventApplicationCreateNestedOneWithoutEventApplicationFirstPairsInput, {nullable:false})
     applicationFirst!: EventApplicationCreateNestedOneWithoutEventApplicationFirstPairsInput;
 
-    @Field(() => EventApplicationCreateNestedOneWithoutEventApplicationSecondPairsInput, {nullable:false})
-    applicationSecond!: EventApplicationCreateNestedOneWithoutEventApplicationSecondPairsInput;
+    @Field(() => EventApplicationCreateNestedOneWithoutEventApplicationSecondPairsInput, {nullable:true})
+    applicationSecond?: EventApplicationCreateNestedOneWithoutEventApplicationSecondPairsInput;
 
-    @Field(() => ChatCreateNestedOneWithoutEventApplicationPairInput, {nullable:false})
-    chat!: ChatCreateNestedOneWithoutEventApplicationPairInput;
+    @Field(() => ChatCreateNestedOneWithoutEventApplicationPairInput, {nullable:true})
+    chat?: ChatCreateNestedOneWithoutEventApplicationPairInput;
 }
