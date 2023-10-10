@@ -51,7 +51,7 @@ export class EventService {
       for (const pair of eventApplicationPairs) {
         const hasValidApplications =
           (await this.checkApplication(pair.eventApplicationFirstId)) &&
-          (await this.checkApplication(pair.eventApplicationSecondId));
+          (await this.checkApplication(pair.eventApplicationSecondId!));
 
         if (!hasValidApplications) return false;
       }
