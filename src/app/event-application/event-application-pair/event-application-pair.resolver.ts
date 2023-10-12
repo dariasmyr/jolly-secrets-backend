@@ -10,11 +10,13 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 
+import { Chat } from '@/@generated/nestgraphql/chat/chat.model';
 import { Event } from '@/@generated/nestgraphql/event/event.model';
 import { EventApplication } from '@/@generated/nestgraphql/event-application/event-application.model';
 import { EventApplicationPair } from '@/@generated/nestgraphql/event-application-pair/event-application-pair.model';
 import { AuthGuard } from '@/app/auth/auth-guard/auth.guard';
 import { EventService } from '@/app/event/event.service';
+import { ChatService } from '@/app/event-application/chat/chat.service';
 import { EventApplicationService } from '@/app/event-application/event-application.service';
 import { EventApplicationPairService } from '@/app/event-application/event-application-pair/event-application-pair.service';
 
@@ -48,6 +50,7 @@ export class EventApplicationPairResolver {
     private readonly eventService: EventService,
     private readonly eventApplicationService: EventApplicationService,
     private readonly eventApplicationPairService: EventApplicationPairService,
+    private readonly chatService: ChatService,
   ) {}
 
   @Query(() => [EventApplicationPair], { name: 'eventApplicationPairs' })
@@ -130,5 +133,15 @@ export class EventApplicationPairResolver {
     @Parent() eventApplicationPair: EventApplicationPair,
   ): Promise<Event | null> {
     return this.eventService.getEventById(eventApplicationPair.eventId);
+  }
+
+  @ResolveField(() => [Chat], { name: 'chats' })
+  @UseGuards(AuthGuard)
+  async chats(
+    @Parent() eventApplicationPair: EventApplicationPair,
+  ): Promise<Chat | null> {
+    return this.chatService.getChatByEventApplicationPairId(
+      eventApplicationPair.id,
+    );
   }
 }

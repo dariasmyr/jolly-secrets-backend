@@ -112,4 +112,12 @@ export class AccountService {
       },
     });
   }
+
+  async getAccountById(accountId: number): Promise<Account | null> {
+    return this.prisma.account.findUnique({
+      where: {
+        id: accountId,
+      },
+    });
+  }
 }

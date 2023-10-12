@@ -12,8 +12,10 @@ import {
 import { Group } from '@prisma/client';
 
 import { Event } from '@/@generated/nestgraphql/event/event.model';
+import { EventApplicationPair } from '@/@generated/nestgraphql/event-application-pair/event-application-pair.model';
 import { AuthGuard } from '@/app/auth/auth-guard/auth.guard';
 import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
+import { EventApplicationPairService } from '@/app/event-application/event-application-pair/event-application-pair.service';
 import { GroupService } from '@/app/group/group.service';
 import { RequestContextDecorator } from '@/app/request-context.decorator';
 
@@ -42,6 +44,7 @@ export class EventResolver {
   constructor(
     private readonly eventService: EventService,
     private readonly groupService: GroupService,
+    private readonly eventApplicationPairService: EventApplicationPairService,
   ) {}
 
   @Query(() => [Event], { name: 'events' })
@@ -80,5 +83,15 @@ export class EventResolver {
     @Parent() event: Event,
   ): Promise<Group | null> {
     return this.groupService.getGroupById(context.account!.id, event.groupId);
+  }
+
+  @ResolveField(() => [EventApplicationPair], { name: 'eventApplicationPairs' })
+  @UseGuards(AuthGuard)
+  async eventApplicationPairs(
+    @Parent() event: Event,
+  ): Promise<Array<EventApplicationPair> | null> {
+    return this.eventApplicationPairService.getEventApplicationPairByEventId(
+      event.id,
+    );
   }
 }

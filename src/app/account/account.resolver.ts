@@ -11,6 +11,7 @@ import { I18n, I18nContext, I18nService } from 'nestjs-i18n';
 
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountSession } from '@/@generated/nestgraphql/account-session/account-session.model';
+import { EventApplication } from '@/@generated/nestgraphql/event-application/event-application.model';
 import { ExternalProfile } from '@/@generated/nestgraphql/external-profile/external-profile.model';
 import { GroupMember } from '@/@generated/nestgraphql/group-member/group-member.model';
 import { Notification } from '@/@generated/nestgraphql/notification/notification.model';
@@ -20,6 +21,7 @@ import { UpdateAccountInput } from '@/app/account/types';
 import { AccountSessionService } from '@/app/account-session/account-session.service';
 import { AuthGuard } from '@/app/auth/auth-guard/auth.guard';
 import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
+import { EventApplicationService } from '@/app/event-application/event-application.service';
 import { GroupMemberService } from '@/app/group/group-member/group-member.service';
 import { NotificationService } from '@/app/notification/notification.service';
 import { ProfileService } from '@/app/profile/profile.service';
@@ -33,6 +35,7 @@ export class AccountResolver {
     private profileService: ProfileService,
     private groupMemberService: GroupMemberService,
     private notificationService: NotificationService,
+    private eventApplicationService: EventApplicationService,
     private i18n: I18nService,
   ) {}
 
@@ -173,6 +176,22 @@ export class AccountResolver {
       accountIdToRemove,
       accountIdToLeave,
       profile,
+    );
+  }
+
+  @ResolveField(() => [EventApplication], { name: 'eventApplications' })
+  @UseGuards(AuthGuard)
+  async eventApplications(
+    @Parent() account: Account,
+    @RequestContextDecorator() context: RequestContext,
+    @I18n() i18n: I18nContext,
+  ): Promise<EventApplication[] | null> {
+    if (context.account?.id !== account.id) {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      throw new Error(i18n.t('errors.unauthorized'));
+    }
+    return this.eventApplicationService.getEventApplicationByAccountId(
+      account.id,
     );
   }
 }
