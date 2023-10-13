@@ -34,7 +34,7 @@ export class CreatePreferenceInput {
   comment: string;
 }
 
-@Resolver()
+@Resolver(() => Preference)
 export class PreferenceResolver {
   constructor(
     private readonly preferenceService: PreferenceService,

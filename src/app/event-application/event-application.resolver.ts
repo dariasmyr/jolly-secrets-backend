@@ -1,6 +1,9 @@
 import { UseGuards } from '@nestjs/common';
 import {
   Args,
+  Field,
+  InputType,
+  Int,
   Mutation,
   Parent,
   ResolveField,
@@ -18,7 +21,16 @@ import { RequestContextDecorator } from '@/app/request-context.decorator';
 
 import { EventApplicationService } from './event-application.service';
 
-@Resolver()
+@InputType()
+export class AddPreferencesToEventApplicationInput {
+  @Field()
+  eventApplicationId: number;
+
+  @Field(() => [Int])
+  preferenceIds: number[];
+}
+
+@Resolver(() => EventApplication)
 export class EventApplicationResolver {
   constructor(
     private readonly eventApplicationService: EventApplicationService,
@@ -35,15 +47,16 @@ export class EventApplicationResolver {
     );
   }
 
-  @Mutation(() => Event, { name: 'addPreferencesToEventApplication' })
+  @Mutation(() => EventApplication, {
+    name: 'addPreferencesToEventApplication',
+  })
   @UseGuards(AuthGuard)
   async addPreferencesToEventApplication(
-    @Args('preferences') preferences: Preference[],
-    @Args('eventApplicationId') eventApplicationId: number,
+    @Args('input') input: AddPreferencesToEventApplicationInput,
   ): Promise<EventApplication | null> {
     return this.eventApplicationService.addPreferencesToEventApplication(
-      eventApplicationId,
-      preferences,
+      input.eventApplicationId,
+      input.preferenceIds,
     );
   }
 

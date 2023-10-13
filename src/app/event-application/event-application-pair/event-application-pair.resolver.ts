@@ -44,7 +44,7 @@ export class UpdateApplicationPairInput {
   chatId: number;
 }
 
-@Resolver()
+@Resolver(() => EventApplicationPair)
 export class EventApplicationPairResolver {
   constructor(
     private readonly eventService: EventService,

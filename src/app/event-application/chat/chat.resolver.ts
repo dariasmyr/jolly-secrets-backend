@@ -11,7 +11,7 @@ import { EventApplicationPairService } from '@/app/event-application/event-appli
 import { MessageService } from '@/app/event-application/message/message.service';
 import { AuthGuard } from '@/common/logger-serve/auth/auth.guard';
 
-@Resolver()
+@Resolver(() => Chat)
 export class ChatResolver {
   constructor(
     private readonly chatService: ChatService,

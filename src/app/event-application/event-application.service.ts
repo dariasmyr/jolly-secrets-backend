@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import {
   EventApplication,
   EventApplicationStatus,
-  Preference,
   PriceRange,
 } from '@prisma/client';
 
@@ -23,13 +22,13 @@ export class EventApplicationService {
 
   async addPreferencesToEventApplication(
     eventApplicationId: number,
-    preferences: Preference[],
+    preferenceIds: number[],
   ): Promise<EventApplication> {
     return this.prismaService.eventApplication.update({
       where: { id: eventApplicationId },
       data: {
         preferences: {
-          create: preferences,
+          connect: preferenceIds.map((id) => ({ id })),
         },
       },
     });

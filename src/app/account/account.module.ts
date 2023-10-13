@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AccountSessionModule } from '@/app/account-session/account-session.module';
+import { EventApplicationModule } from '@/app/event-application/event-application.module';
 import { GroupModule } from '@/app/group/group.module';
 import { NotificationModule } from '@/app/notification/notification.module';
 import { NotificationService } from '@/app/notification/notification.service';
@@ -20,6 +21,7 @@ import { AccountService } from './account.service';
     AccountSessionModule,
     ConfigModule,
     forwardRef(() => GroupModule),
+    forwardRef(() => EventApplicationModule),
     forwardRef(() => NotificationModule),
     ProfileModule,
   ],

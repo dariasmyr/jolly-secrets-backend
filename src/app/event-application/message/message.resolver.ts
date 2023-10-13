@@ -28,7 +28,7 @@ export class CreateMessageInput {
   text: string;
 }
 
-@Resolver()
+@Resolver(() => Message)
 export class MessageResolver {
   constructor(
     private readonly accountService: AccountService,

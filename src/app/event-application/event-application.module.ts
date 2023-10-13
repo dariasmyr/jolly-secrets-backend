@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 
+import { AccountModule } from '@/app/account/account.module';
 import { EventModule } from '@/app/event/event.module';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
@@ -17,7 +18,7 @@ import { PreferenceResolver } from './preference/preference.resolver';
 import { PreferenceService } from './preference/preference.service';
 
 @Module({
-  imports: [forwardRef(() => EventModule)],
+  imports: [forwardRef(() => EventModule), forwardRef(() => AccountModule)],
   providers: [
     PrismaService,
     EventApplicationResolver,
@@ -32,6 +33,14 @@ import { PreferenceService } from './preference/preference.service';
     ChatMemberService,
     MessageService,
     MessageResolver,
+  ],
+  exports: [
+    EventApplicationService,
+    EventApplicationPairService,
+    PreferenceService,
+    ChatService,
+    ChatMemberService,
+    MessageService,
   ],
 })
 export class EventApplicationModule {}

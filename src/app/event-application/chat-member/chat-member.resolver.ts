@@ -28,7 +28,7 @@ export class CreateChatMemberInput {
   role: ChatMemberRole;
 }
 
-@Resolver()
+@Resolver(() => ChatMember)
 export class ChatMemberResolver {
   constructor(
     private readonly accountService: AccountService,
