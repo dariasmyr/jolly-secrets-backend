@@ -1,37 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import {
-  EventApplication,
-  EventApplicationStatus,
-  PriceRange,
-} from '@prisma/client';
+import { EventApplication, EventApplicationStatus } from '@prisma/client';
 
+import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
+import { EventApplicationPairService } from '@/app/event-application/event-application-pair/event-application-pair.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
 @Injectable()
 export class EventApplicationService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly eventApplicationPairService: EventApplicationPairService,
+  ) {}
 
-  async createEventApplication(accountId: number): Promise<EventApplication> {
-    return this.prismaService.eventApplication.create({
-      data: {
-        accountId,
-        status: EventApplicationStatus.LOOKING_FOR_PAIR,
-      },
-    });
-  }
+  async createEventApplication(
+    input: CreateEventApplicationInput,
+  ): Promise<EventApplication | null> {
+    const result =
+      await this.eventApplicationPairService.upsertEventApplicationPair(input);
 
-  async addPreferencesToEventApplication(
-    eventApplicationId: number,
-    preferenceIds: number[],
-  ): Promise<EventApplication> {
-    return this.prismaService.eventApplication.update({
-      where: { id: eventApplicationId },
-      data: {
-        preferences: {
-          connect: preferenceIds.map((id) => ({ id })),
-        },
-      },
-    });
+    if (!result) {
+      // eslint-disable-next-line unicorn/no-null
+      return null;
+    }
+
+    const eventApplications = await this.getEventApplicationByAccountId(
+      input.accountId,
+    );
+
+    if (eventApplications!.length === 0) {
+      // eslint-disable-next-line unicorn/no-null
+      return null;
+    }
+
+    const eventApplication = eventApplications!.find(
+      (_eventApplication) =>
+        _eventApplication.id === result.eventApplicationFirstId ||
+        _eventApplication.id === result.eventApplicationSecondId,
+    );
+    // eslint-disable-next-line unicorn/no-null
+    return eventApplication ?? null;
   }
 
   async setEventApplicationStatus(
@@ -70,27 +77,6 @@ export class EventApplicationService {
         preferences: {
           some: {
             id: preferenceId,
-          },
-        },
-      },
-    });
-  }
-
-  async findEventApplicationByCommonPriceRange(
-    priceRange: PriceRange,
-    eventId: number,
-  ): Promise<EventApplication | null> {
-    return this.prismaService.eventApplication.findFirst({
-      where: {
-        preferences: {
-          some: {
-            priceRange,
-          },
-        },
-        status: EventApplicationStatus.LOOKING_FOR_PAIR,
-        eventApplicationFirstPairs: {
-          some: {
-            eventId,
           },
         },
       },

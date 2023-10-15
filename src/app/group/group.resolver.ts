@@ -74,7 +74,7 @@ export class GroupResolver {
     @RequestContextDecorator() context: RequestContext,
     @Args('id') id: number,
   ): Promise<Group | null> {
-    return this.groupService.getGroupById(context.account!.id, id);
+    return this.groupService.getGroupByAccountId(context.account!.id, id);
   }
 
   @Mutation(() => Group, { name: 'createGroup' })

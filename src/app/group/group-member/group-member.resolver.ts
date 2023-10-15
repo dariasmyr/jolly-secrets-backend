@@ -52,7 +52,10 @@ export class GroupMemberResolver {
   @ResolveField(() => [Group])
   @UseGuards(AuthGuard)
   async group(@Parent() groupMember: GroupMember): Promise<Group | null> {
-    return this.groupService.getGroupById(groupMember.id, groupMember.groupId);
+    return this.groupService.getGroupByAccountId(
+      groupMember.id,
+      groupMember.groupId,
+    );
   }
 
   @Mutation(() => GroupMember)

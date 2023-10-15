@@ -7,16 +7,6 @@ import { PrismaService } from '@/common/prisma/prisma.service';
 export class ChatService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createChat(): Promise<Chat> {
-    return this.prismaService.chat.create({
-      data: {
-        messages: {
-          create: [],
-        },
-      },
-    });
-  }
-
   async getChatById(chatId: number): Promise<Chat | null> {
     return this.prismaService.chat.findUnique({
       where: {

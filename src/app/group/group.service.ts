@@ -40,7 +40,10 @@ export class GroupService {
     });
   }
 
-  async getGroupById(accountId: number, id: number): Promise<Group | null> {
+  async getGroupByAccountId(
+    accountId: number,
+    id: number,
+  ): Promise<Group | null> {
     const group = await this.prisma.group.findUnique({
       where: {
         id,
@@ -59,6 +62,18 @@ export class GroupService {
     } else {
       return null;
     }
+  }
+
+  async getGroupByEventId(eventId: number): Promise<Group | null> {
+    return this.prisma.group.findFirst({
+      where: {
+        events: {
+          some: {
+            id: eventId,
+          },
+        },
+      },
+    });
   }
 
   async ifAccountAdminOfGroup(
@@ -80,6 +95,30 @@ export class GroupService {
         },
       });
       return member?.role === 'ADMIN';
+    } else {
+      return null;
+    }
+  }
+
+  async ifAccountMemberOfGroup(
+    accountId: number,
+    id: number,
+  ): Promise<boolean | null> {
+    const group = await this.prisma.group.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (group?.type === 'PUBLIC') {
+      return false;
+    } else if (group?.type === 'PRIVATE') {
+      const member = await this.prisma.groupMember.findFirst({
+        where: {
+          groupId: id,
+          accountId: accountId,
+        },
+      });
+      return member?.role === 'MEMBER';
     } else {
       return null;
     }
@@ -108,7 +147,7 @@ export class GroupService {
     id: number,
     input: CreateOrUpdateGroupInput,
   ): Promise<Group> {
-    const group = await this.getGroupById(accountId, id);
+    const group = await this.getGroupByAccountId(accountId, id);
     if (!group) {
       throw new Error('Group not found');
     }
@@ -121,7 +160,7 @@ export class GroupService {
   }
 
   async deleteGroup(accountId: number, id: number): Promise<Group> {
-    const group = await this.getGroupById(accountId, id);
+    const group = await this.getGroupByAccountId(accountId, id);
     if (!group) {
       throw new Error('Group not found');
     }

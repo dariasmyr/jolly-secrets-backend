@@ -82,7 +82,10 @@ export class EventResolver {
     @RequestContextDecorator() context: RequestContext,
     @Parent() event: Event,
   ): Promise<Group | null> {
-    return this.groupService.getGroupById(context.account!.id, event.groupId);
+    return this.groupService.getGroupByAccountId(
+      context.account!.id,
+      event.groupId,
+    );
   }
 
   @ResolveField(() => [EventApplicationPair], { name: 'eventApplicationPairs' })

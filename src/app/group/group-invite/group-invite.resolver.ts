@@ -25,6 +25,9 @@ export class GroupInviteResolver {
   @ResolveField(() => [Group])
   @UseGuards(AuthGuard)
   async group(@Parent() groupInvite: GroupInvite): Promise<Group | null> {
-    return this.groupService.getGroupById(groupInvite.id, groupInvite.groupId);
+    return this.groupService.getGroupByAccountId(
+      groupInvite.id,
+      groupInvite.groupId,
+    );
   }
 }

@@ -1,54 +1,151 @@
 import { Injectable } from '@nestjs/common';
-import { EventApplicationPair } from '@prisma/client';
+import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
 
-import {
-  CreateApplicationPairInput,
-  UpdateApplicationPairInput,
-} from '@/app/event-application/event-application-pair/event-application-pair.resolver';
+import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
+import { CreatePreferenceInput } from '@/app/event-application/preference/preference.resolver';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
 @Injectable()
 export class EventApplicationPairService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createEventApplicationPair(
-    input: CreateApplicationPairInput,
+  async upsertEventApplicationPair(
+    input: CreateEventApplicationInput,
   ): Promise<EventApplicationPair> {
-    const { eventId, eventApplicationFirstId } = input;
-    return this.prismaService.eventApplicationPair.create({
-      data: {
-        eventApplicationFirstId,
-        eventId,
-      },
+    const suitableEventApplicationPair = await this.findSuitableApplicationPair(
+      input.eventId,
+      input.preferences,
+    );
+
+    return suitableEventApplicationPair
+      ? this.updateEventApplicationPair(input, suitableEventApplicationPair.id)
+      : this.createEventApplicationPair(input);
+  }
+
+  private async findSuitableApplicationPair(
+    eventId: number,
+    preferences: CreatePreferenceInput[],
+  ): Promise<EventApplicationPair | undefined> {
+    const evenApplicationsWithoutPair: EventApplicationPair[] =
+      await this.prismaService.eventApplicationPair.findMany({
+        where: {
+          eventId,
+          // eslint-disable-next-line unicorn/no-null
+          eventApplicationSecondId: null,
+        },
+        include: { applicationFirst: true },
+      });
+
+    if (evenApplicationsWithoutPair.length === 0) {
+      return undefined;
+    }
+    for (const eventApplicationPair of evenApplicationsWithoutPair) {
+      const { eventApplicationFirstId } = eventApplicationPair;
+
+      const eventApplicationFirstPreferences =
+        await this.prismaService.preference.findMany({
+          where: {
+            applicationId: eventApplicationFirstId,
+          },
+        });
+
+      const uniquePriceRangesFromDatabaseArray = [
+        ...new Set(
+          eventApplicationFirstPreferences.map((preference) => {
+            return preference.priceRange.toString();
+          }),
+        ),
+      ];
+
+      const uniquePriceRangesFromInputArray = new Set(
+        new Set(
+          preferences.map((preference) => {
+            return preference.priceRange.toString();
+          }),
+        ),
+      );
+
+      const crossPriceRanges = uniquePriceRangesFromDatabaseArray.filter(
+        (priceRange) => {
+          return uniquePriceRangesFromInputArray.has(priceRange);
+        },
+      );
+
+      if (crossPriceRanges.length > 0) {
+        return eventApplicationPair;
+      }
+    }
+    return undefined;
+  }
+
+  async createEventApplicationPair(
+    input: CreateEventApplicationInput,
+  ): Promise<EventApplicationPair> {
+    const { accountId, eventId, preferences } = input;
+    return this.prismaService.$transaction(async (prisma) => {
+      const eventApplication = await prisma.eventApplication.create({
+        data: {
+          accountId,
+          status: EventApplicationStatus.LOOKING_FOR_PAIR,
+          preferences: {
+            create: preferences,
+          },
+        },
+      });
+
+      return prisma.eventApplicationPair.create({
+        data: {
+          eventApplicationFirstId: eventApplication.id,
+          eventId,
+        },
+      });
     });
   }
 
   async updateEventApplicationPair(
-    input: UpdateApplicationPairInput,
-  ): Promise<EventApplicationPair | undefined> {
-    const {
-      eventId,
-      eventApplicationFirstId,
-      eventApplicationSecondId,
-      chatId,
-    } = input;
-    const eventApplicationPair =
-      await this.prismaService.eventApplicationPair.findFirst({
-        where: {
-          eventApplicationFirstId,
-          eventId,
+    input: CreateEventApplicationInput,
+    eventApplicationPairId: number,
+  ): Promise<EventApplicationPair> {
+    const { accountId, preferences } = input;
+    return this.prismaService.$transaction(async (prisma) => {
+      const eventApplication = await prisma.eventApplication.create({
+        data: {
+          accountId,
+          status: EventApplicationStatus.PAIRED,
+          preferences: {
+            create: preferences,
+          },
         },
       });
 
-    return eventApplicationPair
-      ? this.prismaService.eventApplicationPair.update({
-          where: { id: eventApplicationPair.id },
-          data: {
-            eventApplicationSecondId,
-            chatId,
+      const chat = await prisma.chat.create({
+        data: {
+          members: {
+            create: [
+              {
+                accountId,
+              },
+              {
+                accountId: eventApplication.accountId,
+              },
+            ],
           },
-        })
-      : undefined;
+          messages: {
+            create: [],
+          },
+        },
+      });
+
+      return prisma.eventApplicationPair.update({
+        where: {
+          id: eventApplicationPairId,
+        },
+        data: {
+          eventApplicationSecondId: eventApplication.id,
+          chatId: chat.id,
+        },
+      });
+    });
   }
 
   async getEventApplicationPairByEventId(
@@ -72,18 +169,6 @@ export class EventApplicationPairService {
   ): Promise<EventApplicationPair | null> {
     return this.prismaService.eventApplicationPair.findFirst({
       where: { chatId },
-    });
-  }
-
-  async getEventApplicationWithoutPairByEventId(
-    eventId: number,
-  ): Promise<EventApplicationPair | null> {
-    return this.prismaService.eventApplicationPair.findFirst({
-      where: {
-        eventId,
-        // eslint-disable-next-line unicorn/no-null
-        eventApplicationSecondId: null,
-      },
     });
   }
 }
