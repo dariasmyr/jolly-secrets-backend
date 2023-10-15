@@ -76,6 +76,14 @@ export class GroupService {
     });
   }
 
+  async getGroupId(id: number): Promise<Group | null> {
+    return this.prisma.group.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
   async ifAccountAdminOfGroup(
     accountId: number,
     id: number,
@@ -110,7 +118,7 @@ export class GroupService {
       },
     });
     if (group?.type === 'PUBLIC') {
-      return false;
+      return true;
     } else if (group?.type === 'PRIVATE') {
       const member = await this.prisma.groupMember.findFirst({
         where: {

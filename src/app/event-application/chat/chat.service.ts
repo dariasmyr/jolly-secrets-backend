@@ -28,28 +28,4 @@ export class ChatService {
       },
     });
   }
-
-  async getChatByMessageId(messageId: number): Promise<Chat | null> {
-    return this.prismaService.chat.findFirst({
-      where: {
-        messages: {
-          some: {
-            id: messageId,
-          },
-        },
-      },
-    });
-  }
-
-  async getChatByChatMemberId(chatMemberId: number): Promise<Chat | null> {
-    return this.prismaService.chat.findFirst({
-      where: {
-        members: {
-          some: {
-            id: chatMemberId,
-          },
-        },
-      },
-    });
-  }
 }

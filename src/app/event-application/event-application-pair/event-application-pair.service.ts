@@ -108,13 +108,32 @@ export class EventApplicationPairService {
   ): Promise<EventApplicationPair> {
     const { accountId, preferences } = input;
     return this.prismaService.$transaction(async (prisma) => {
-      const eventApplication = await prisma.eventApplication.create({
+      const eventApplicationSecond = await prisma.eventApplication.create({
         data: {
           accountId,
           status: EventApplicationStatus.PAIRED,
           preferences: {
             create: preferences,
           },
+        },
+      });
+
+      const eventApplicationFirst =
+        await prisma.eventApplicationPair.findUnique({
+          where: {
+            id: eventApplicationPairId,
+          },
+          include: {
+            applicationFirst: true,
+          },
+        });
+
+      await prisma.eventApplication.update({
+        where: {
+          id: eventApplicationFirst!.eventApplicationFirstId,
+        },
+        data: {
+          status: EventApplicationStatus.PAIRED,
         },
       });
 
@@ -126,7 +145,7 @@ export class EventApplicationPairService {
                 accountId,
               },
               {
-                accountId: eventApplication.accountId,
+                accountId: eventApplicationSecond.accountId,
               },
             ],
           },
@@ -141,7 +160,7 @@ export class EventApplicationPairService {
           id: eventApplicationPairId,
         },
         data: {
-          eventApplicationSecondId: eventApplication.id,
+          eventApplicationSecondId: eventApplicationSecond.id,
           chatId: chat.id,
         },
       });

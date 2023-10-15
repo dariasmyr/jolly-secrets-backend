@@ -81,30 +81,12 @@ export class EventApplicationPairResolver {
     @Args('id') id: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<EventApplicationPair | null> {
-    const applications =
-      await this.eventApplicationService.getEventApplicationByAccountId(
-        context.account!.id,
-      );
-    if (!applications)
-      // eslint-disable-next-line sonarjs/no-duplicate-string
-      throw new Error(this.i18n.t('errors.unauthorized'));
-
     const eventApplicationPair =
       await this.eventApplicationPairService.getEventApplicationPairById(id);
     if (!eventApplicationPair)
       // eslint-disable-next-line sonarjs/no-duplicate-string
-      throw new Error(this.i18n.t('errors.unauthorized'));
-
-    const isApplicationOwner = applications.some(
-      (application) =>
-        application.id === eventApplicationPair.eventApplicationFirstId ||
-        application.id === eventApplicationPair.eventApplicationSecondId,
-    );
-
-    if (!isApplicationOwner)
-      // eslint-disable-next-line sonarjs/no-duplicate-string
-      throw new Error(this.i18n.t('errors.unauthorized'));
-
+      throw new Error(this.i18n.t('errors.notFound'));
+    await this.authorize(context, eventApplicationPair);
     return this.eventApplicationPairService.getEventApplicationPairById(id);
   }
 
