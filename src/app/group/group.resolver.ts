@@ -9,6 +9,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { I18nService } from 'nestjs-i18n';
 
 import { Event } from '@/@generated/nestgraphql/event/event.model';
 import { Group } from '@/@generated/nestgraphql/group/group.model';
@@ -43,7 +44,22 @@ export class GroupResolver {
     private readonly groupMemberService: GroupMemberService,
     private readonly groupInviteService: GroupInviteService,
     private readonly eventService: EventService,
+    private i18n: I18nService,
   ) {}
+
+  private async checkGroupMembership(
+    accountId: number,
+    groupId: number,
+  ): Promise<void> {
+    const isMember = await this.groupService.ifAccountMemberOfGroup(
+      accountId,
+      groupId,
+    );
+
+    if (!isMember) {
+      throw new Error(this.i18n.t('errors.unauthorized'));
+    }
+  }
 
   @Query(() => [Group], { name: 'publicGroups' })
   @UseGuards(AuthGuard)
@@ -74,6 +90,7 @@ export class GroupResolver {
     @RequestContextDecorator() context: RequestContext,
     @Args('id') id: number,
   ): Promise<Group | null> {
+    await this.checkGroupMembership(context.account!.id, id);
     return this.groupService.getGroupByAccountId(context.account!.id, id);
   }
 
@@ -93,6 +110,7 @@ export class GroupResolver {
     @Args('id') id: number,
     @Args('input') input: CreateOrUpdateGroupInput,
   ): Promise<Group> {
+    await this.checkGroupMembership(context.account!.id, id);
     return this.groupService.updateGroup(context.account!.id, id, input);
   }
 
@@ -102,18 +120,27 @@ export class GroupResolver {
     @RequestContextDecorator() context: RequestContext,
     @Args('id') id: number,
   ): Promise<Group> {
+    await this.checkGroupMembership(context.account!.id, id);
     return this.groupService.deleteGroup(context.account!.id, id);
   }
 
   @ResolveField(() => [Group])
   @UseGuards(AuthGuard)
-  async members(@Parent() group: Group): Promise<Array<GroupMember> | null> {
+  async members(
+    @Parent() group: Group,
+    @RequestContextDecorator() context: RequestContext,
+  ): Promise<Array<GroupMember> | null> {
+    await this.checkGroupMembership(context.account!.id, group.id);
     return this.groupMemberService.getGroupMember(group.id);
   }
 
   @ResolveField(() => [Group])
   @UseGuards(AuthGuard)
-  async events(@Parent() group: Group): Promise<Array<Event> | null> {
+  async events(
+    @Parent() group: Group,
+    @RequestContextDecorator() context: RequestContext,
+  ): Promise<Array<Event> | null> {
+    await this.checkGroupMembership(context.account!.id, group.id);
     return this.eventService.getEventsByGroupId(group.id);
   }
 
@@ -121,7 +148,9 @@ export class GroupResolver {
   @UseGuards(AuthGuard)
   async groupInvites(
     @Parent() group: Group,
+    @RequestContextDecorator() context: RequestContext,
   ): Promise<Array<GroupInvite> | null> {
+    await this.checkGroupMembership(context.account!.id, group.id);
     return this.groupInviteService.getGroupInvitesByGroupId(group.id);
   }
 }

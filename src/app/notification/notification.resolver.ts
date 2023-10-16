@@ -57,19 +57,15 @@ export class NotificationResolver {
     );
   }
 
-  @Mutation(() => Notification, { name: 'createNotification' })
-  @UseGuards(AuthGuard)
-  async createNotification(
-    @Args('input') input: CreateNotificationInput,
-  ): Promise<Notification> {
-    return this.notificationService.createNotification(input);
-  }
-
   @Mutation(() => Notification, { name: 'setNotificationAsRead' })
   @UseGuards(AuthGuard)
   async setNotificationAsRead(
+    @RequestContextDecorator() context: RequestContext,
     @Args('id') id: number,
   ): Promise<Notification | null> {
-    return this.notificationService.setNotificationAsRead(id);
+    return this.notificationService.setNotificationAsRead(
+      context.account!.id,
+      id,
+    );
   }
 }
