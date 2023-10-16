@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 
 import { AccountModule } from '@/app/account/account.module';
 import { EventModule } from '@/app/event/event.module';
+import { GroupModule } from '@/app/group/group.module';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
 import { ChatResolver } from './chat/chat.resolver';
@@ -18,7 +19,11 @@ import { PreferenceResolver } from './preference/preference.resolver';
 import { PreferenceService } from './preference/preference.service';
 
 @Module({
-  imports: [forwardRef(() => EventModule), forwardRef(() => AccountModule)],
+  imports: [
+    forwardRef(() => EventModule),
+    forwardRef(() => AccountModule),
+    forwardRef(() => GroupModule),
+  ],
   providers: [
     PrismaService,
     EventApplicationResolver,

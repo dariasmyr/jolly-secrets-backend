@@ -3,6 +3,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { AccountModule } from '@/app/account/account.module';
 import { AccountSessionModule } from '@/app/account-session/account-session.module';
 import { EventModule } from '@/app/event/event.module';
+import { EventApplicationModule } from '@/app/event-application/event-application.module';
 import { CryptoService } from '@/common/crypto/crypto.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
@@ -18,6 +19,7 @@ import { GroupMemberService } from './group-member/group-member.service';
     forwardRef(() => AccountModule),
     forwardRef(() => AccountSessionModule),
     forwardRef(() => EventModule),
+    forwardRef(() => EventApplicationModule),
   ],
   providers: [
     GroupResolver,
