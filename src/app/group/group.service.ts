@@ -26,14 +26,18 @@ export class GroupService {
     offset: number,
     limit: number,
   ): Promise<Array<Group>> {
+    const groupMember = await this.prisma.groupMember.findMany({
+      where: {
+        accountId,
+      },
+    });
+
     return this.prisma.group.findMany({
       where: {
-        type: 'PRIVATE',
-        members: {
-          some: {
-            id: accountId,
-          },
+        id: {
+          in: groupMember.map((member) => member.groupId),
         },
+        type: 'PRIVATE',
       },
       skip: offset,
       take: limit,
@@ -139,7 +143,8 @@ export class GroupService {
     return this.prisma.group.create({
       data: {
         ...input,
-        pictureUrl: 'images/rainbow-vortex.png',
+        pictureUrl:
+          'https://catastic.b-cdn.net/wp-content/uploads/2023/04/bengal-cat-origin.jpg',
         status: GroupStatus.OPEN,
         members: {
           create: {

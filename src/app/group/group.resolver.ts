@@ -3,6 +3,7 @@ import {
   Args,
   Field,
   InputType,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -33,7 +34,7 @@ export class CreateOrUpdateGroupInput {
   @Field()
   description: string;
 
-  @Field()
+  @Field(() => GroupType)
   type: GroupType;
 }
 
@@ -64,8 +65,8 @@ export class GroupResolver {
   @Query(() => [Group], { name: 'publicGroups' })
   @UseGuards(AuthGuard)
   async publicGroups(
-    @Args('offset') offset: number,
-    @Args('limit') limit: number,
+    @Args('offset', { type: () => Int }) offset: number,
+    @Args('limit', { type: () => Int }) limit: number,
   ): Promise<Array<Group>> {
     return this.groupService.getPublicGroups(offset, limit);
   }
@@ -74,8 +75,8 @@ export class GroupResolver {
   @UseGuards(AuthGuard)
   async privateGroups(
     @RequestContextDecorator() context: RequestContext,
-    @Args('offset') offset: number,
-    @Args('limit') limit: number,
+    @Args('offset', { type: () => Int }) offset: number,
+    @Args('limit', { type: () => Int }) limit: number,
   ): Promise<Array<Group>> {
     return this.groupService.getPrivateGroups(
       context.account!.id,
