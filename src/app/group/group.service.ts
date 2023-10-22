@@ -80,14 +80,6 @@ export class GroupService {
     });
   }
 
-  async getGroupId(id: number): Promise<Group | null> {
-    return this.prisma.group.findUnique({
-      where: {
-        id,
-      },
-    });
-  }
-
   async ifAccountAdminOfGroup(
     accountId: number,
     id: number,
@@ -130,7 +122,7 @@ export class GroupService {
           accountId: accountId,
         },
       });
-      return member?.role === 'MEMBER';
+      return member?.role === 'MEMBER' || member?.role === 'ADMIN';
     } else {
       return null;
     }
@@ -149,6 +141,7 @@ export class GroupService {
         members: {
           create: {
             accountId: accountId,
+            role: 'ADMIN',
           },
         },
       },
