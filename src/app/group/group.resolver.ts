@@ -62,6 +62,20 @@ export class GroupResolver {
     }
   }
 
+  private async checkIfMemberIsGroupAdmin(
+    accountId: number,
+    groupId: number,
+  ): Promise<void> {
+    const isAdmin = await this.groupService.isMemberGroupAdmin(
+      accountId,
+      groupId,
+    );
+
+    if (!isAdmin) {
+      throw new Error(this.i18n.t('errors.unauthorized'));
+    }
+  }
+
   @Query(() => [Group], { name: 'publicGroups' })
   @UseGuards(AuthGuard)
   async publicGroups(
@@ -112,6 +126,7 @@ export class GroupResolver {
     @Args('input') input: CreateOrUpdateGroupInput,
   ): Promise<Group> {
     await this.checkGroupMembership(context.account!.id, id);
+    await this.checkIfMemberIsGroupAdmin(context.account!.id, id);
     return this.groupService.updateGroup(context.account!.id, id, input);
   }
 
@@ -119,9 +134,10 @@ export class GroupResolver {
   @UseGuards(AuthGuard)
   async deleteGroup(
     @RequestContextDecorator() context: RequestContext,
-    @Args('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
   ): Promise<Group> {
     await this.checkGroupMembership(context.account!.id, id);
+    await this.checkIfMemberIsGroupAdmin(context.account!.id, id);
     return this.groupService.deleteGroup(context.account!.id, id);
   }
 

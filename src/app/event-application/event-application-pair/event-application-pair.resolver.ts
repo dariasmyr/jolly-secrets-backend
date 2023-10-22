@@ -62,7 +62,7 @@ export class EventApplicationPairResolver {
       // eslint-disable-next-line sonarjs/no-duplicate-string
       throw new Error(this.i18n.t('errors.unauthorized'));
 
-    const isAdmin = await this.groupService.ifAccountAdminOfGroup(
+    const isAdmin = await this.groupService.isMemberGroupAdmin(
       context.account!.id,
       group.id,
     );

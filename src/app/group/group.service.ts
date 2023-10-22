@@ -15,6 +15,9 @@ export class GroupService {
     return this.prisma.group.findMany({
       where: {
         type: 'PUBLIC',
+        status: {
+          not: GroupStatus.CLOSED,
+        },
       },
       skip: offset,
       take: limit,
@@ -38,6 +41,9 @@ export class GroupService {
           in: groupMember.map((member) => member.groupId),
         },
         type: 'PRIVATE',
+        status: {
+          not: GroupStatus.CLOSED,
+        },
       },
       skip: offset,
       take: limit,
@@ -80,7 +86,7 @@ export class GroupService {
     });
   }
 
-  async ifAccountAdminOfGroup(
+  async isMemberGroupAdmin(
     accountId: number,
     id: number,
   ): Promise<boolean | null> {
@@ -89,9 +95,7 @@ export class GroupService {
         id,
       },
     });
-    if (group?.type === 'PUBLIC') {
-      return false;
-    } else if (group?.type === 'PRIVATE') {
+    if (group?.type === 'PUBLIC' || group?.type === 'PRIVATE') {
       const member = await this.prisma.groupMember.findFirst({
         where: {
           groupId: id,
@@ -113,9 +117,7 @@ export class GroupService {
         id,
       },
     });
-    if (group?.type === 'PUBLIC') {
-      return true;
-    } else if (group?.type === 'PRIVATE') {
+    if (group?.type === 'PUBLIC' || group?.type === 'PRIVATE') {
       const member = await this.prisma.groupMember.findFirst({
         where: {
           groupId: id,
@@ -170,22 +172,13 @@ export class GroupService {
     if (!group) {
       throw new Error('Group not found');
     }
-
-    const isAccountAdminOfGroup = await this.ifAccountAdminOfGroup(
-      accountId,
-      id,
-    );
-    if (isAccountAdminOfGroup) {
-      return this.prisma.group.update({
-        where: {
-          id,
-        },
-        data: {
-          status: GroupStatus.CLOSED,
-        },
-      });
-    } else {
-      throw new Error('Account is not admin of group');
-    }
+    return this.prisma.group.update({
+      where: {
+        id,
+      },
+      data: {
+        status: GroupStatus.CLOSED,
+      },
+    });
   }
 }
