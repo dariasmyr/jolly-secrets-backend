@@ -22,7 +22,7 @@ export class TelegramResolver {
     @RealIp() ip: string,
   ): Promise<AuthResponse> {
     try {
-      return this.telegramService.loginWithTelegram(token, context, ip);
+      return await this.telegramService.loginWithTelegram(token, context, ip);
     } catch (error) {
       throw new Error(
         `Failed to log in with Telegram: ${(error as Error).message}`,

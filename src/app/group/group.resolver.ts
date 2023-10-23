@@ -143,21 +143,13 @@ export class GroupResolver {
 
   @ResolveField(() => [Group])
   @UseGuards(AuthGuard)
-  async members(
-    @Parent() group: Group,
-    @RequestContextDecorator() context: RequestContext,
-  ): Promise<Array<GroupMember> | null> {
-    await this.checkGroupMembership(context.account!.id, group.id);
+  async members(@Parent() group: Group): Promise<Array<GroupMember> | null> {
     return this.groupMemberService.getGroupMember(group.id);
   }
 
   @ResolveField(() => [Group])
   @UseGuards(AuthGuard)
-  async events(
-    @Parent() group: Group,
-    @RequestContextDecorator() context: RequestContext,
-  ): Promise<Array<Event> | null> {
-    await this.checkGroupMembership(context.account!.id, group.id);
+  async events(@Parent() group: Group): Promise<Array<Event> | null> {
     return this.eventService.getEventsByGroupId(group.id);
   }
 

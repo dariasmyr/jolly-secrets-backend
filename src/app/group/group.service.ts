@@ -3,7 +3,9 @@
 import { Injectable } from '@nestjs/common';
 import { Group } from '@prisma/client';
 
+import { GroupMemberRole } from '@/@generated/nestgraphql/prisma/group-member-role.enum';
 import { GroupStatus } from '@/@generated/nestgraphql/prisma/group-status.enum';
+import { GroupType } from '@/@generated/nestgraphql/prisma/group-type.enum';
 import { CreateOrUpdateGroupInput } from '@/app/group/group.resolver';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
@@ -14,7 +16,7 @@ export class GroupService {
   async getPublicGroups(offset: number, limit: number): Promise<Array<Group>> {
     return this.prisma.group.findMany({
       where: {
-        type: 'PUBLIC',
+        type: GroupType.PUBLIC,
         status: {
           not: GroupStatus.CLOSED,
         },
@@ -40,7 +42,7 @@ export class GroupService {
         id: {
           in: groupMember.map((member) => member.groupId),
         },
-        type: 'PRIVATE',
+        type: GroupType.PRIVATE,
         status: {
           not: GroupStatus.CLOSED,
         },
@@ -59,9 +61,9 @@ export class GroupService {
         id,
       },
     });
-    if (group?.type === 'PUBLIC') {
+    if (group?.type === GroupType.PUBLIC) {
       return group;
-    } else if (group?.type === 'PRIVATE') {
+    } else if (group?.type === GroupType.PRIVATE) {
       const member = await this.prisma.groupMember.findFirst({
         where: {
           groupId: id,
@@ -95,14 +97,14 @@ export class GroupService {
         id,
       },
     });
-    if (group?.type === 'PUBLIC' || group?.type === 'PRIVATE') {
+    if (group?.type === GroupType.PUBLIC || group?.type === GroupType.PRIVATE) {
       const member = await this.prisma.groupMember.findFirst({
         where: {
           groupId: id,
           accountId: accountId,
         },
       });
-      return member?.role === 'ADMIN';
+      return member?.role === GroupMemberRole.ADMIN;
     } else {
       return null;
     }
@@ -117,14 +119,17 @@ export class GroupService {
         id,
       },
     });
-    if (group?.type === 'PUBLIC' || group?.type === 'PRIVATE') {
+    if (group?.type === GroupType.PUBLIC || group?.type === GroupType.PRIVATE) {
       const member = await this.prisma.groupMember.findFirst({
         where: {
           groupId: id,
           accountId: accountId,
         },
       });
-      return member?.role === 'MEMBER' || member?.role === 'ADMIN';
+      return (
+        member?.role === GroupMemberRole.MEMBER ||
+        member?.role === GroupMemberRole.ADMIN
+      );
     } else {
       return null;
     }
@@ -143,7 +148,7 @@ export class GroupService {
         members: {
           create: {
             accountId: accountId,
-            role: 'ADMIN',
+            role: GroupMemberRole.ADMIN,
           },
         },
       },
