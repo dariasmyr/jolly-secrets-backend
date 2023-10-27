@@ -103,7 +103,7 @@ export class GroupResolver {
   @UseGuards(AuthGuard)
   async group(
     @RequestContextDecorator() context: RequestContext,
-    @Args('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
   ): Promise<Group | null> {
     await this.checkGroupMembership(context.account!.id, id);
     return this.groupService.getGroupByAccountId(context.account!.id, id);

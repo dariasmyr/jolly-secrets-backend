@@ -1,5 +1,13 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 
 import { Group } from '@/@generated/nestgraphql/group/group.model';
 import { GroupInvite } from '@/@generated/nestgraphql/group-invite/group-invite.model';
@@ -20,6 +28,14 @@ export class GroupInviteResolver {
     @Args('groupId') groupId: number,
   ): Promise<Array<GroupInvite> | null> {
     return this.groupInviteService.getGroupInvitesByGroupId(groupId);
+  }
+
+  @Mutation(() => GroupInvite, { name: 'createGroupInvite' })
+  @UseGuards(AuthGuard)
+  async createGroupInvite(
+    @Args('groupId', { type: () => Int }) groupId: number,
+  ): Promise<GroupInvite> {
+    return this.groupInviteService.createGroupInviteCode(groupId);
   }
 
   @ResolveField(() => [Group])
