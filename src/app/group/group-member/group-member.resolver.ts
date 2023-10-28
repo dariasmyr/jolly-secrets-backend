@@ -15,8 +15,10 @@ import { Group } from '@/@generated/nestgraphql/group/group.model';
 import { GroupMember } from '@/@generated/nestgraphql/group-member/group-member.model';
 import { AccountService } from '@/app/account/account.service';
 import { AuthGuard } from '@/app/auth/auth-guard/auth.guard';
+import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
 import { GroupService } from '@/app/group/group.service';
 import { GroupMemberService } from '@/app/group/group-member/group-member.service';
+import { RequestContextDecorator } from '@/app/request-context.decorator';
 
 @InputType()
 export class CreateGroupMemberInput {
@@ -24,7 +26,7 @@ export class CreateGroupMemberInput {
   accountId: number;
 
   @Field()
-  link?: string;
+  code?: string;
 }
 
 @Resolver(() => GroupMember)
@@ -53,7 +55,7 @@ export class GroupMemberResolver {
   @UseGuards(AuthGuard)
   async group(@Parent() groupMember: GroupMember): Promise<Group | null> {
     return this.groupService.getGroupByAccountId(
-      groupMember.id,
+      groupMember.accountId,
       groupMember.groupId,
     );
   }
@@ -61,8 +63,9 @@ export class GroupMemberResolver {
   @Mutation(() => GroupMember)
   @UseGuards(AuthGuard)
   async createGroupMember(
-    @Args('input') input: CreateGroupMemberInput,
+    @RequestContextDecorator() context: RequestContext,
+    @Args('code') code: string,
   ): Promise<GroupMember | null> {
-    return this.groupMemberService.createGroupMember(input);
+    return this.groupMemberService.createGroupMember(context.account!.id, code);
   }
 }

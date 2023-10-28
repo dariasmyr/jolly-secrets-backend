@@ -1,5 +1,3 @@
-import process from 'node:process';
-
 import { Injectable } from '@nestjs/common';
 import { GroupInvite } from '@prisma/client';
 
@@ -25,7 +23,7 @@ export class GroupInviteService {
   }
 
   async createGroupInviteCode(groupId: number): Promise<GroupInvite> {
-    const codeLength: number = 16;
+    const codeLength: number = 32;
     const code = await this.cryptoService.generateRandomString(
       RandomStringType.CODE,
       codeLength,
@@ -41,35 +39,18 @@ export class GroupInviteService {
     });
   }
 
-  async createGroupInviteLink(groupInvite: GroupInvite): Promise<string> {
-    const code = groupInvite.code;
-    const group = groupInvite.groupId;
-    const domain = process.env.DOMAIN;
-    if (!code) {
-      throw new Error('Failed to get code');
-    }
-    return `${domain}/invite?code=${code}&group=${group}`;
-  }
-
-  async verifyGroupInviteLink(link: string): Promise<GroupInvite | null> {
-    const code = link.split('?code=')[1];
-    const groupId = Number(link.split('&group=')[1]);
+  async verifyGroupInviteCode(code: string): Promise<GroupInvite | null> {
     return this.prisma.groupInvite.findFirst({
       where: {
         code,
-        groupId,
       },
     });
   }
 
-  async deleteGroupInvite(
-    code: string,
-    groupId: number,
-  ): Promise<GroupInvite | null> {
+  async deleteGroupInvite(code: string): Promise<GroupInvite | null> {
     return this.prisma.groupInvite.delete({
       where: {
         code,
-        groupId,
       },
     });
   }
