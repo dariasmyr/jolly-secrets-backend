@@ -122,7 +122,7 @@ export class GroupResolver {
   @UseGuards(AuthGuard)
   async updateGroup(
     @RequestContextDecorator() context: RequestContext,
-    @Args('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
     @Args('input') input: CreateOrUpdateGroupInput,
   ): Promise<Group> {
     await this.checkGroupMembership(context.account!.id, id);
