@@ -3,6 +3,7 @@ import {
   Args,
   Field,
   InputType,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -24,7 +25,7 @@ import { EventService } from './event.service';
 
 @InputType()
 export class CreateEventInput {
-  @Field()
+  @Field(() => Int)
   groupId: number;
 
   @Field()
@@ -66,7 +67,7 @@ export class EventResolver {
   @Query(() => [Event], { name: 'events' })
   @UseGuards(AuthGuard)
   async events(
-    @Args('groupId') groupId: number,
+    @Args('groupId', { type: () => Int }) groupId: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<Array<Event> | null> {
     await this.checkGroupMembership(context.account!.id, groupId);
@@ -76,7 +77,7 @@ export class EventResolver {
   @Query(() => Event, { name: 'event' })
   @UseGuards(AuthGuard)
   async event(
-    @Args('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<Event | null> {
     const group = await this.groupService.getGroupByEventId(id);
