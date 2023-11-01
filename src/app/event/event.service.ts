@@ -10,6 +10,10 @@ export class EventService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createEvent(input: CreateEventInput): Promise<Event> {
+    if (input.endsAt <= input.startsAt) {
+      throw new Error('End date must be later than start date');
+    }
+
     return this.prismaService.event.create({
       data: {
         pictureUrl:
