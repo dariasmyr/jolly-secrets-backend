@@ -119,7 +119,7 @@ export class GroupService {
         id,
       },
     });
-    if (group?.type === GroupType.PUBLIC || group?.type === GroupType.PRIVATE) {
+    if (group?.type === GroupType.PRIVATE) {
       const member = await this.prisma.groupMember.findFirst({
         where: {
           groupId: id,
@@ -130,9 +130,10 @@ export class GroupService {
         member?.role === GroupMemberRole.MEMBER ||
         member?.role === GroupMemberRole.ADMIN
       );
-    } else {
-      return null;
+    } else if (group?.type === GroupType.PUBLIC) {
+      return true;
     }
+    return null;
   }
 
   async createGroup(
