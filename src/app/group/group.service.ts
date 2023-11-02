@@ -26,6 +26,15 @@ export class GroupService {
     });
   }
 
+  async isGroupNameAvailable(name: string): Promise<boolean> {
+    const group = await this.prisma.group.findFirst({
+      where: {
+        name,
+      },
+    });
+    return !group;
+  }
+
   async getPrivateGroups(
     accountId: number,
     offset: number,

@@ -109,6 +109,12 @@ export class GroupResolver {
     return this.groupService.getGroupByAccountId(context.account!.id, id);
   }
 
+  @Query(() => Boolean, { name: 'isGroupNameAvailable' })
+  @UseGuards(AuthGuard)
+  async isGroupNameAvailable(@Args('name') name: string): Promise<boolean> {
+    return this.groupService.isGroupNameAvailable(name);
+  }
+
   @Mutation(() => Group, { name: 'createGroup' })
   @UseGuards(AuthGuard)
   async createGroup(

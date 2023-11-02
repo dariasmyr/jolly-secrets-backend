@@ -37,11 +37,27 @@ export class EventService {
   }
 
   async getEventsByGroupId(groupId: number): Promise<Array<Event> | null> {
-    return this.prismaService.event.findMany({
+    const events = await this.prismaService.event.findMany({
       where: {
         groupId,
       },
     });
+
+    // eslint-disable-next-line unicorn/no-null
+    if (events === null) return null;
+
+    const updatedEvents = events.map(async (event) => {
+      if (event.endsAt < new Date()) {
+        // If event has already ended, update its status to EXPIRED
+        await this.prismaService.event.update({
+          where: { id: event.id },
+          data: { status: EventStatus.EXPIRED },
+        });
+      }
+      return event;
+    });
+
+    return Promise.all(updatedEvents);
   }
 
   async isEventDeletable(id: number): Promise<boolean> {
