@@ -196,4 +196,12 @@ export class GroupService {
       },
     });
   }
+
+  async getGroupById(id: number): Promise<Group | null> {
+    return this.prisma.group.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
 }

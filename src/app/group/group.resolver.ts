@@ -115,6 +115,20 @@ export class GroupResolver {
     return this.groupService.isGroupNameAvailable(name);
   }
 
+  @Query(() => Group, { name: 'getGroupByEventId' })
+  @UseGuards(AuthGuard)
+  async groupByEventId(
+    @RequestContextDecorator() context: RequestContext,
+    @Args('eventId', { type: () => Int }) eventId: number,
+  ): Promise<Group | null> {
+    const group = await this.groupService.getGroupByEventId(eventId);
+    if (!group) {
+      throw new Error(this.i18n.t('errors.notFound'));
+    }
+    await this.checkGroupMembership(context.account!.id, group.id);
+    return group;
+  }
+
   @Mutation(() => Group, { name: 'createGroup' })
   @UseGuards(AuthGuard)
   async createGroup(
