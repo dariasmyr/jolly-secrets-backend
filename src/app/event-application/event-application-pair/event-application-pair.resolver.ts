@@ -1,5 +1,12 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { I18nService } from 'nestjs-i18n';
 
 import { Chat } from '@/@generated/nestgraphql/chat/chat.model';
@@ -78,7 +85,7 @@ export class EventApplicationPairResolver {
   @Query(() => EventApplicationPair, { name: 'eventApplicationPair' })
   @UseGuards(AuthGuard)
   async eventApplicationPair(
-    @Args('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<EventApplicationPair | null> {
     const eventApplicationPair =
@@ -90,9 +97,9 @@ export class EventApplicationPairResolver {
     return this.eventApplicationPairService.getEventApplicationPairById(id);
   }
 
-  @ResolveField(() => EventApplication, { name: 'eventApplicationFirst' })
+  @ResolveField(() => EventApplication, { name: 'applicationFirst' })
   @UseGuards(AuthGuard)
-  async eventApplicationFirst(
+  async applicationFirst(
     @RequestContextDecorator() context: RequestContext,
     @Parent() eventApplicationPair: EventApplicationPair,
   ): Promise<EventApplication | null> {
@@ -106,19 +113,22 @@ export class EventApplicationPairResolver {
     return applicationFirst ?? null;
   }
 
-  @ResolveField(() => EventApplication, { name: 'eventApplicationSecond' })
+  @ResolveField(() => EventApplication, { name: 'applicationSecond' })
   @UseGuards(AuthGuard)
-  async eventApplicationSecond(
+  async applicationSecond(
     @RequestContextDecorator() context: RequestContext,
     @Parent() eventApplicationPair: EventApplicationPair,
   ): Promise<EventApplication | null> {
     await this.authorize(context, eventApplicationPair);
-    const applicationSecond =
-      await this.eventApplicationService.getEventApplicationById(
-        eventApplicationPair.eventApplicationSecondId!,
+    // eslint-disable-next-line unicorn/prefer-ternary
+    if (eventApplicationPair.eventApplicationSecondId) {
+      return await this.eventApplicationService.getEventApplicationById(
+        eventApplicationPair.eventApplicationSecondId,
       );
-    // eslint-disable-next-line unicorn/no-null
-    return applicationSecond ?? null;
+    } else {
+      // eslint-disable-next-line unicorn/no-null
+      return null;
+    }
   }
 
   @ResolveField(() => Event, { name: 'event' })

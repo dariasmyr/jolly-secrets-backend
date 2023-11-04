@@ -3,6 +3,7 @@ import {
   Args,
   Field,
   InputType,
+  Int,
   Mutation,
   Parent,
   ResolveField,
@@ -24,10 +25,10 @@ import { EventApplicationService } from './event-application.service';
 
 @InputType()
 export class CreateEventApplicationInput {
-  @Field()
+  @Field(() => Int)
   accountId: number;
 
-  @Field()
+  @Field(() => Int)
   eventId: number;
 
   @Field(() => [CreatePreferenceInput])

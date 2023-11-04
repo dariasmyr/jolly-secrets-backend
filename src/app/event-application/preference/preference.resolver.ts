@@ -3,6 +3,7 @@ import {
   Args,
   Field,
   InputType,
+  Int,
   Mutation,
   Parent,
   ResolveField,
@@ -21,7 +22,7 @@ import { RequestContextDecorator } from '@/app/request-context.decorator';
 
 @InputType()
 export class CreatePreferenceInput {
-  @Field()
+  @Field(() => Int)
   applicationId: number;
 
   @Field()
