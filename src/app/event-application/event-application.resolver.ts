@@ -87,12 +87,7 @@ export class EventApplicationResolver {
   @UseGuards(AuthGuard)
   async preferences(
     @Parent() eventApplication: EventApplication,
-    @RequestContextDecorator() context: RequestContext,
   ): Promise<Preference[] | null> {
-    if (context.account?.id !== eventApplication.accountId) {
-      // eslint-disable-next-line sonarjs/no-duplicate-string
-      throw new Error(this.i18n.t('errors.unauthorized'));
-    }
     return this.preferenceService.getPreferencesByApplicationId(
       eventApplication.id,
     );
