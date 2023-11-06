@@ -135,9 +135,9 @@ export class EventResolver {
     );
   }
 
-  @ResolveField(() => [EventApplicationPair], { name: 'eventApplicationPairs' })
+  @ResolveField(() => [EventApplicationPair], { name: 'applicationPairs' })
   @UseGuards(AuthGuard)
-  async eventApplicationPairs(
+  async applicationPairs(
     @RequestContextDecorator() context: RequestContext,
     @Parent() event: Event,
   ): Promise<Array<EventApplicationPair> | null> {

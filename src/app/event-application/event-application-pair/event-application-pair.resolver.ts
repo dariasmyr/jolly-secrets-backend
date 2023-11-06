@@ -58,9 +58,9 @@ export class EventApplicationPairResolver {
     }
   }
 
-  @Query(() => [EventApplicationPair], { name: 'eventApplicationPairs' })
+  @Query(() => [EventApplicationPair], { name: 'applicationPairs' })
   @UseGuards(AuthGuard)
-  async eventApplicationPairs(
+  async applicationPairs(
     @Args('eventId') eventId: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<Array<EventApplicationPair> | null> {
@@ -82,9 +82,9 @@ export class EventApplicationPairResolver {
     );
   }
 
-  @Query(() => EventApplicationPair, { name: 'eventApplicationPair' })
+  @Query(() => EventApplicationPair, { name: 'applicationPair' })
   @UseGuards(AuthGuard)
-  async eventApplicationPair(
+  async applicationPair(
     @Args('id', { type: () => Int }) id: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<EventApplicationPair | null> {
@@ -99,21 +99,17 @@ export class EventApplicationPairResolver {
 
   @Query(() => EventApplicationPair, {
     name: 'getEventApplicationPairByEventAndAccount',
+    nullable: true,
   })
   @UseGuards(AuthGuard)
   async getEventApplicationPairByEventAndAccount(
     @Args('eventId', { type: () => Int }) eventId: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<EventApplicationPair | null> {
-    const eventApplicationPair =
-      await this.eventApplicationPairService.getEventApplicationPairByEventAndAccount(
-        eventId,
-        context.account!.id,
-      );
-    if (!eventApplicationPair)
-      // eslint-disable-next-line sonarjs/no-duplicate-string
-      throw new Error(this.i18n.t('errors.notFound'));
-    return eventApplicationPair;
+    return await this.eventApplicationPairService.getEventApplicationPairByEventAndAccount(
+      eventId,
+      context.account!.id,
+    );
   }
 
   @ResolveField(() => EventApplication, { name: 'applicationFirst' })

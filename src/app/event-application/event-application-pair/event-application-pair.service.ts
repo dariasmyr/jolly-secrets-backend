@@ -1,3 +1,5 @@
+import * as console from 'node:console';
+
 import { Injectable } from '@nestjs/common';
 import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
 
@@ -170,6 +172,7 @@ export class EventApplicationPairService {
   async getEventApplicationPairByEventId(
     eventId: number,
   ): Promise<Array<EventApplicationPair> | null> {
+    console.log('@@@@@@@@@@@@@@@@@@@@@@');
     return this.prismaService.eventApplicationPair.findMany({
       where: { eventId },
     });
