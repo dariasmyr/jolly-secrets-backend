@@ -1,5 +1,3 @@
-import * as console from 'node:console';
-
 import { Injectable } from '@nestjs/common';
 import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
 
@@ -177,14 +175,35 @@ export class EventApplicationPairService {
     });
   }
 
+  async getEventApplicationPairByEventAndAccount(
+    eventId: number,
+    accountId: number,
+  ): Promise<EventApplicationPair | null> {
+    return this.prismaService.eventApplicationPair.findFirst({
+      where: {
+        eventId,
+        OR: [
+          {
+            applicationFirst: {
+              accountId,
+            },
+          },
+          {
+            applicationSecond: {
+              accountId,
+            },
+          },
+        ],
+      },
+    });
+  }
+
   async getEventApplicationPairById(
     id: number,
   ): Promise<EventApplicationPair | null> {
-    const result = await this.prismaService.eventApplicationPair.findUnique({
+    return await this.prismaService.eventApplicationPair.findUnique({
       where: { id },
     });
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@', result);
-    return result;
   }
 
   async getEventApplicationPairByChatId(

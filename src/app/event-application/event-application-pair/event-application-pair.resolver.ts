@@ -94,7 +94,26 @@ export class EventApplicationPairResolver {
       // eslint-disable-next-line sonarjs/no-duplicate-string
       throw new Error(this.i18n.t('errors.notFound'));
     await this.authorize(context, eventApplicationPair);
-    return this.eventApplicationPairService.getEventApplicationPairById(id);
+    return eventApplicationPair;
+  }
+
+  @Query(() => EventApplicationPair, {
+    name: 'getEventApplicationPairByEventAndAccount',
+  })
+  @UseGuards(AuthGuard)
+  async getEventApplicationPairByEventAndAccount(
+    @Args('eventId', { type: () => Int }) eventId: number,
+    @RequestContextDecorator() context: RequestContext,
+  ): Promise<EventApplicationPair | null> {
+    const eventApplicationPair =
+      await this.eventApplicationPairService.getEventApplicationPairByEventAndAccount(
+        eventId,
+        context.account!.id,
+      );
+    if (!eventApplicationPair)
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      throw new Error(this.i18n.t('errors.notFound'));
+    return eventApplicationPair;
   }
 
   @ResolveField(() => EventApplication, { name: 'applicationFirst' })
