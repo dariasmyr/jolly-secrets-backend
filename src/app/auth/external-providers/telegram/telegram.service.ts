@@ -92,7 +92,7 @@ export class TelegramService {
     } else {
       this.logger.log('Profile not found, create profile');
       profile = await this.profileService.createProfile({
-        externalId: telegramId,
+        externalId: telegramId.toString(),
         provider: ExternalProfileProvider.TELEGRAM,
         username,
       });
