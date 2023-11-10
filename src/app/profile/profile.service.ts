@@ -66,7 +66,7 @@ export class ProfileService {
     const seedIndex = Number.parseInt(hash, 16) % this.seeds.length;
     const seed = this.seeds[seedIndex];
 
-    const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}?backgroundColor=fff`;
+    const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}?backgroundColor=ffffff,ffffff,ffffff`;
 
     return this.prisma.externalProfile.create({
       data: {
