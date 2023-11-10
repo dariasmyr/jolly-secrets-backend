@@ -1,6 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -45,6 +46,19 @@ export class AccountResolver {
     // Should be because AuthGuard is used
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return context.account!;
+  }
+
+  @Query(() => Int, { name: 'getAccountCount' })
+  @UseGuards(AuthGuard)
+  getAccountCount(
+    @RequestContextDecorator() context: RequestContext,
+    @I18n() i18n: I18nContext,
+  ): Promise<number> {
+    if (!context.account?.id) {
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      throw new Error(i18n.t('errors.unauthorized'));
+    }
+    return this.accountService.getAccountCount();
   }
 
   @ResolveField(() => [AccountSession])

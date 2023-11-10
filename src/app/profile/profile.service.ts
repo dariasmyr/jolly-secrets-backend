@@ -1,3 +1,5 @@
+import * as crypto from 'node:crypto';
+
 import { Injectable } from '@nestjs/common';
 import {
   Account,
@@ -34,8 +36,38 @@ export class ProfileService {
     });
   }
 
+  seeds = [
+    'Angel',
+    'Simba',
+    'Salem',
+    'Snuggles',
+    'Garfield',
+    'Sasha',
+    'Boots',
+    'Max',
+    'Tiger',
+    'Chloe',
+    'Socks',
+    'Abby',
+    'Buster',
+    'Daisy',
+    'Sammy',
+    'Harley',
+    'Mimi',
+    'Loki',
+    'Buddy',
+    'Milo',
+  ];
+
   async createProfile(data: ICreateProfileInput): Promise<ExternalProfile> {
     const { externalId, provider, username } = data;
+
+    const hash = crypto.createHash('md5').update(externalId).digest('hex');
+    const seedIndex = Number.parseInt(hash, 16) % this.seeds.length;
+    const seed = this.seeds[seedIndex];
+
+    const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}?backgroundColor=fff`;
+
     return this.prisma.externalProfile.create({
       data: {
         externalId,
@@ -45,6 +77,7 @@ export class ProfileService {
             username: username,
             status: AccountStatus.ACTIVE,
             roles: [AccountRole.USER],
+            avatarUrl: avatar,
           },
         },
       },

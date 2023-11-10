@@ -15,6 +15,10 @@ export class AccountService {
     private readonly accountGateway: AccountGateway,
   ) {}
 
+  async getAccountCount(): Promise<number> {
+    return this.prisma.account.count();
+  }
+
   async getAccountByProfile(profile: ExternalProfile): Promise<Account | null> {
     return this.prisma.account.findUnique({
       where: {
