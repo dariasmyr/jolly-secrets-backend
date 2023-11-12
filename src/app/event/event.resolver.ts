@@ -39,6 +39,9 @@ export class CreateEventInput {
 
   @Field()
   endsAt: Date;
+
+  @Field(() => String, { nullable: true })
+  pictureUrl: string | null;
 }
 
 @Resolver(() => Event)

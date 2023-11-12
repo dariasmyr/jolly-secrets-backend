@@ -28,6 +28,9 @@ import { GroupService } from './group.service';
 
 @InputType()
 export class CreateOrUpdateGroupInput {
+  @Field(() => String, { nullable: true })
+  pictureUrl: string | null;
+
   @Field()
   name: string;
 

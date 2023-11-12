@@ -2,8 +2,9 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { IntFilter } from '../prisma/int-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
-import { StringFilter } from '../prisma/string-filter.input';
+import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { EnumEventStatusFilter } from '../prisma/enum-event-status-filter.input';
+import { StringFilter } from '../prisma/string-filter.input';
 import { GroupRelationFilter } from '../group/group-relation-filter.input';
 import { EventApplicationPairListRelationFilter } from '../event-application-pair/event-application-pair-list-relation-filter.input';
 
@@ -28,8 +29,8 @@ export class EventWhereInput {
     @Field(() => DateTimeFilter, {nullable:true})
     updatedAt?: DateTimeFilter;
 
-    @Field(() => StringFilter, {nullable:true})
-    pictureUrl?: StringFilter;
+    @Field(() => StringNullableFilter, {nullable:true})
+    pictureUrl?: StringNullableFilter;
 
     @Field(() => EnumEventStatusFilter, {nullable:true})
     status?: EnumEventStatusFilter;

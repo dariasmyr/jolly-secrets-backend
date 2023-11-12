@@ -21,8 +21,8 @@ export class GroupGroupBy {
     @Field(() => Date, {nullable:false})
     updatedAt!: Date | string;
 
-    @Field(() => String, {nullable:false})
-    pictureUrl!: string;
+    @Field(() => String, {nullable:true})
+    pictureUrl?: string;
 
     @Field(() => String, {nullable:false})
     name!: string;

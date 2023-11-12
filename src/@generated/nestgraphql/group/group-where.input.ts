@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { IntFilter } from '../prisma/int-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { StringFilter } from '../prisma/string-filter.input';
 import { EnumGroupTypeFilter } from '../prisma/enum-group-type-filter.input';
 import { EnumGroupStatusFilter } from '../prisma/enum-group-status-filter.input';
@@ -30,8 +31,8 @@ export class GroupWhereInput {
     @Field(() => DateTimeFilter, {nullable:true})
     updatedAt?: DateTimeFilter;
 
-    @Field(() => StringFilter, {nullable:true})
-    pictureUrl?: StringFilter;
+    @Field(() => StringNullableFilter, {nullable:true})
+    pictureUrl?: StringNullableFilter;
 
     @Field(() => StringFilter, {nullable:true})
     name?: StringFilter;

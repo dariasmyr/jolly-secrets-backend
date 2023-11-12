@@ -152,8 +152,6 @@ export class GroupService {
     return this.prisma.group.create({
       data: {
         ...input,
-        pictureUrl:
-          'https://catastic.b-cdn.net/wp-content/uploads/2023/04/bengal-cat-origin.jpg',
         status: GroupStatus.OPEN,
         members: {
           create: {

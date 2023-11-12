@@ -141,7 +141,7 @@ model Group {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  pictureUrl String
+  pictureUrl String?
 
   name        String      @unique
   description String
@@ -197,7 +197,7 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  pictureUrl String
+  pictureUrl String?
 
   status EventStatus
 

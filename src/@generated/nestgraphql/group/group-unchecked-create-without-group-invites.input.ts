@@ -18,8 +18,8 @@ export class GroupUncheckedCreateWithoutGroupInvitesInput {
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
 
-    @Field(() => String, {nullable:false})
-    pictureUrl!: string;
+    @Field(() => String, {nullable:true})
+    pictureUrl?: string;
 
     @Field(() => String, {nullable:false})
     name!: string;

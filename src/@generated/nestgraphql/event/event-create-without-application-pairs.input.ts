@@ -12,8 +12,8 @@ export class EventCreateWithoutApplicationPairsInput {
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
 
-    @Field(() => String, {nullable:false})
-    pictureUrl!: string;
+    @Field(() => String, {nullable:true})
+    pictureUrl?: string;
 
     @Field(() => EventStatus, {nullable:false})
     status!: keyof typeof EventStatus;

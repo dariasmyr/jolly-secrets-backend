@@ -18,8 +18,8 @@ export class Event {
     @Field(() => Date, {nullable:false})
     updatedAt!: Date;
 
-    @Field(() => String, {nullable:false})
-    pictureUrl!: string;
+    @Field(() => String, {nullable:true})
+    pictureUrl!: string | null;
 
     @Field(() => EventStatus, {nullable:false})
     status!: keyof typeof EventStatus;

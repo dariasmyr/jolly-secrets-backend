@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
+import { SortOrderInput } from '../prisma/sort-order.input';
 import { EventCountOrderByAggregateInput } from './event-count-order-by-aggregate.input';
 import { EventAvgOrderByAggregateInput } from './event-avg-order-by-aggregate.input';
 import { EventMaxOrderByAggregateInput } from './event-max-order-by-aggregate.input';
@@ -19,8 +20,8 @@ export class EventOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     updatedAt?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
-    pictureUrl?: keyof typeof SortOrder;
+    @Field(() => SortOrderInput, {nullable:true})
+    pictureUrl?: SortOrderInput;
 
     @Field(() => SortOrder, {nullable:true})
     status?: keyof typeof SortOrder;

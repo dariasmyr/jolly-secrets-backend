@@ -20,8 +20,8 @@ export class EventGroupBy {
     @Field(() => Date, {nullable:false})
     updatedAt!: Date | string;
 
-    @Field(() => String, {nullable:false})
-    pictureUrl!: string;
+    @Field(() => String, {nullable:true})
+    pictureUrl?: string;
 
     @Field(() => EventStatus, {nullable:false})
     status!: keyof typeof EventStatus;
