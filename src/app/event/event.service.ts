@@ -48,7 +48,6 @@ export class EventService {
 
     const updatedEvents = events.map(async (event) => {
       if (event.endsAt < new Date()) {
-        // If event has already ended, update its status to EXPIRED
         await this.prismaService.event.update({
           where: { id: event.id },
           data: { status: EventStatus.EXPIRED },
@@ -56,7 +55,6 @@ export class EventService {
       }
       return event;
     });
-
     return Promise.all(updatedEvents);
   }
 

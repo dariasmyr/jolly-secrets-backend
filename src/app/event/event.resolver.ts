@@ -144,7 +144,7 @@ export class EventResolver {
     @RequestContextDecorator() context: RequestContext,
     @Parent() event: Event,
   ): Promise<Array<EventApplicationPair> | null> {
-    const group = await this.groupService.getGroupByEventId(event.groupId);
+    const group = await this.groupService.getGroupByEventId(event.id);
     if (!group) {
       throw new Error(this.i18n.t('errors.notFound'));
     }
