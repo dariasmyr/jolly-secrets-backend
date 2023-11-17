@@ -1,3 +1,5 @@
+import * as console from 'node:console';
+
 import { UseGuards } from '@nestjs/common';
 import {
   Args,
@@ -57,20 +59,22 @@ export class EventApplicationResolver {
     return this.eventApplicationService.createEventApplication(input);
   }
 
-  @Mutation(() => Event, { name: 'setEventApplicationStatus' })
+  @Mutation(() => EventApplication, { name: 'setEventApplicationStatus' })
   @UseGuards(AuthGuard)
   async setEventApplicationStatus(
-    @Args('eventApplicationId') eventApplicationId: number,
-    @Args('status') status: EventApplicationStatus,
+    @Args('eventApplicationId', { type: () => Int }) eventApplicationId: number,
+    @Args('status', { type: () => EventApplicationStatus })
+    status: EventApplicationStatus,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<EventApplication | null> {
     const eventApplication =
       await this.eventApplicationService.getEventApplicationById(
         eventApplicationId,
       );
+    console.log(eventApplication);
     if (!eventApplication) {
       // eslint-disable-next-line sonarjs/no-duplicate-string
-      throw new Error(this.i18n.t('errors.unauthorized'));
+      throw new Error(this.i18n.t('errors.notFound'));
     }
 
     if (context.account?.id !== eventApplication.accountId) {
