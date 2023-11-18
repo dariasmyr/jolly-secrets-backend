@@ -53,8 +53,15 @@ export class TelegramService {
         return;
       }
       this.logger.log('Telegram auth bot started with user', id, username);
-      const authlink = await this.generateTelegramAuthLink(id, username);
-      await context.reply(authlink);
+      const authLink = await this.generateTelegramAuthLink(id, username);
+      const message = await context.reply(authLink);
+
+      // delete message for security
+      setTimeout(() => {
+        context.deleteMessage(message.message_id);
+        context.deleteMessage();
+        // eslint-disable-next-line no-magic-numbers
+      }, 1000 * 60); // 1 minute
     });
   }
   async generateTelegramAuthLink(
