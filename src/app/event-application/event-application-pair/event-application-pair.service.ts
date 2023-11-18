@@ -216,4 +216,21 @@ export class EventApplicationPairService {
       where: { chatId },
     });
   }
+
+  async getEventApplicationPairByEventApplicationId(
+    eventApplicationId: number,
+  ): Promise<EventApplicationPair | null> {
+    return this.prismaService.eventApplicationPair.findFirst({
+      where: {
+        OR: [
+          {
+            eventApplicationFirstId: eventApplicationId,
+          },
+          {
+            eventApplicationSecondId: eventApplicationId,
+          },
+        ],
+      },
+    });
+  }
 }
