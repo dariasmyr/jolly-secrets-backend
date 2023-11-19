@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 
@@ -17,10 +17,4 @@ export class GenerateEmailCodeResponse {
   result: boolean;
   @Field()
   expiresAt: Date;
-}
-
-@InputType()
-export class UpdateAccountInput {
-  @Field()
-  username: string;
 }

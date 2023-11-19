@@ -18,7 +18,6 @@ import { GroupMember } from '@/@generated/nestgraphql/group-member/group-member.
 import { Notification } from '@/@generated/nestgraphql/notification/notification.model';
 import { ExternalProfileProvider } from '@/@generated/nestgraphql/prisma/external-profile-provider.enum';
 import { AccountService } from '@/app/account/account.service';
-import { UpdateAccountInput } from '@/app/account/types';
 import { AccountSessionService } from '@/app/account-session/account-session.service';
 import { AuthGuard } from '@/app/auth/auth-guard/auth.guard';
 import { RequestContext } from '@/app/auth/request-context-extractor/interfaces';
@@ -122,11 +121,11 @@ export class AccountResolver {
   @UseGuards(AuthGuard)
   async updateAccount(
     @RequestContextDecorator() context: RequestContext,
-    @Args('input') input: UpdateAccountInput,
+    @Args('username') username: string,
   ): Promise<Account> {
     // Should be because AuthGuard is used
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.accountService.updateAccount(context.account!, input);
+    return this.accountService.updateAccount(context.account!, username);
   }
 
   // enable notifications mutation
