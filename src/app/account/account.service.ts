@@ -26,7 +26,7 @@ export class AccountService {
     });
   }
 
-  async updateAccount(account: Account, username: string): Promise<Account> {
+  async updateAccount(account: Account, publicName: string): Promise<Account> {
     await this.accountGateway.sendToAccount(
       account.id,
       'accountUpdated',
@@ -37,7 +37,7 @@ export class AccountService {
         id: account.id,
       },
       data: {
-        username,
+        publicName,
       },
     });
   }
