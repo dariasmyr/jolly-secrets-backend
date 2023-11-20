@@ -25,6 +25,8 @@ model Account {
   email String?
   publicName  String
 
+  isNotificationsEnabled    Boolean @default(true)
+
   roles  AccountRole[]
   status AccountStatus
 
