@@ -24,6 +24,9 @@ export class AccountOrderByWithAggregationInput {
     email?: SortOrderInput;
 
     @Field(() => SortOrder, {nullable:true})
+    isNotificationsEnabled?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
     roles?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})

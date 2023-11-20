@@ -23,9 +23,8 @@ model Account {
   updatedAt DateTime @updatedAt
 
   email String?
-  publicName  String
 
-  isNotificationsEnabled    Boolean @default(true)
+  isNotificationsEnabled Boolean @default(true)
 
   roles  AccountRole[]
   status AccountStatus

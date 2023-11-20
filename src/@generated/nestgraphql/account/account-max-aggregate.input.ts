@@ -17,6 +17,9 @@ export class AccountMaxAggregateInput {
     email?: true;
 
     @Field(() => Boolean, {nullable:true})
+    isNotificationsEnabled?: true;
+
+    @Field(() => Boolean, {nullable:true})
     status?: true;
 
     @Field(() => Boolean, {nullable:true})

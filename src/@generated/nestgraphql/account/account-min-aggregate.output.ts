@@ -18,6 +18,9 @@ export class AccountMinAggregate {
     @Field(() => String, {nullable:true})
     email?: string;
 
+    @Field(() => Boolean, {nullable:true})
+    isNotificationsEnabled?: boolean;
+
     @Field(() => AccountStatus, {nullable:true})
     status?: keyof typeof AccountStatus;
 

@@ -27,6 +27,9 @@ export class Account {
     @Field(() => String, {nullable:true})
     email!: string | null;
 
+    @Field(() => Boolean, {nullable:false,defaultValue:true})
+    isNotificationsEnabled!: boolean;
+
     @Field(() => [AccountRole], {nullable:true})
     roles!: Array<keyof typeof AccountRole>;
 

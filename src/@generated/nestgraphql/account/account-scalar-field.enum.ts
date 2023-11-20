@@ -5,6 +5,7 @@ export enum AccountScalarFieldEnum {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     email = "email",
+    isNotificationsEnabled = "isNotificationsEnabled",
     roles = "roles",
     status = "status",
     avatarUrl = "avatarUrl",

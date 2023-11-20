@@ -18,6 +18,9 @@ export class AccountCountAggregate {
     email!: number;
 
     @Field(() => Int, {nullable:false})
+    isNotificationsEnabled!: number;
+
+    @Field(() => Int, {nullable:false})
     roles!: number;
 
     @Field(() => Int, {nullable:false})

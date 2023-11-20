@@ -18,6 +18,9 @@ export class AccountMaxOrderByAggregateInput {
     email?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
+    isNotificationsEnabled?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
     status?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})

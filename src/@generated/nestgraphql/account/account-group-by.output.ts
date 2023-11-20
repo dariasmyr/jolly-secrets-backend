@@ -24,6 +24,9 @@ export class AccountGroupBy {
     @Field(() => String, {nullable:true})
     email?: string;
 
+    @Field(() => Boolean, {nullable:false})
+    isNotificationsEnabled!: boolean;
+
     @Field(() => [AccountRole], {nullable:true})
     roles?: Array<keyof typeof AccountRole>;
 

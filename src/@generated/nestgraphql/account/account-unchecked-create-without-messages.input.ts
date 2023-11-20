@@ -25,6 +25,9 @@ export class AccountUncheckedCreateWithoutMessagesInput {
     @Field(() => String, {nullable:true})
     email?: string;
 
+    @Field(() => Boolean, {nullable:true})
+    isNotificationsEnabled?: boolean;
+
     @Field(() => [AccountRole], {nullable:true})
     roles?: Array<keyof typeof AccountRole>;
 

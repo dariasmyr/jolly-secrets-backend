@@ -4,6 +4,7 @@ import { Int } from '@nestjs/graphql';
 import { AccountWhereInput } from './account-where.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
+import { BoolFilter } from '../prisma/bool-filter.input';
 import { EnumAccountRoleNullableListFilter } from '../prisma/enum-account-role-nullable-list-filter.input';
 import { EnumAccountStatusFilter } from '../prisma/enum-account-status-filter.input';
 import { AccountSessionListRelationFilter } from '../account-session/account-session-list-relation-filter.input';
@@ -40,6 +41,9 @@ export class AccountWhereUniqueInput {
 
     @Field(() => StringNullableFilter, {nullable:true})
     email?: StringNullableFilter;
+
+    @Field(() => BoolFilter, {nullable:true})
+    isNotificationsEnabled?: BoolFilter;
 
     @Field(() => EnumAccountRoleNullableListFilter, {nullable:true})
     roles?: EnumAccountRoleNullableListFilter;

@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable unicorn/no-null */
 import { Injectable } from '@nestjs/common';
-import { ExternalProfile } from '@prisma/client';
+import { AccountStatus, ExternalProfile } from '@prisma/client';
 
 import { Account } from '@/@generated/nestgraphql/account/account.model';
 import { AccountGateway } from '@/app/account/account.gateway';
@@ -26,7 +26,7 @@ export class AccountService {
     });
   }
 
-  async updateAccount(account: Account, publicName: string): Promise<Account> {
+  async updateAccount(account: Account, username: string): Promise<Account> {
     await this.accountGateway.sendToAccount(
       account.id,
       'accountUpdated',
@@ -37,7 +37,7 @@ export class AccountService {
         id: account.id,
       },
       data: {
-        publicName,
+        username,
       },
     });
   }
@@ -70,7 +70,7 @@ export class AccountService {
         id: account.id,
       },
       data: {
-        status: 'DELETED',
+        status: AccountStatus.DELETED,
       },
     });
   }

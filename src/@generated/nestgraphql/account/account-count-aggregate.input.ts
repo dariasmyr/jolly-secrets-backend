@@ -17,6 +17,9 @@ export class AccountCountAggregateInput {
     email?: true;
 
     @Field(() => Boolean, {nullable:true})
+    isNotificationsEnabled?: true;
+
+    @Field(() => Boolean, {nullable:true})
     roles?: true;
 
     @Field(() => Boolean, {nullable:true})

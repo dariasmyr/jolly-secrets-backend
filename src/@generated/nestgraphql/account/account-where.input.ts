@@ -3,6 +3,7 @@ import { InputType } from '@nestjs/graphql';
 import { IntFilter } from '../prisma/int-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
+import { BoolFilter } from '../prisma/bool-filter.input';
 import { EnumAccountRoleNullableListFilter } from '../prisma/enum-account-role-nullable-list-filter.input';
 import { EnumAccountStatusFilter } from '../prisma/enum-account-status-filter.input';
 import { StringFilter } from '../prisma/string-filter.input';
@@ -37,6 +38,9 @@ export class AccountWhereInput {
 
     @Field(() => StringNullableFilter, {nullable:true})
     email?: StringNullableFilter;
+
+    @Field(() => BoolFilter, {nullable:true})
+    isNotificationsEnabled?: BoolFilter;
 
     @Field(() => EnumAccountRoleNullableListFilter, {nullable:true})
     roles?: EnumAccountRoleNullableListFilter;
