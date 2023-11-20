@@ -3,6 +3,7 @@ import {
   Args,
   Field,
   InputType,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -35,8 +36,8 @@ export class NotificationResolver {
   @UseGuards(AuthGuard)
   async notifications(
     @RequestContextDecorator() context: RequestContext,
-    @Args('offset') offset: number,
-    @Args('limit') limit: number,
+    @Args('offset', { type: () => Int }) offset: number,
+    @Args('limit', { type: () => Int }) limit: number,
   ): Promise<Array<Notification>> {
     return this.notificationService.getNotifications(
       context.account!.id,
