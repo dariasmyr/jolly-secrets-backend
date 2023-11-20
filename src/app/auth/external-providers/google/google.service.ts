@@ -130,6 +130,7 @@ export class GoogleService {
         externalId,
         provider: ExternalProfileProvider.GOOGLE,
         username,
+        publicName: username,
       });
       console.log('Create account');
       account = await this.accountService.getAccountByProfile(profile);
