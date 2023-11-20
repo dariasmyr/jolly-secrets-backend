@@ -133,11 +133,10 @@ export class AccountResolver {
   @UseGuards(AuthGuard)
   async enableNotifications(
     @RequestContextDecorator() context: RequestContext,
-    @Args('email') email: string,
   ): Promise<Account> {
     // Should be because AuthGuard is used
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.accountService.enableNotifications(context.account!, email);
+    return this.accountService.enableNotifications(context.account!);
   }
 
   // disable notifications mutation
