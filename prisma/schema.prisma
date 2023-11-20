@@ -23,6 +23,7 @@ model Account {
   updatedAt DateTime @updatedAt
 
   email String?
+  telegramUsername  String?
 
   roles  AccountRole[]
   status AccountStatus
