@@ -42,13 +42,13 @@ export class AccountService {
     });
   }
 
-  async enableNotifications(account: Account, email: string): Promise<Account> {
+  async enableNotifications(account: Account): Promise<Account> {
     return this.prisma.account.update({
       where: {
         id: account.id,
       },
       data: {
-        email,
+        isNotificationsEnabled: true,
       },
     });
   }
@@ -59,7 +59,7 @@ export class AccountService {
         id: account.id,
       },
       data: {
-        email: null,
+        isNotificationsEnabled: false,
       },
     });
   }
