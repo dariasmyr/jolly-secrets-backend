@@ -121,11 +121,11 @@ export class AccountResolver {
   @UseGuards(AuthGuard)
   async updateAccount(
     @RequestContextDecorator() context: RequestContext,
-    @Args('username') username: string,
+    @Args('publicName') publicName: string,
   ): Promise<Account> {
     // Should be because AuthGuard is used
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.accountService.updateAccount(context.account!, username);
+    return this.accountService.updateAccount(context.account!, publicName);
   }
 
   // enable notifications mutation
