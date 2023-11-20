@@ -102,6 +102,7 @@ export class TelegramService {
         externalId: telegramId.toString(),
         provider: ExternalProfileProvider.TELEGRAM,
         username,
+        publicName: username,
       });
       this.logger.log('Get account');
       account = await this.accountService.getAccountByProfile(profile);
