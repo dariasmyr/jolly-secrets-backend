@@ -62,11 +62,8 @@ export class NotificationResolver {
   @UseGuards(AuthGuard)
   async setNotificationAsRead(
     @RequestContextDecorator() context: RequestContext,
-    @Args('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
   ): Promise<Notification | null> {
-    return this.notificationService.setNotificationAsRead(
-      context.account!.id,
-      id,
-    );
+    return this.notificationService.setNotificationAsRead(id);
   }
 }

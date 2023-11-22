@@ -33,14 +33,10 @@ export class NotificationService {
     });
   }
 
-  async setNotificationAsRead(
-    accountId: number,
-    id: number,
-  ): Promise<Notification | null> {
+  async setNotificationAsRead(id: number): Promise<Notification | null> {
     return this.prismaService.notification.update({
       where: {
         id,
-        accountId,
       },
       data: {
         read: true,
