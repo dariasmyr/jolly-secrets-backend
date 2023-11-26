@@ -204,7 +204,7 @@ export class EventApplicationPairService {
   async getEventApplicationPairById(
     id: number,
   ): Promise<EventApplicationPair | null> {
-    return await this.prismaService.eventApplicationPair.findUnique({
+    return this.prismaService.eventApplicationPair.findUnique({
       where: { id },
     });
   }

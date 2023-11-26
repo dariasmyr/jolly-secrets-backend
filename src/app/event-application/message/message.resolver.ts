@@ -2,6 +2,7 @@ import {
   Args,
   Field,
   InputType,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -44,7 +45,7 @@ export class MessageResolver {
 
   @Query(() => [Message], { name: 'messages' })
   async messages(
-    @Args('chatId') chatId: number,
+    @Args('chatId', { type: () => Int }) chatId: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<Array<Message> | null> {
     const chatMembers =
@@ -73,13 +74,7 @@ export class MessageResolver {
   }
 
   @ResolveField(() => Chat, { name: 'chat' })
-  async chat(
-    @Parent() message: Message,
-    @RequestContextDecorator() context: RequestContext,
-  ): Promise<Chat | null> {
-    if (message.accountId === context.account?.id) {
-      throw new Error(this.i18n.t('errors.unauthorized'));
-    }
+  async chat(@Parent() message: Message): Promise<Chat | null> {
     return this.chatService.getChatById(message.chatId!);
   }
 

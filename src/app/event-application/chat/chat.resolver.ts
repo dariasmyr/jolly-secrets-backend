@@ -1,5 +1,14 @@
+import * as console from 'node:console';
+
 import { UseGuards } from '@nestjs/common';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { I18nService } from 'nestjs-i18n';
 
 import { Chat } from '@/@generated/nestgraphql/chat/chat.model';
@@ -26,10 +35,7 @@ export class ChatResolver {
     private i18n: I18nService,
   ) {}
 
-  private async authorize(
-    context: RequestContext,
-    chatId: number,
-  ): Promise<void> {
+  private async authorize(accountId: number, chatId: number): Promise<void> {
     const eventApplicationPair =
       await this.eventApplicationPairService.getEventApplicationPairByChatId(
         chatId,
@@ -40,7 +46,7 @@ export class ChatResolver {
 
     const applications =
       await this.eventApplicationService.getEventApplicationByAccountId(
-        context.account!.id,
+        accountId,
       );
 
     if (!applications) {
@@ -54,31 +60,38 @@ export class ChatResolver {
         application.id === eventApplicationPair.eventApplicationSecondId,
     );
 
+    console.log('isApplicationOwner', isApplicationOwner);
+
     if (!isApplicationOwner) {
       throw new Error(this.i18n.t('errors.unauthorized'));
     }
   }
 
-  @Query(() => [Chat], { name: 'chat' })
+  @Query(() => Chat, { name: 'chat' })
   @UseGuards(AuthGuard)
   async chat(
-    @Args('id') chatId: number,
+    @Args('id', { type: () => Int }) chatId: number,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<Chat | null> {
-    await this.authorize(context, chatId);
+    await this.authorize(context.account!.id, chatId);
     return this.chatService.getChatById(chatId);
   }
 
-  @ResolveField(() => EventApplicationPair, { name: 'eventApplicationPair' })
+  @ResolveField(() => [EventApplicationPair], { name: 'eventApplicationPair' })
   @UseGuards(AuthGuard)
   async eventApplicationPair(
     @Parent() chat: Chat,
     @RequestContextDecorator() context: RequestContext,
-  ): Promise<EventApplicationPair | null> {
-    await this.authorize(context, chat.id);
-    return this.eventApplicationPairService.getEventApplicationPairByChatId(
-      chat.id,
-    );
+  ): Promise<Array<EventApplicationPair>> {
+    await this.authorize(context.account!.id, chat.id);
+    const result =
+      await this.eventApplicationPairService.getEventApplicationPairByChatId(
+        chat.id,
+      );
+    if (!result) {
+      throw new Error(this.i18n.t('errors.notFound'));
+    }
+    return [result];
   }
 
   @ResolveField(() => [ChatMember], { name: 'chatMembers' })
@@ -87,7 +100,7 @@ export class ChatResolver {
     @Parent() chat: Chat,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<Array<ChatMember> | null> {
-    await this.authorize(context, chat.id);
+    await this.authorize(context.account!.id, chat.id);
     return this.chatMember.getChatMemberByChatId(chat.id);
   }
 
@@ -97,7 +110,7 @@ export class ChatResolver {
     @Parent() chat: Chat,
     @RequestContextDecorator() context: RequestContext,
   ): Promise<Array<Message> | null> {
-    await this.authorize(context, chat.id);
+    await this.authorize(context.account!.id, chat.id);
     return this.messageService.getMessageByChatId(chat.id);
   }
 }
