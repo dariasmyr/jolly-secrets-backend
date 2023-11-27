@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { EventApplication, EventApplicationStatus } from '@prisma/client';
+import {
+  EventApplication,
+  EventApplicationStatus,
+  Notification,
+} from '@prisma/client';
+import { I18nService } from 'nestjs-i18n';
 
 import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
 import { EventApplicationPairService } from '@/app/event-application/event-application-pair/event-application-pair.service';
@@ -10,7 +15,22 @@ export class EventApplicationService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly eventApplicationPairService: EventApplicationPairService,
+    private i18n: I18nService,
   ) {}
+
+  async createNotification(
+    title: string,
+    accountId: number,
+    message: string,
+  ): Promise<Notification> {
+    return await this.prismaService.notification.create({
+      data: {
+        title: title,
+        accountId: accountId,
+        message: message,
+      },
+    });
+  }
 
   async createEventApplication(
     input: CreateEventApplicationInput,
@@ -45,12 +65,25 @@ export class EventApplicationService {
     eventApplicationId: number,
     status: EventApplicationStatus,
   ): Promise<EventApplication> {
-    return this.prismaService.eventApplication.update({
+    const result = await this.prismaService.eventApplication.update({
       where: { id: eventApplicationId },
       data: {
         status,
       },
     });
+
+    const eventApplicationPair =
+      await this.eventApplicationPairService.getEventApplicationPairByEventApplicationId(
+        eventApplicationId,
+      );
+
+    await this.createNotification(
+      'Статус заявки обновлен',
+      result.accountId,
+      `Ваша заявка из события ${eventApplicationPair?.eventId} только что была обновлена. Проверьте ее статус!`,
+    );
+
+    return result;
   }
 
   async getEventApplicationById(

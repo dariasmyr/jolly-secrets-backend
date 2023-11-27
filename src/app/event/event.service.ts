@@ -41,6 +41,9 @@ export class EventService {
       where: {
         groupId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     // eslint-disable-next-line unicorn/no-null

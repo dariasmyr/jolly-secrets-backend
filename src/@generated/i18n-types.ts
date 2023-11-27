@@ -13,6 +13,10 @@ export type I18nTranslations = {
     };
     "translations": {
         "hello": string;
+        "notification": {
+            "title": string;
+            "body": string;
+        };
     };
 };
 export type I18nPath = Path<I18nTranslations>;

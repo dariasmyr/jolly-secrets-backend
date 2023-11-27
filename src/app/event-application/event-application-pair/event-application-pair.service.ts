@@ -1,7 +1,9 @@
-import * as console from 'node:console';
-
 import { Injectable } from '@nestjs/common';
-import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
+import {
+  EventApplicationPair,
+  EventApplicationStatus,
+  Notification,
+} from '@prisma/client';
 
 import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
 import { CreatePreferenceInput } from '@/app/event-application/preference/preference.resolver';
@@ -10,6 +12,20 @@ import { PrismaService } from '@/common/prisma/prisma.service';
 @Injectable()
 export class EventApplicationPairService {
   constructor(private readonly prismaService: PrismaService) {}
+
+  async createNotification(
+    title: string,
+    accountId: number,
+    message: string,
+  ): Promise<Notification> {
+    return await this.prismaService.notification.create({
+      data: {
+        title: title,
+        accountId: accountId,
+        message: message,
+      },
+    });
+  }
 
   async upsertEventApplicationPair(
     input: CreateEventApplicationInput,
@@ -157,6 +173,22 @@ export class EventApplicationPairService {
         },
       });
 
+      await this.createNotification(
+        'Пара найдена!',
+        eventApplicationFirst!.applicationFirst.accountId,
+        `Ваша заявка из события ${
+          eventApplicationFirst!.eventId
+        } только что была обновлена. Проверьте ее статус!`,
+      );
+
+      await this.createNotification(
+        'Пара найдена!',
+        eventApplicationSecond.accountId,
+        `Ваша заявка из события ${
+          eventApplicationFirst!.eventId
+        } только что была обновлена. Проверьте ее статус!`,
+      );
+
       return prisma.eventApplicationPair.update({
         where: {
           id: eventApplicationPairId,
@@ -172,7 +204,6 @@ export class EventApplicationPairService {
   async getEventApplicationPairByEventId(
     eventId: number,
   ): Promise<Array<EventApplicationPair> | null> {
-    console.log('@@@@@@@@@@@@@@@@@@@@@@');
     return this.prismaService.eventApplicationPair.findMany({
       where: { eventId },
     });

@@ -23,6 +23,9 @@ export class GroupService {
       },
       skip: offset,
       take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 
@@ -58,6 +61,9 @@ export class GroupService {
       },
       skip: offset,
       take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 

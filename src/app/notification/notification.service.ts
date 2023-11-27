@@ -18,6 +18,9 @@ export class NotificationService {
       },
       skip: offset,
       take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 
@@ -29,6 +32,9 @@ export class NotificationService {
       where: {
         id,
         accountId,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }
