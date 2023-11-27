@@ -23,13 +23,13 @@ import { RequestContextDecorator } from '@/app/request-context.decorator';
 
 @InputType()
 export class CreateMessageInput {
-  @Field()
+  @Field(() => Int)
   accountId: number;
 
-  @Field()
+  @Field(() => Int)
   chatId: number;
 
-  @Field()
+  @Field(() => String)
   text: string;
 }
 
@@ -64,12 +64,7 @@ export class MessageResolver {
   @Mutation(() => Message, { name: 'createMessage' })
   async createMessage(
     @Args('input') input: CreateMessageInput,
-    @RequestContextDecorator() context: RequestContext,
   ): Promise<Message | null> {
-    if (input.accountId === context.account?.id) {
-      // eslint-disable-next-line sonarjs/no-duplicate-string
-      throw new Error(this.i18n.t('errors.unauthorized'));
-    }
     return this.messageService.createMessage(input);
   }
 
