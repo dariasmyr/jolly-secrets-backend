@@ -18,13 +18,13 @@ import { NotificationService } from './notification.service';
 
 @InputType()
 export class CreateNotificationInput {
-  @Field()
+  @Field(() => Int)
   accountId: number;
 
-  @Field()
+  @Field(() => String)
   title: string;
 
-  @Field()
+  @Field(() => String)
   message: string;
 }
 
@@ -65,5 +65,15 @@ export class NotificationResolver {
     @Args('id', { type: () => Int }) id: number,
   ): Promise<Notification | null> {
     return this.notificationService.setNotificationAsRead(id);
+  }
+
+  @Query(() => Boolean, { name: 'checkUnreadNotifications' })
+  @UseGuards(AuthGuard)
+  async checkUnreadNotifications(
+    @RequestContextDecorator() context: RequestContext,
+  ): Promise<boolean> {
+    return this.notificationService.checkUnreadNotifications(
+      context.account!.id,
+    );
   }
 }

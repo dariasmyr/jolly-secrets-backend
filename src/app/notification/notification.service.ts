@@ -50,6 +50,20 @@ export class NotificationService {
     });
   }
 
+  async createNotification(
+    title: string,
+    accountId: number,
+    message: string,
+  ): Promise<Notification> {
+    return await this.prismaService.notification.create({
+      data: {
+        title: title,
+        accountId: accountId,
+        message: message,
+      },
+    });
+  }
+
   async getNotificationsByAccountId(
     accountId: number,
   ): Promise<Array<Notification>> {
@@ -58,5 +72,15 @@ export class NotificationService {
         accountId,
       },
     });
+  }
+
+  async checkUnreadNotifications(accountId: number): Promise<boolean> {
+    const notifications = await this.prismaService.notification.findMany({
+      where: {
+        accountId,
+        read: false,
+      },
+    });
+    return notifications.length > 0;
   }
 }

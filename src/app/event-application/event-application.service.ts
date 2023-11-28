@@ -1,13 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import {
-  EventApplication,
-  EventApplicationStatus,
-  Notification,
-} from '@prisma/client';
+import { EventApplication, EventApplicationStatus } from '@prisma/client';
 import { I18nService } from 'nestjs-i18n';
 
 import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
 import { EventApplicationPairService } from '@/app/event-application/event-application-pair/event-application-pair.service';
+import { NotificationService } from '@/app/notification/notification.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
 @Injectable()
@@ -15,22 +12,9 @@ export class EventApplicationService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly eventApplicationPairService: EventApplicationPairService,
+    private readonly notificationsService: NotificationService,
     private i18n: I18nService,
   ) {}
-
-  async createNotification(
-    title: string,
-    accountId: number,
-    message: string,
-  ): Promise<Notification> {
-    return await this.prismaService.notification.create({
-      data: {
-        title: title,
-        accountId: accountId,
-        message: message,
-      },
-    });
-  }
 
   async createEventApplication(
     input: CreateEventApplicationInput,
@@ -65,25 +49,73 @@ export class EventApplicationService {
     eventApplicationId: number,
     status: EventApplicationStatus,
   ): Promise<EventApplication> {
-    const result = await this.prismaService.eventApplication.update({
-      where: { id: eventApplicationId },
-      data: {
-        status,
+    const updatedApplication = await this.prismaService.eventApplication.update(
+      {
+        where: { id: eventApplicationId },
+        data: {
+          status,
+        },
       },
-    });
+    );
 
     const eventApplicationPair =
       await this.eventApplicationPairService.getEventApplicationPairByEventApplicationId(
         eventApplicationId,
       );
 
-    await this.createNotification(
-      'Статус заявки обновлен',
-      result.accountId,
-      `Ваша заявка из события ${eventApplicationPair?.eventId} только что была обновлена. Проверьте ее статус!`,
-    );
+    const event = await this.prismaService.event.findUnique({
+      where: { id: eventApplicationPair!.eventId },
+    });
 
-    return result;
+    const partherEventApplicationId =
+      eventApplicationPair!.eventApplicationFirstId === eventApplicationId
+        ? eventApplicationPair!.eventApplicationSecondId
+        : eventApplicationPair!.eventApplicationFirstId;
+
+    // eslint-disable-next-line default-case
+    switch (status) {
+      case EventApplicationStatus.GIFT_SENT: {
+        await this.notificationsService.createNotification(
+          this.i18n.t('notifications.gift_sent.title'),
+          updatedApplication.accountId,
+          // eslint-disable-next-line sonarjs/no-duplicate-string
+          this.i18n.t('notifications.description', {
+            args: {
+              event,
+            },
+          }),
+        );
+
+        break;
+      }
+      case EventApplicationStatus.GIFT_RECEIVED: {
+        await this.notificationsService.createNotification(
+          this.i18n.t('notifications.gift_received.title'),
+          partherEventApplicationId!,
+          this.i18n.t('notifications.description', {
+            args: {
+              event,
+            },
+          }),
+        );
+
+        break;
+      }
+      case EventApplicationStatus.GIFT_NOT_RECEIVED: {
+        await this.notificationsService.createNotification(
+          this.i18n.t('notifications.gift_not_received.title'),
+          partherEventApplicationId!,
+          this.i18n.t('notifications.description', {
+            args: {
+              event,
+            },
+          }),
+        );
+
+        break;
+      }
+    }
+    return updatedApplication;
   }
 
   async getEventApplicationById(

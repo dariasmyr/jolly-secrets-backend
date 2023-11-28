@@ -11,12 +11,33 @@ export type I18nTranslations = {
         "emailNotSent": string;
         "invalidCode": string;
     };
+    "notifications": {
+        "notifications": {
+            "title": string;
+            "description": string;
+            "looking_for_pair": {
+                "title": string;
+            };
+            "paired": {
+                "title": string;
+            };
+            "gift_sent": {
+                "title": string;
+            };
+            "gift_received": {
+                "title": string;
+            };
+            "gift_not_received": {
+                "title": string;
+            };
+        };
+        "notifications_not_found": {
+            "title": string;
+            "description": string;
+        };
+    };
     "translations": {
         "hello": string;
-        "notification": {
-            "title": string;
-            "body": string;
-        };
     };
 };
 export type I18nPath = Path<I18nTranslations>;

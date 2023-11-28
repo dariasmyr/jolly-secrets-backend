@@ -1,7 +1,3 @@
 {
-  "hello": "Hello {username}!",
-  "notification": {
-    "title": "Application status updated",
-    "body": "Your application for {eventId} has been just updated. Check it out!"
-  }
+  "hello": "Hello {username}!"
 }

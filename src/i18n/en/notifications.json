@@ -1,0 +1,25 @@
+{
+  "notifications": {
+    "title": "Notifications",
+    "description": "Your application from {eventName} has been updated. Check it out!",
+    "looking_for_pair": {
+      "title": "We are looking for a pair for you! Stay tuned!"
+    },
+    "paired": {
+      "title": "You have been paired!"
+    },
+    "gift_sent": {
+      "title": "Secret Santa has sent the gift!"
+    },
+    "gift_received": {
+      "title": "Secret Santa has received the gift!"
+    },
+    "gift_not_received": {
+      "title": "Secret Santa has not received the gift :( Please contact him to resolve the issue!"
+    }
+  },
+  "notifications_not_found": {
+    "title": "There are no notifications yet",
+    "description": "Waiting..."
+  }
+}

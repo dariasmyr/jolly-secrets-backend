@@ -1,31 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import {
-  EventApplicationPair,
-  EventApplicationStatus,
-  Notification,
-} from '@prisma/client';
+import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
+import { I18nService } from 'nestjs-i18n';
 
 import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
 import { CreatePreferenceInput } from '@/app/event-application/preference/preference.resolver';
+import { NotificationService } from '@/app/notification/notification.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
 @Injectable()
 export class EventApplicationPairService {
-  constructor(private readonly prismaService: PrismaService) {}
-
-  async createNotification(
-    title: string,
-    accountId: number,
-    message: string,
-  ): Promise<Notification> {
-    return await this.prismaService.notification.create({
-      data: {
-        title: title,
-        accountId: accountId,
-        message: message,
-      },
-    });
-  }
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly notificationsService: NotificationService,
+    private i18n: I18nService,
+  ) {}
 
   async upsertEventApplicationPair(
     input: CreateEventApplicationInput,
@@ -100,7 +88,7 @@ export class EventApplicationPairService {
     input: CreateEventApplicationInput,
   ): Promise<EventApplicationPair> {
     const { accountId, eventId, preferences } = input;
-    return this.prismaService.$transaction(async (prisma) => {
+    const result = await this.prismaService.$transaction(async (prisma) => {
       const eventApplication = await prisma.eventApplication.create({
         data: {
           accountId,
@@ -118,14 +106,27 @@ export class EventApplicationPairService {
         },
       });
     });
+    const event = await this.prismaService.event.findUnique({
+      where: { id: eventId },
+    });
+    await this.notificationsService.createNotification(
+      this.i18n.t('notifications.looking_for_pair.title'),
+      accountId,
+      this.i18n.t('notifications.description', {
+        args: {
+          event,
+        },
+      }),
+    );
+    return result;
   }
 
   async updateEventApplicationPair(
     input: CreateEventApplicationInput,
     eventApplicationPairId: number,
   ): Promise<EventApplicationPair> {
-    const { accountId, preferences } = input;
-    return this.prismaService.$transaction(async (prisma) => {
+    const { accountId, preferences, eventId } = input;
+    const result = this.prismaService.$transaction(async (prisma) => {
       const eventApplicationSecond = await prisma.eventApplication.create({
         data: {
           accountId,
@@ -173,22 +174,6 @@ export class EventApplicationPairService {
         },
       });
 
-      await this.createNotification(
-        'Пара найдена!',
-        eventApplicationFirst!.applicationFirst.accountId,
-        `Ваша заявка из события ${
-          eventApplicationFirst!.eventId
-        } только что была обновлена. Проверьте ее статус!`,
-      );
-
-      await this.createNotification(
-        'Пара найдена!',
-        eventApplicationSecond.accountId,
-        `Ваша заявка из события ${
-          eventApplicationFirst!.eventId
-        } только что была обновлена. Проверьте ее статус!`,
-      );
-
       return prisma.eventApplicationPair.update({
         where: {
           id: eventApplicationPairId,
@@ -199,6 +184,31 @@ export class EventApplicationPairService {
         },
       });
     });
+    const event = await this.prismaService.event.findUnique({
+      where: { id: eventId },
+    });
+
+    const eventApplicationFirst =
+      await this.prismaService.eventApplicationPair.findUnique({
+        where: { id: eventApplicationPairId },
+        include: {
+          applicationFirst: true,
+        },
+      });
+
+    const eventApplicationFirstAccountId =
+      eventApplicationFirst!.applicationFirst.accountId;
+
+    await this.notificationsService.createNotification(
+      this.i18n.t('notifications.paired.title'),
+      eventApplicationFirstAccountId,
+      this.i18n.t('notifications.description', {
+        args: {
+          event,
+        },
+      }),
+    );
+    return result;
   }
 
   async getEventApplicationPairByEventId(

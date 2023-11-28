@@ -3,6 +3,8 @@ import { forwardRef, Module } from '@nestjs/common';
 import { AccountModule } from '@/app/account/account.module';
 import { EventModule } from '@/app/event/event.module';
 import { GroupModule } from '@/app/group/group.module';
+import { NotificationModule } from '@/app/notification/notification.module';
+import { NotificationService } from '@/app/notification/notification.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
 import { ChatResolver } from './chat/chat.resolver';
@@ -23,6 +25,7 @@ import { PreferenceService } from './preference/preference.service';
     forwardRef(() => EventModule),
     forwardRef(() => AccountModule),
     forwardRef(() => GroupModule),
+    forwardRef(() => NotificationModule),
   ],
   providers: [
     PrismaService,
@@ -38,6 +41,7 @@ import { PreferenceService } from './preference/preference.service';
     ChatMemberService,
     MessageService,
     MessageResolver,
+    NotificationService,
   ],
   exports: [
     EventApplicationService,
