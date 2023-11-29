@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from '@prisma/client';
 
+import { AccountGateway } from '@/app/account/account.gateway';
 import { CreateMessageInput } from '@/app/event-application/message/message.resolver';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
 @Injectable()
 export class MessageService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly accountGateway: AccountGateway,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   async createMessage(input: CreateMessageInput): Promise<Message | null> {
     const { chatId, text, accountId } = input;
@@ -15,10 +19,17 @@ export class MessageService {
       return null;
     }
 
-    if (text.length > 200) {
+    const MAX_TEXT_LENGTH = 200;
+
+    if (text.length > MAX_TEXT_LENGTH) {
       // eslint-disable-next-line unicorn/no-null
       return null;
     }
+
+    await this.accountGateway.sendToAccount(accountId, 'new_message', {
+      chatId,
+      text,
+    });
 
     return this.prismaService.message.create({
       data: {
