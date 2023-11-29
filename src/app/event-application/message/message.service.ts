@@ -13,7 +13,7 @@ export class MessageService {
   ) {}
 
   async createMessage(input: CreateMessageInput): Promise<Message | null> {
-    const { chatId, text, accountId } = input;
+    const { chatId, text, accountId: receiverAccountId } = input;
     if (text.trim() === '') {
       // eslint-disable-next-line unicorn/no-null
       return null;
@@ -26,7 +26,7 @@ export class MessageService {
       return null;
     }
 
-    await this.accountGateway.sendToAccount(accountId, 'new_message', {
+    await this.accountGateway.sendToAccount(receiverAccountId, 'new_message', {
       chatId,
       text,
     });
@@ -35,7 +35,7 @@ export class MessageService {
       data: {
         chatId,
         text,
-        accountId,
+        accountId: receiverAccountId,
       },
     });
   }
