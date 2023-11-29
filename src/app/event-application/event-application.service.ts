@@ -72,14 +72,19 @@ export class EventApplicationService {
         ? eventApplicationPair!.eventApplicationSecondId
         : eventApplicationPair!.eventApplicationFirstId;
 
+    const partherEventApplicationAccountId =
+      (await this.prismaService.eventApplication.findUnique({
+        where: { id: partherEventApplicationId! },
+      }))!.accountId;
+
     // eslint-disable-next-line default-case
     switch (status) {
       case EventApplicationStatus.GIFT_SENT: {
         await this.notificationsService.createNotification(
-          this.i18n.t('notifications.gift_sent.title'),
+          this.i18n.t('notifications:notifications.gift_sent.title'),
           updatedApplication.accountId,
           // eslint-disable-next-line sonarjs/no-duplicate-string
-          this.i18n.t('notifications.description', {
+          this.i18n.t('notifications:notifications.description', {
             args: {
               event,
             },
@@ -90,9 +95,9 @@ export class EventApplicationService {
       }
       case EventApplicationStatus.GIFT_RECEIVED: {
         await this.notificationsService.createNotification(
-          this.i18n.t('notifications.gift_received.title'),
-          partherEventApplicationId!,
-          this.i18n.t('notifications.description', {
+          this.i18n.t('notifications:notifications.gift_received.title'),
+          partherEventApplicationAccountId!,
+          this.i18n.t('notifications:notifications.description', {
             args: {
               event,
             },
@@ -103,9 +108,9 @@ export class EventApplicationService {
       }
       case EventApplicationStatus.GIFT_NOT_RECEIVED: {
         await this.notificationsService.createNotification(
-          this.i18n.t('notifications.gift_not_received.title'),
-          partherEventApplicationId!,
-          this.i18n.t('notifications.description', {
+          this.i18n.t('notifications:notifications.gift_not_received.title'),
+          partherEventApplicationAccountId!,
+          this.i18n.t('notifications:notifications.description', {
             args: {
               event,
             },

@@ -55,7 +55,7 @@ export class NotificationService {
     accountId: number,
     message: string,
   ): Promise<Notification> {
-    return await this.prismaService.notification.create({
+    return this.prismaService.notification.create({
       data: {
         title: title,
         accountId: accountId,

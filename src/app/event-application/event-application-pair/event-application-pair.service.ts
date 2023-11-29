@@ -110,9 +110,9 @@ export class EventApplicationPairService {
       where: { id: eventId },
     });
     await this.notificationsService.createNotification(
-      this.i18n.t('notifications.looking_for_pair.title'),
+      this.i18n.t('notifications:notifications.looking_for_pair.title'),
       accountId,
-      this.i18n.t('notifications.description', {
+      this.i18n.t('notifications:notifications.description', {
         args: {
           event,
         },
@@ -200,9 +200,9 @@ export class EventApplicationPairService {
       eventApplicationFirst!.applicationFirst.accountId;
 
     await this.notificationsService.createNotification(
-      this.i18n.t('notifications.paired.title'),
+      this.i18n.t('notifications:notifications.paired.title'),
       eventApplicationFirstAccountId,
-      this.i18n.t('notifications.description', {
+      this.i18n.t('notifications:notifications.description', {
         args: {
           event,
         },
