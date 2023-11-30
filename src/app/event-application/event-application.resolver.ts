@@ -57,7 +57,10 @@ export class EventApplicationResolver {
       throw new Error(this.i18n.t('errors.unauthorized'));
     }
 
-    return this.eventApplicationService.createEventApplication(input);
+    return this.eventApplicationService.createEventApplication(
+      input,
+      context.req.headers['content-language'] as string,
+    );
   }
 
   @Mutation(() => EventApplication, { name: 'setEventApplicationStatus' })
@@ -108,6 +111,7 @@ export class EventApplicationResolver {
     return this.eventApplicationService.setEventApplicationStatus(
       eventApplicationId,
       status,
+      context.req.headers['content-language'] as string,
     );
   }
 

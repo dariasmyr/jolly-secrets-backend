@@ -2,12 +2,12 @@ import * as console from 'node:console';
 
 import { Injectable } from '@nestjs/common';
 import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
-import { I18nContext, I18nService } from 'nestjs-i18n';
 
 import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
 import { CreatePreferenceInput } from '@/app/event-application/preference/preference.resolver';
 import { NotificationService } from '@/app/notification/notification.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
+import { I18nService } from '@/i18n/i18n.service';
 
 @Injectable()
 export class EventApplicationPairService {
@@ -19,6 +19,7 @@ export class EventApplicationPairService {
 
   async upsertEventApplicationPair(
     input: CreateEventApplicationInput,
+    language: string,
   ): Promise<EventApplicationPair> {
     const suitableEventApplicationPair = await this.findSuitableApplicationPair(
       input.eventId,
@@ -28,8 +29,12 @@ export class EventApplicationPairService {
     console.log('suitableEventApplicationPair', suitableEventApplicationPair);
 
     return suitableEventApplicationPair
-      ? this.updateEventApplicationPair(input, suitableEventApplicationPair.id)
-      : this.createEventApplicationPair(input);
+      ? this.updateEventApplicationPair(
+          input,
+          suitableEventApplicationPair.id,
+          language,
+        )
+      : this.createEventApplicationPair(input, language);
   }
 
   private async findSuitableApplicationPair(
@@ -90,6 +95,7 @@ export class EventApplicationPairService {
 
   async createEventApplicationPair(
     input: CreateEventApplicationInput,
+    language: string,
   ): Promise<EventApplicationPair> {
     const { accountId, eventId, preferences } = input;
     const result = await this.prismaService.$transaction(async (prisma) => {
@@ -114,13 +120,13 @@ export class EventApplicationPairService {
       where: { id: eventId },
     });
     await this.notificationsService.createNotification(
-      this.i18n.t('notifications:notifications.looking_for_pair.title'),
+      this.i18n.getTranslation(language)(
+        'notifications.looking_for_pair.title',
+      ),
       accountId,
-      this.i18n.t('notifications:notifications.description', {
-        args: {
-          event,
-        },
-      }),
+      `${this.i18n.getTranslation(language)(
+        'notifications.description',
+      )} ${event?.id}`,
     );
 
     console.log('CREATE result', result);
@@ -130,6 +136,7 @@ export class EventApplicationPairService {
   async updateEventApplicationPair(
     input: CreateEventApplicationInput,
     eventApplicationPairId: number,
+    language: string,
   ): Promise<EventApplicationPair> {
     const { accountId, preferences, eventId } = input;
     const result = this.prismaService.$transaction(async (prisma) => {
@@ -212,16 +219,13 @@ export class EventApplicationPairService {
       eventApplicationFirst!.applicationFirst.accountId;
 
     await this.notificationsService.createNotification(
-      this.i18n.t('notifications:notifications.paired.title', {
-        lang: I18nContext.current()?.lang,
-      }),
+      this.i18n.getTranslation(language)('notifications.paired.title'),
       eventApplicationFirstAccountId,
-      this.i18n.t('notifications:notifications.description', {
-        args: {
-          event,
-          lang: I18nContext.current()?.lang,
-        },
-      }),
+      `${this.i18n.getTranslation(language)(
+        'notifications.paired.title',
+      )} ${this.i18n.getTranslation(language)(
+        'notifications.description',
+      )} ${event?.name}`,
     );
 
     console.log('UPDATE result', result);

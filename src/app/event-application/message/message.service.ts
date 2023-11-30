@@ -1,4 +1,5 @@
 import * as console from 'node:console';
+import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
 import { Message } from '@prisma/client';
@@ -49,11 +50,14 @@ export class MessageService {
       return null;
     }
 
+    const link = `${process.env.SECRET_SANTA_DOMAIN}/chat?id=${chatId}`;
+
     await this.accountGateway.sendToAccount(receiver.accountId, 'new_message', {
       senderAccountId,
       receiverAccountId: receiver.accountId,
       chatId,
       text,
+      link,
     });
 
     return this.prismaService.message.create({
@@ -69,9 +73,6 @@ export class MessageService {
     return this.prismaService.message.findMany({
       where: {
         chatId,
-      },
-      orderBy: {
-        createdAt: 'desc',
       },
     });
   }

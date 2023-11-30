@@ -2,12 +2,12 @@ import * as console from 'node:console';
 
 import { Injectable } from '@nestjs/common';
 import { EventApplication, EventApplicationStatus } from '@prisma/client';
-import { I18nService } from 'nestjs-i18n';
 
 import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
 import { EventApplicationPairService } from '@/app/event-application/event-application-pair/event-application-pair.service';
 import { NotificationService } from '@/app/notification/notification.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
+import { I18nService } from '@/i18n/i18n.service';
 
 @Injectable()
 export class EventApplicationService {
@@ -20,6 +20,7 @@ export class EventApplicationService {
 
   async createEventApplication(
     input: CreateEventApplicationInput,
+    language: string,
   ): Promise<number | null> {
     const eventApplications =
       await this.prismaService.eventApplication.findMany({
@@ -56,7 +57,10 @@ export class EventApplicationService {
     }
 
     const result =
-      await this.eventApplicationPairService.upsertEventApplicationPair(input);
+      await this.eventApplicationPairService.upsertEventApplicationPair(
+        input,
+        language,
+      );
 
     if (!result) {
       // eslint-disable-next-line unicorn/no-null
@@ -72,6 +76,7 @@ export class EventApplicationService {
   async setEventApplicationStatus(
     eventApplicationId: number,
     status: EventApplicationStatus,
+    language: string,
   ): Promise<EventApplication> {
     const updatedApplication = await this.prismaService.eventApplication.update(
       {
@@ -105,40 +110,44 @@ export class EventApplicationService {
     switch (status) {
       case EventApplicationStatus.GIFT_SENT: {
         await this.notificationsService.createNotification(
-          this.i18n.t('notifications:notifications.gift_sent.title'),
+          this.i18n.getTranslation(language)('notifications.gift_sent.title'),
           updatedApplication.accountId,
-          // eslint-disable-next-line sonarjs/no-duplicate-string
-          this.i18n.t('notifications:notifications.description', {
-            args: {
-              event,
-            },
-          }),
+          `${this.i18n.getTranslation(language)(
+            'notifications.gift_sent.title',
+          )} ${this.i18n.getTranslation(language)(
+            // eslint-disable-next-line sonarjs/no-duplicate-string
+            'notifications.description',
+          )} ${event?.name}`,
         );
 
         break;
       }
       case EventApplicationStatus.GIFT_RECEIVED: {
         await this.notificationsService.createNotification(
-          this.i18n.t('notifications:notifications.gift_received.title'),
+          this.i18n.getTranslation(language)(
+            'notifications.gift_received.title',
+          ),
           partherEventApplicationAccountId!,
-          this.i18n.t('notifications:notifications.description', {
-            args: {
-              event,
-            },
-          }),
+          `${this.i18n.getTranslation(language)(
+            'notifications.gift_received.title',
+          )} ${this.i18n.getTranslation(language)(
+            'notifications.description',
+          )} ${event?.name}`,
         );
 
         break;
       }
       case EventApplicationStatus.GIFT_NOT_RECEIVED: {
         await this.notificationsService.createNotification(
-          this.i18n.t('notifications:notifications.gift_not_received.title'),
+          this.i18n.getTranslation(language)(
+            'notifications.gift_not_received.title',
+          ),
           partherEventApplicationAccountId!,
-          this.i18n.t('notifications:notifications.description', {
-            args: {
-              event,
-            },
-          }),
+          `${this.i18n.getTranslation(language)(
+            'notifications.gift_not_received.title',
+          )} ${this.i18n.getTranslation(language)(
+            'notifications.description',
+          )} ${event?.name}`,
         );
 
         break;

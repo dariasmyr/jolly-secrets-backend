@@ -6,6 +6,7 @@ import { GroupModule } from '@/app/group/group.module';
 import { NotificationModule } from '@/app/notification/notification.module';
 import { NotificationService } from '@/app/notification/notification.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
+import { I18nService } from '@/i18n/i18n.service';
 
 import { ChatResolver } from './chat/chat.resolver';
 import { ChatService } from './chat/chat.service';
@@ -42,6 +43,7 @@ import { PreferenceService } from './preference/preference.service';
     MessageService,
     MessageResolver,
     NotificationService,
+    I18nService,
   ],
   exports: [
     EventApplicationService,

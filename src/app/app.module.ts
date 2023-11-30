@@ -33,6 +33,7 @@ import { LoggerServeModule } from '@/common/logger-serve/logger-serve.module';
 import { PrismaModule } from '@/common/prisma/prisma.module';
 import { PrismaStudioModule } from '@/common/prisma-studio/prisma-studio.module';
 
+import { I18nService } from '../i18n/i18n.service';
 import { EventModule } from './event/event.module';
 import { EventApplicationModule } from './event-application/event-application.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
@@ -109,6 +110,7 @@ import { ProfileModule } from './profile/profile.module';
       provide: APP_FILTER,
       useClass: Page404Filter,
     },
+    I18nService,
   ],
 })
 export class AppModule implements NestModule {

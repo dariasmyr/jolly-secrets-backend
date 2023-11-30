@@ -1,7 +1,7 @@
 {
   "notifications": {
     "title": "Notifications",
-    "description": "Your application from {eventName} has been updated. Check it out!",
+    "description": "Your application has been updated. Event name: ",
     "looking_for_pair": {
       "title": "We are looking for a pair for you! Stay tuned!"
     },
