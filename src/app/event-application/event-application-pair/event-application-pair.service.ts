@@ -2,7 +2,7 @@ import * as console from 'node:console';
 
 import { Injectable } from '@nestjs/common';
 import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
-import { I18nService } from 'nestjs-i18n';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 import { CreateEventApplicationInput } from '@/app/event-application/event-application.resolver';
 import { CreatePreferenceInput } from '@/app/event-application/preference/preference.resolver';
@@ -212,11 +212,14 @@ export class EventApplicationPairService {
       eventApplicationFirst!.applicationFirst.accountId;
 
     await this.notificationsService.createNotification(
-      this.i18n.t('notifications:notifications.paired.title'),
+      this.i18n.t('notifications:notifications.paired.title', {
+        lang: I18nContext.current()?.lang,
+      }),
       eventApplicationFirstAccountId,
       this.i18n.t('notifications:notifications.description', {
         args: {
           event,
+          lang: I18nContext.current()?.lang,
         },
       }),
     );
