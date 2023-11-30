@@ -1,17 +1,89 @@
-[//]: # (todo improve readme)
+# Secret Santa Backend
 
-<p align="center">
-  <a href="https://github.com/uxname/liteend" target="blank"><img src=".github/logo.png" width="400" alt="LiteEnd logo" /></a>
-</p>
+## About The App
 
-Lightweight template for a backend applications, based on [NestJS](https://nestjs.com).
-[Prisma.io](https://www.prisma.io) and PostgreSQL uses as base for data storage.
+Welcome to the backend of Secret Santa - an application for secret gift exchange. This README provides a comprehensive guide to the backend structure, technologies, and performance considerations. Explore the innovative architecture, real-time communication features, and ways to contribute.
+
+### Stack
+
+- [**Nest JS**](https://nestjs.com/)
+- [**Prisma**](https://www.prisma.io/)
+- [**GraphQL**](https://graphql.org/)
+- [**PostgreSQL**](https://www.postgresql.org/)
+- [**Docker**](https://www.docker.com/)
+- [**Telegraph**](https://telegra.ph/)
+- [**Jest**](https://jestjs.io/)
+
+### App Usage
+
+1. Clone the repository.
+2. Install dependencies using `npm install`.
+3. Set up the database using Prisma migrations.
+4. Run the application using `npm run start`.
+5. Access the GraphQL endpoint to interact with the API.
+
+### Implemented Features
+
+- **Real-time Communication:**
+  - WebSocket-based chat system using Socket.IO library.
+  - Enables instant messaging and notification delivery for a seamless user experience.
+
+## Tech Details
+
+### Architecture
+
+#### Server Architecture
+
+- Built on Nest JS framework with modular design for scalability.
+- Each module represents a feature or entity, enhancing maintainability.
+
+#### Database Architecture
+
+- PostgreSQL for robust and relational data storage.
+- Prisma ORM ensures seamless communication between Nest JS and PostgreSQL.
+
+#### GraphQL API
+
+- Flexible and efficient API for clients.
+- Telegraph tool auto-generates GraphQL schema and resolvers based on Prisma schema.
+
+#### Performance Considerations
+
+- **Query Optimization:**
+  - Prisma's type-safe query builder optimizes database queries.
+  - Careful data selection minimizes unnecessary retrieval.
+  
+- **Caching Strategies:**
+  - Implement caching for frequently requested data to reduce database queries.
+
+- **Asynchronous Processing:**
+  - Offload resource-intensive tasks to background jobs using tools like Bull.
+  - Ensures critical processes do not impact immediate response time.
+
+#### Real-time Communication Features
+
+- **WebSocket Integration:**
+  - Configured to handle WebSocket connections for bidirectional communication.
+
+- **Instant Messaging:**
+  - WebSocket-based chat system for instant message exchange.
+
+- **Notification Delivery:**
+  - Real-time communication extends to instant delivery of notifications.
+
+## Used Materials
+
+- List any external references, tutorials, or articles used during development.
+
+## Configuration
+
+- Set environment variables, including the database URL and WebSocket configuration.
 
 ## 📃 Get started (TL;DR)
 
 ```shell
 # Init project
-$ npx liteend-cli new <project-name>
+$ npx secret-santa-backend-cli new <project-name>
 
 # Deploy database: 
 $ npm run db:migrations:apply
@@ -29,12 +101,10 @@ $ npm run build
 $ npm start:prod
 ```
 
-### 💧 System endpoints
+## System endpoints
+There are available debug endpoints for viewing project information (e.g., logs and DB data).
 
-There available debug endpoints for view project information (ex.: logs and DB data)
-
-#### Logs
-
+Logs
 ```shell
 /logs/ # View logs
 /logs/all # View all logs
@@ -42,14 +112,12 @@ There available debug endpoints for view project information (ex.: logs and DB d
 # Etc. See src/common/logger-serve/logger-serve.controller.ts
 ```
 
-#### Database admin panel
-
+Database admin panel
 ```shell
 /studio # Prisma Studio
 ```
 
-### 🥡 Docker-compose
-
+## Docker-compose
 ```shell
 # Launch
 $ docker-compose up -d
@@ -58,8 +126,7 @@ $ docker-compose up -d
 $ docker-compose up -d --build
 ```
 
-### 📦 Database workflow
-
+## Database workflow
 ```shell
 # Edit schema: 
 $ prisma/schema.prisma
@@ -73,15 +140,9 @@ $ npm run db:migrations:create
 # Deploy migrations to database: 
 $ npm run db:migrations:apply
 ```
+More info about using Prisma: Prisma Documentation
 
-> More info about using Prisma: https://www.prisma.io
-
-## 🍀 Code quality
-
-> TL;DR: Run `npm run check` before **every** commit
-
-### ✅ Tests
-
+## Tests
 ```shell
 # unit tests
 $ npm run test
@@ -93,35 +154,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-The project has [ESLint](https://eslint.org/) configured, which checks the code for errors and warnings, and See
-also `tsconfig.json` for proper assembly and compilation of types. To check the code for errors and warnings - run the
-command `npm run check`.
-Prettier is also configured to format the code, run `npm run format` to format the code (but ESLint will still check it)
-.
+The project has ESLint configured, which checks the code for errors and warnings, and See also tsconfig.json for proper assembly and compilation of types. To check the code for errors and warnings - run the command npm run check. Prettier is also configured to format the code, run npm run format to format the code (but ESLint will still check it).
 
 In addition, the project has a pre-commit hook configured to check the code for errors and warnings before each commit.
-
-## 🤝 Contributing
-
-Contributions, issues and feature requests are welcome!<br />Feel free to
-check [issues page](https://github.com/uxname/liteend/issues).
-
-## 💪 Show your support
-
-Give a ⭐️ if this project helped you!
-
-## 📝 License
-
-Copyright © 2023 [uxname@gmail.com](https://github.com/uxname).<br />
-This project is [MIT](https://mit-license.org/) licensed.
-
-## 🔍 Telemetry
-
-The LiteEnd project collects telemetry data to help improve the product and enhance user experience. Telemetry data
-collected includes information such as product name, version, architecture, operating system, NodeJS version, a unique
-instance identifier, and launch timestamp.
-
-The telemetry data collected is used to understand how users are using the product and to identify any issues or areas
-for improvement. All telemetry data collected is treated as confidential and is never shared with third parties.
-
-To opt-out of telemetry, users can set the `DISABLE_TELEMETRY` environment variable to `true` when running LiteEnd.
