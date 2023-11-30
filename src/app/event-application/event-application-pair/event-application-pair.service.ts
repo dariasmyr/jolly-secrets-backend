@@ -1,3 +1,5 @@
+import * as console from 'node:console';
+
 import { Injectable } from '@nestjs/common';
 import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
 import { I18nService } from 'nestjs-i18n';
@@ -22,6 +24,8 @@ export class EventApplicationPairService {
       input.eventId,
       input.preferences,
     );
+
+    console.log('suitableEventApplicationPair', suitableEventApplicationPair);
 
     return suitableEventApplicationPair
       ? this.updateEventApplicationPair(input, suitableEventApplicationPair.id)
@@ -118,6 +122,8 @@ export class EventApplicationPairService {
         },
       }),
     );
+
+    console.log('CREATE result', result);
     return result;
   }
 
@@ -156,12 +162,18 @@ export class EventApplicationPairService {
         },
       });
 
+      console.log(
+        'DDDDDDDDDDDDDDD MEMBER 1',
+        eventApplicationFirst!.applicationFirst.accountId,
+      );
+      console.log('DDDDDDDDDDDDDDD MEMBER 2', eventApplicationSecond.accountId);
+
       const chat = await prisma.chat.create({
         data: {
           members: {
             create: [
               {
-                accountId,
+                accountId: eventApplicationFirst!.applicationFirst.accountId,
               },
               {
                 accountId: eventApplicationSecond.accountId,
@@ -208,6 +220,8 @@ export class EventApplicationPairService {
         },
       }),
     );
+
+    console.log('UPDATE result', result);
     return result;
   }
 

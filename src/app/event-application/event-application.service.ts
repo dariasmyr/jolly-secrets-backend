@@ -1,3 +1,5 @@
+import * as console from 'node:console';
+
 import { Injectable } from '@nestjs/common';
 import { EventApplication, EventApplicationStatus } from '@prisma/client';
 import { I18nService } from 'nestjs-i18n';
@@ -18,7 +20,41 @@ export class EventApplicationService {
 
   async createEventApplication(
     input: CreateEventApplicationInput,
-  ): Promise<EventApplication | null> {
+  ): Promise<number | null> {
+    const eventApplications =
+      await this.prismaService.eventApplication.findMany({
+        where: {
+          OR: [
+            {
+              eventApplicationFirstPairs: {
+                some: {
+                  eventId: input.eventId,
+                },
+              },
+            },
+            {
+              eventApplicationSecondPairs: {
+                some: {
+                  eventId: input.eventId,
+                },
+              },
+            },
+          ],
+        },
+      });
+
+    console.log('eventApplications', eventApplications);
+
+    const eventApplication = eventApplications.find(
+      (_eventApplication) => _eventApplication.accountId === input.accountId,
+    );
+
+    if (eventApplication) {
+      console.log('eventApplication', eventApplication);
+      // eslint-disable-next-line unicorn/no-null
+      return null;
+    }
+
     const result =
       await this.eventApplicationPairService.upsertEventApplicationPair(input);
 
@@ -27,22 +63,10 @@ export class EventApplicationService {
       return null;
     }
 
-    const eventApplications = await this.getEventApplicationByAccountId(
-      input.accountId,
-    );
-
-    if (eventApplications!.length === 0) {
+    return (
       // eslint-disable-next-line unicorn/no-null
-      return null;
-    }
-
-    const eventApplication = eventApplications!.find(
-      (_eventApplication) =>
-        _eventApplication.id === result.eventApplicationFirstId ||
-        _eventApplication.id === result.eventApplicationSecondId,
+      result.eventApplicationFirstId ?? result.eventApplicationSecondId ?? null
     );
-    // eslint-disable-next-line unicorn/no-null
-    return eventApplication ?? null;
   }
 
   async setEventApplicationStatus(

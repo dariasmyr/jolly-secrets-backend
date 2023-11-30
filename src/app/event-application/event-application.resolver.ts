@@ -13,7 +13,6 @@ import {
 } from '@nestjs/graphql';
 import { I18nService } from 'nestjs-i18n';
 
-import { Event } from '@/@generated/nestgraphql/event/event.model';
 import { EventApplication } from '@/@generated/nestgraphql/event-application/event-application.model';
 import { Preference } from '@/@generated/nestgraphql/preference/preference.model';
 import { EventApplicationStatus } from '@/@generated/nestgraphql/prisma/event-application-status.enum';
@@ -47,12 +46,12 @@ export class EventApplicationResolver {
     private i18n: I18nService,
   ) {}
 
-  @Mutation(() => Event, { name: 'createEventApplication' })
+  @Mutation(() => Number, { name: 'createEventApplication' })
   @UseGuards(AuthGuard)
   async createEventApplication(
     @Args('input') input: CreateEventApplicationInput,
     @RequestContextDecorator() context: RequestContext,
-  ): Promise<EventApplication | null> {
+  ): Promise<number | null> {
     if (context.account?.id !== input.accountId) {
       // eslint-disable-next-line sonarjs/no-duplicate-string
       throw new Error(this.i18n.t('errors.unauthorized'));

@@ -3,6 +3,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { I18n, I18nContext } from 'nestjs-i18n';
 
 import { I18nTranslations } from '@/@generated/i18n-types';
+import { AccountGateway } from '@/app/account/account.gateway';
 import { GitService } from '@/app/debug/git/git.service';
 import { Logger } from '@/common/logger/logger';
 
@@ -12,7 +13,10 @@ import appInfo from '../../../app-info.json';
 export class DebugResolver {
   private readonly logger: Logger = new Logger(DebugResolver.name);
 
-  constructor(private readonly gitService: GitService) {}
+  constructor(
+    private readonly accountGateway: AccountGateway,
+    private readonly gitService: GitService,
+  ) {}
 
   @Query(() => String, { name: 'testTranslation' })
   testTranslation(
@@ -27,7 +31,12 @@ export class DebugResolver {
   }
 
   @Query(() => String, { name: 'echo' })
-  echo(@Args('text', { type: () => String }) text: string): string {
+  async echo(
+    @Args('text', { type: () => String }) text: string,
+  ): Promise<string> {
+    await this.accountGateway.sendToAccount(2, 'new_message', {
+      echoMessage: text,
+    });
     this.logger.log({ resolver: 'echo', text });
     return text;
   }

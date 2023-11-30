@@ -1,3 +1,5 @@
+import * as console from 'node:console';
+
 import { Injectable } from '@nestjs/common';
 import { Message } from '@prisma/client';
 
@@ -13,11 +15,32 @@ export class MessageService {
   ) {}
 
   async createMessage(input: CreateMessageInput): Promise<Message | null> {
-    const { chatId, text, accountId: receiverAccountId } = input;
+    const { chatId, text, accountId: senderAccountId } = input;
     if (text.trim() === '') {
       // eslint-disable-next-line unicorn/no-null
       return null;
     }
+
+    const members = await this.prismaService.chat
+      .findUnique({
+        where: {
+          id: chatId,
+        },
+      })
+      .members();
+
+    console.log('aaaaaaaaaaaaaaaaaaaa', members);
+
+    const receiver = members?.find((account) => {
+      return account.accountId !== senderAccountId;
+    });
+
+    if (!receiver) {
+      throw new Error('Receiver not found');
+    }
+
+    console.log('receiver', receiver);
+    console.log('senderAccountId', senderAccountId);
 
     const MAX_TEXT_LENGTH = 200;
 
@@ -26,7 +49,9 @@ export class MessageService {
       return null;
     }
 
-    await this.accountGateway.sendToAccount(receiverAccountId, 'new_message', {
+    await this.accountGateway.sendToAccount(receiver.accountId, 'new_message', {
+      senderAccountId,
+      receiverAccountId: receiver.accountId,
       chatId,
       text,
     });
@@ -35,7 +60,7 @@ export class MessageService {
       data: {
         chatId,
         text,
-        accountId: receiverAccountId,
+        accountId: senderAccountId,
       },
     });
   }
@@ -44,6 +69,9 @@ export class MessageService {
     return this.prismaService.message.findMany({
       where: {
         chatId,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }
