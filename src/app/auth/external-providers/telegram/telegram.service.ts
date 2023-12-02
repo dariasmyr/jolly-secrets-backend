@@ -69,7 +69,7 @@ export class TelegramService {
     username: string,
   ): Promise<string> {
     const jwt = await this.jwtService.signAsync({ telegramId, username });
-    return `http://localhost:3000/auth/telegram?token=${jwt}`;
+    return `${process.env.SECRET_SANTA_DOMAIN}/auth/telegram?token=${jwt}`;
   }
 
   async generateTelegramBotLink(): Promise<string> {
