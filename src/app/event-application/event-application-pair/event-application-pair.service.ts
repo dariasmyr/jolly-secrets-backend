@@ -1,5 +1,4 @@
 import * as console from 'node:console';
-import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
 import { EventApplicationPair, EventApplicationStatus } from '@prisma/client';
@@ -118,14 +117,18 @@ export class EventApplicationPairService {
       });
     });
 
+    const event = await this.prismaService.event.findUnique({
+      where: { id: eventId },
+    });
+
     await this.notificationsService.createNotification(
       this.i18n.getTranslation(language)(
         'notifications.looking_for_pair.title',
       ),
       accountId,
-      `${this.i18n.getTranslation(language)('notifications.description')} ${
-        process.env.SECRET_SANTA_DOMAIN
-      }/event?id=${eventId}`,
+      `${this.i18n.getTranslation(language)(
+        'notifications.description',
+      )} ${event?.name}`,
     );
 
     console.log('CREATE result', result);
@@ -214,14 +217,18 @@ export class EventApplicationPairService {
     const eventApplicationFirstAccountId =
       eventApplicationFirst!.applicationFirst.accountId;
 
+    const event = await this.prismaService.event.findUnique({
+      where: { id: eventId },
+    });
+
     await this.notificationsService.createNotification(
       this.i18n.getTranslation(language)('notifications.paired.title'),
       eventApplicationFirstAccountId,
       `${this.i18n.getTranslation(language)(
         'notifications.paired.title',
-      )} ${this.i18n.getTranslation(language)('notifications.description')} ${
-        process.env.SECRET_SANTA_DOMAIN
-      }/event?id=${eventId}`,
+      )} ${this.i18n.getTranslation(language)(
+        'notifications.description',
+      )} ${event?.name}`,
     );
 
     console.log('UPDATE result', result);

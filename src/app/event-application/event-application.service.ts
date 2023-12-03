@@ -1,5 +1,4 @@
 import * as console from 'node:console';
-import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
 import { EventApplication, EventApplicationStatus } from '@prisma/client';
@@ -118,7 +117,7 @@ export class EventApplicationService {
           )} ${this.i18n.getTranslation(language)(
             // eslint-disable-next-line sonarjs/no-duplicate-string
             'notifications.description',
-          )} ${process.env.SECRET_SANTA_DOMAIN}/event?id=${event?.id}`,
+          )} ${event?.name}`,
         );
 
         break;
@@ -133,7 +132,7 @@ export class EventApplicationService {
             'notifications.gift_received.title',
           )} ${this.i18n.getTranslation(language)(
             'notifications.description',
-          )} ${process.env.SECRET_SANTA_DOMAIN}/event?id=${event?.id}`,
+          )} ${event?.name}`,
         );
 
         break;
@@ -148,7 +147,7 @@ export class EventApplicationService {
             'notifications.gift_not_received.title',
           )} ${this.i18n.getTranslation(language)(
             'notifications.description',
-          )} ${process.env.SECRET_SANTA_DOMAIN}/event?id=${event?.id}`,
+          )} ${event?.name}`,
         );
 
         break;
