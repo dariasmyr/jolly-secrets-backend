@@ -20,12 +20,14 @@ import {
   RandomStringType,
 } from '@/common/crypto/crypto.service';
 import { Logger } from '@/common/logger/logger';
+import { I18nService } from '@/i18n/i18n.service';
 
 @Injectable()
 export class TelegramService {
   private readonly logger = new Logger(TelegramService.name);
   private readonly botToken: string;
   private static bot: Telegraf;
+  private languageCode: string;
 
   constructor(
     private readonly accountService: AccountService,
@@ -33,6 +35,7 @@ export class TelegramService {
     private readonly profileService: ProfileService,
     private readonly cryptoService: CryptoService,
     private readonly jwtService: JwtService,
+    private i18n: I18nService,
   ) {
     console.log('TelegramService constructor AAAAAAAAAAAAAAAAA');
     this.botToken = process.env.TELEGRAM_BOT_TOKEN as string;
@@ -51,7 +54,9 @@ export class TelegramService {
         });
 
         // eslint-disable-next-line camelcase
-        const { id, username } = context.from;
+        const { id, username, language_code } = context.from;
+        // eslint-disable-next-line camelcase
+        this.languageCode = language_code!;
         if (!id || !username) {
           this.logger.error('Telegram auth bot started with invalid user');
           return;
@@ -69,10 +74,23 @@ export class TelegramService {
     }
   }
 
-  async sendTelegramMessage(chatId: string, message: string): Promise<void> {
-    await TelegramService.bot.telegram.sendMessage(chatId, message, {
+  async sendTelegramMessage(chatId: string, link: string): Promise<void> {
+    const title = this.i18n.getTranslation(this.languageCode)(
+      'new_message.title',
+    );
+    const preLink = this.i18n.getTranslation(this.languageCode)(
+      'new_message.link',
+    );
+
+    const messageText = `
+      *${title}*
+[${preLink}](${link})`;
+
+    console.log('messageText', messageText);
+
+    await TelegramService.bot.telegram.sendMessage(chatId, messageText, {
       // eslint-disable-next-line camelcase
-      parse_mode: 'Markdown',
+      parse_mode: 'MarkdownV2',
     });
   }
 

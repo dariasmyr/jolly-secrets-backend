@@ -35,6 +35,10 @@ export type I18nTranslations = {
             "title": string;
             "description": string;
         };
+        "new_message": {
+            "title": string;
+            "link": string;
+        };
     };
     "translations": {
         "hello": string;

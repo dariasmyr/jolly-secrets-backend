@@ -21,5 +21,9 @@
   "notifications_not_found": {
     "title": "There are no notifications yet",
     "description": "Waiting..."
+  },
+  "new_message": {
+    "title": "You have a new message from Secret Santa",
+    "link": "Click here to reply"
   }
 }

@@ -78,10 +78,7 @@ export class MessageService {
     if (telegramChatId) {
       await this.telegramService.sendTelegramMessage(
         telegramChatId!.externalId,
-        `
-      *You have a new message from Secret Santa*
-Message: ${text.trim()}
-[Click here to reply](${link.trim()})`,
+        link,
       );
     }
 

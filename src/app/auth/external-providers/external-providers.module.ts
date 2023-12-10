@@ -10,6 +10,7 @@ import { ProfileModule } from '@/app/profile/profile.module';
 import { ProfileService } from '@/app/profile/profile.service';
 import { CryptoModule } from '@/common/crypto/crypto.module';
 import { PrismaService } from '@/common/prisma/prisma.service';
+import { I18nService } from '@/i18n/i18n.service';
 
 import { TelegramResolver } from './telegram/telegram.resolver';
 import { TelegramService } from './telegram/telegram.service';
@@ -36,6 +37,7 @@ import { TelegramService } from './telegram/telegram.service';
     TelegramResolver,
     ProfileService,
     PrismaService,
+    I18nService,
   ],
 })
 export class ExternalProvidersModule {}
