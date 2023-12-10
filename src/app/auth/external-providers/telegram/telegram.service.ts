@@ -86,8 +86,6 @@ export class TelegramService {
       *${title}*
 [${preLink}](${link})`;
 
-    console.log('messageText', messageText);
-
     await TelegramService.bot.telegram.sendMessage(chatId, messageText, {
       // eslint-disable-next-line camelcase
       parse_mode: 'MarkdownV2',
