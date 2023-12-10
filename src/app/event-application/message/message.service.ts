@@ -2,9 +2,10 @@ import * as console from 'node:console';
 import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
-import { Message } from '@prisma/client';
+import { ExternalProfileProvider, Message } from '@prisma/client';
 
 import { AccountGateway } from '@/app/account/account.gateway';
+import { TelegramService } from '@/app/auth/external-providers/telegram/telegram.service';
 import { CreateMessageInput } from '@/app/event-application/message/message.resolver';
 import { PrismaService } from '@/common/prisma/prisma.service';
 
@@ -13,6 +14,7 @@ export class MessageService {
   constructor(
     private readonly accountGateway: AccountGateway,
     private readonly prismaService: PrismaService,
+    private readonly telegramService: TelegramService,
   ) {}
 
   async createMessage(input: CreateMessageInput): Promise<Message | null> {
@@ -29,8 +31,6 @@ export class MessageService {
         },
       })
       .members();
-
-    console.log('aaaaaaaaaaaaaaaaaaaa', members);
 
     const receiver = members?.find((account) => {
       return account.accountId !== senderAccountId;
@@ -60,13 +60,32 @@ export class MessageService {
       link,
     });
 
-    return this.prismaService.message.create({
+    const result = this.prismaService.message.create({
       data: {
         chatId,
         text,
         accountId: senderAccountId,
       },
     });
+
+    const telegramChatId = await this.prismaService.externalProfile.findFirst({
+      where: {
+        accountId: receiver.accountId,
+        provider: ExternalProfileProvider.TELEGRAM,
+      },
+    });
+
+    if (telegramChatId) {
+      await this.telegramService.sendTelegramMessage(
+        telegramChatId!.externalId,
+        `
+      *You have a new message from Secret Santa*
+Message: ${text.trim()}
+[Click here to reply](${link.trim()})`,
+      );
+    }
+
+    return result;
   }
 
   async getMessageByChatId(chatId: number): Promise<Array<Message> | null> {

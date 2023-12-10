@@ -1,10 +1,15 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { AccountModule } from '@/app/account/account.module';
+import { AccountSessionService } from '@/app/account-session/account-session.service';
+import { TelegramService } from '@/app/auth/external-providers/telegram/telegram.service';
 import { EventModule } from '@/app/event/event.module';
 import { GroupModule } from '@/app/group/group.module';
 import { NotificationModule } from '@/app/notification/notification.module';
 import { NotificationService } from '@/app/notification/notification.service';
+import { ProfileService } from '@/app/profile/profile.service';
+import { CryptoService } from '@/common/crypto/crypto.service';
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { I18nService } from '@/i18n/i18n.service';
 
@@ -44,6 +49,11 @@ import { PreferenceService } from './preference/preference.service';
     MessageResolver,
     NotificationService,
     I18nService,
+    TelegramService,
+    AccountSessionService,
+    ProfileService,
+    CryptoService,
+    JwtService,
   ],
   exports: [
     EventApplicationService,

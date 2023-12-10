@@ -1,3 +1,4 @@
+import * as console from 'node:console';
 import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
@@ -24,7 +25,7 @@ import { Logger } from '@/common/logger/logger';
 export class TelegramService {
   private readonly logger = new Logger(TelegramService.name);
   private readonly botToken: string;
-  private bot: Telegraf;
+  private static bot: Telegraf;
 
   constructor(
     private readonly accountService: AccountService,
@@ -33,37 +34,48 @@ export class TelegramService {
     private readonly cryptoService: CryptoService,
     private readonly jwtService: JwtService,
   ) {
+    console.log('TelegramService constructor AAAAAAAAAAAAAAAAA');
     this.botToken = process.env.TELEGRAM_BOT_TOKEN as string;
-    this.bot = new Telegraf(this.botToken);
-    this.bot.launch();
-    this.logger.log('Telegram bot started');
+    if (!TelegramService.bot) {
+      // Check if bot is already started
+      TelegramService.bot = new Telegraf(this.botToken);
+      TelegramService.bot.launch();
+      this.logger.log('Telegram bot started');
 
-    this.bot.start(async (context) => {
-      this.logger.log('Telegram auth bot started');
+      TelegramService.bot.start(async (context) => {
+        this.logger.log('Telegram auth bot started');
 
-      process.on('exit', (code) => {
-        this.bot.stop();
-        this.logger.log(`Bot stopped with code: ${code}`);
+        process.on('exit', (code) => {
+          TelegramService.bot.stop();
+          this.logger.log(`Bot stopped with code: ${code}`);
+        });
+
+        // eslint-disable-next-line camelcase
+        const { id, username } = context.from;
+        if (!id || !username) {
+          this.logger.error('Telegram auth bot started with invalid user');
+          return;
+        }
+        this.logger.log('Telegram auth bot started with user', id, username);
+        const authLink = await this.generateTelegramAuthLink(id, username);
+        const message = await context.reply(authLink);
+
+        // delete message for security
+        setTimeout(() => {
+          context.deleteMessage(message.message_id);
+          // eslint-disable-next-line no-magic-numbers
+        }, 1000 * 60); // 1 minute
       });
+    }
+  }
 
+  async sendTelegramMessage(chatId: string, message: string): Promise<void> {
+    await TelegramService.bot.telegram.sendMessage(chatId, message, {
       // eslint-disable-next-line camelcase
-      const { id, username } = context.from;
-      if (!id || !username) {
-        this.logger.error('Telegram auth bot started with invalid user');
-        return;
-      }
-      this.logger.log('Telegram auth bot started with user', id, username);
-      const authLink = await this.generateTelegramAuthLink(id, username);
-      const message = await context.reply(authLink);
-
-      // delete message for security
-      setTimeout(() => {
-        context.deleteMessage(message.message_id);
-        context.deleteMessage();
-        // eslint-disable-next-line no-magic-numbers
-      }, 1000 * 60); // 1 minute
+      parse_mode: 'Markdown',
     });
   }
+
   async generateTelegramAuthLink(
     telegramId: number,
     username: string,
