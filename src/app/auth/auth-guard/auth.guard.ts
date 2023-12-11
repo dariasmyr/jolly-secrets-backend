@@ -21,21 +21,30 @@ export class AuthGuard implements CanActivate {
     if (context.getType() === 'ws') {
       return true;
     }
+
     const gqlContext = GqlExecutionContext.create(context);
     const requestContext = gqlContext.getContext().req.requestContext;
+
     if (requestContext.accountSession) {
       const tokenExpirationTime = requestContext.accountSession.expiresAt;
       const currentTimestamp = Date.now();
 
       if (
-        requestContext.accountSession.account.status !== AccountStatus.ACTIVE ||
-        tokenExpirationTime < currentTimestamp
+        requestContext.accountSession.account.status !== AccountStatus.ACTIVE
       ) {
         throw new HttpException(
           i18n.t('errors.accountSuspended'),
           HttpStatus.UNAUTHORIZED,
         );
       }
+
+      if (tokenExpirationTime < currentTimestamp) {
+        throw new HttpException(
+          i18n.t('errors.tokenExpired'),
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
       return true;
     } else {
       throw new HttpException(

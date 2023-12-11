@@ -10,6 +10,7 @@ export type I18nTranslations = {
         "accountNotFound": string;
         "emailNotSent": string;
         "invalidCode": string;
+        "tokenExpired": string;
     };
     "notifications": {
         "notifications": {
