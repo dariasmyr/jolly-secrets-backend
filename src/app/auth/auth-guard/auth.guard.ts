@@ -24,8 +24,12 @@ export class AuthGuard implements CanActivate {
     const gqlContext = GqlExecutionContext.create(context);
     const requestContext = gqlContext.getContext().req.requestContext;
     if (requestContext.accountSession) {
+      const tokenExpirationTime = requestContext.accountSession.expiresAt;
+      const currentTimestamp = Date.now();
+
       if (
-        requestContext.accountSession.account.status !== AccountStatus.ACTIVE
+        requestContext.accountSession.account.status !== AccountStatus.ACTIVE ||
+        tokenExpirationTime < currentTimestamp
       ) {
         throw new HttpException(
           i18n.t('errors.accountSuspended'),
