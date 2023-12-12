@@ -26,7 +26,7 @@ import { I18nService } from '@/i18n/i18n.service';
 export class TelegramService {
   private readonly logger = new Logger(TelegramService.name);
   private readonly botToken: string;
-  private bot: Telegraf;
+  private static bot: Telegraf;
   private languageCode: string;
 
   constructor(
@@ -39,17 +39,17 @@ export class TelegramService {
   ) {
     console.log('TelegramService constructor AAAAAAAAAAAAAAAAA');
     this.botToken = process.env.TELEGRAM_BOT_TOKEN as string;
-    if (!this.bot) {
+    if (!TelegramService.bot) {
       // Check if bot is already started
-      this.bot = new Telegraf(this.botToken);
-      this.bot.launch();
+      TelegramService.bot = new Telegraf(this.botToken);
+      TelegramService.bot.launch();
       this.logger.log('Telegram bot started');
 
-      this.bot.start(async (context) => {
+      TelegramService.bot.start(async (context) => {
         this.logger.log('Telegram auth bot started');
 
         process.on('exit', (code) => {
-          this.bot.stop();
+          TelegramService.bot.stop();
           this.logger.log(`Bot stopped with code: ${code}`);
         });
 
@@ -86,7 +86,7 @@ export class TelegramService {
       *${title}*
 [${preLink}](${link})`;
 
-    await this.bot.telegram.sendMessage(chatId, messageText, {
+    await TelegramService.bot.telegram.sendMessage(chatId, messageText, {
       // eslint-disable-next-line camelcase
       parse_mode: 'MarkdownV2',
     });
