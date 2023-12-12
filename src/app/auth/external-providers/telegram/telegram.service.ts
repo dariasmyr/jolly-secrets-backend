@@ -1,4 +1,5 @@
-import * as console from 'node:console';
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
@@ -37,41 +38,43 @@ export class TelegramService {
     private readonly jwtService: JwtService,
     private i18n: I18nService,
   ) {
-    console.log('TelegramService constructor AAAAAAAAAAAAAAAAA');
     this.botToken = process.env.TELEGRAM_BOT_TOKEN as string;
+
     if (!TelegramService.bot) {
-      // Check if bot is already started
       TelegramService.bot = new Telegraf(this.botToken);
       TelegramService.bot.launch();
-      this.logger.log('Telegram bot started');
 
-      TelegramService.bot.start(async (context) => {
-        this.logger.log('Telegram auth bot started');
+      TelegramService.bot.command('start', async (context) => {
+        this.handleStartCommand(context);
+      });
 
-        process.on('exit', (code) => {
-          TelegramService.bot.stop();
-          this.logger.log(`Bot stopped with code: ${code}`);
-        });
-
-        // eslint-disable-next-line camelcase
-        const { id, username, language_code } = context.from;
-        // eslint-disable-next-line camelcase
-        this.languageCode = language_code!;
-        if (!id || !username) {
-          this.logger.error('Telegram auth bot started with invalid user');
-          return;
-        }
-        this.logger.log('Telegram auth bot started with user', id, username);
-        const authLink = await this.generateTelegramAuthLink(id, username);
-        const message = await context.reply(authLink);
-
-        // delete message for security
-        setTimeout(() => {
-          context.deleteMessage(message.message_id);
-          // eslint-disable-next-line no-magic-numbers
-        }, 1000 * 60); // 1 minute
+      process.on('exit', (code) => {
+        TelegramService.bot.stop();
+        this.logger.log(`Bot stopped with code: ${code}`);
       });
     }
+  }
+
+  private async handleStartCommand(context: any): Promise<void> {
+    this.logger.log('Telegram bot started');
+
+    // eslint-disable-next-line camelcase
+    const { id, username, language_code } = context.from;
+    // eslint-disable-next-line camelcase
+    this.languageCode = language_code!;
+    if (!id || !username) {
+      this.logger.error('Telegram auth bot started with invalid user');
+      return;
+    }
+    this.logger.log('Telegram auth bot started with user', id, username);
+    const authLink = await this.generateTelegramAuthLink(id, username);
+    const message = await context.reply(authLink);
+
+    // delete message for security
+    setTimeout(() => {
+      context.deleteMessage(message.message_id);
+      // eslint-disable-next-line no-magic-numbers
+    }, 1000 * 60); // 1 minute
   }
 
   async sendTelegramMessage(chatId: string, link: string): Promise<void> {
