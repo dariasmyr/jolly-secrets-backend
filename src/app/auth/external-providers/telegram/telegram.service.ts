@@ -39,32 +39,35 @@ export class TelegramService {
     private i18n: I18nService,
   ) {
     this.botToken = process.env.TELEGRAM_BOT_TOKEN as string;
-    TelegramService.bot = new Telegraf(this.botToken);
-    TelegramService.bot.launch();
 
-    TelegramService.bot.command('start', async (context) => {
-      process.on('exit', (code) => {
-        TelegramService.bot.stop();
-        this.logger.log(`Bot stopped with code: ${code}`);
+    if (!TelegramService.bot) {
+      TelegramService.bot = new Telegraf(this.botToken);
+      TelegramService.bot.launch();
+
+      TelegramService.bot.command('start', async (context) => {
+        process.on('exit', (code) => {
+          TelegramService.bot.stop();
+          this.logger.log(`Bot stopped with code: ${code}`);
+        });
+
+        // eslint-disable-next-line camelcase
+        const { id, username, language_code } = context.from;
+        // eslint-disable-next-line camelcase
+        this.languageCode = language_code!;
+        if (!id || !username) {
+          this.logger.error('Telegram auth bot started with invalid user');
+          return;
+        }
+        this.logger.log('Telegram auth bot started with user', id, username);
+        const authLink = await this.generateTelegramAuthLink(id, username!);
+        const message = await context.reply(authLink);
+        // delete message for security
+        setTimeout(() => {
+          context.deleteMessage(message.message_id);
+          // eslint-disable-next-line no-magic-numbers
+        }, 1000 * 60); // 1 minute
       });
-
-      // eslint-disable-next-line camelcase
-      const { id, username, language_code } = context.from;
-      // eslint-disable-next-line camelcase
-      this.languageCode = language_code!;
-      if (!id || !username) {
-        this.logger.error('Telegram auth bot started with invalid user');
-        return;
-      }
-      this.logger.log('Telegram auth bot started with user', id, username);
-      const authLink = await this.generateTelegramAuthLink(id, username!);
-      const message = await context.reply(authLink);
-      // delete message for security
-      setTimeout(() => {
-        context.deleteMessage(message.message_id);
-        // eslint-disable-next-line no-magic-numbers
-      }, 1000 * 60); // 1 minute
-    });
+    }
   }
 
   async sendTelegramMessage(chatId: string, link: string): Promise<void> {
