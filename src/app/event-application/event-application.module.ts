@@ -1,5 +1,4 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
 import { AccountModule } from '@/app/account/account.module';
 import { AccountSessionService } from '@/app/account-session/account-session.service';
@@ -53,7 +52,6 @@ import { PreferenceService } from './preference/preference.service';
     AccountSessionService,
     ProfileService,
     CryptoService,
-    JwtService,
   ],
   exports: [
     EventApplicationService,

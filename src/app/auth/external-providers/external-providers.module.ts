@@ -1,8 +1,4 @@
-import * as console from 'node:console';
-
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
 
 import { AccountModule } from '@/app/account/account.module';
 import { AccountSessionModule } from '@/app/account-session/account-session.module';
@@ -18,27 +14,7 @@ import { TelegramResolver } from './telegram/telegram.resolver';
 import { TelegramService } from './telegram/telegram.service';
 
 @Module({
-  imports: [
-    AccountSessionModule,
-    AccountModule,
-    ProfileModule,
-    CryptoModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
-        console.log(
-          'configService.getOrThrow<string>(JWT_SECRET)',
-          configService.getOrThrow<string>('JWT_SECRET'),
-        );
-
-        return {
-          secret: configService.getOrThrow<string>('JWT_SECRET'),
-          signOptions: { expiresIn: '5m' },
-        };
-      },
-      inject: [ConfigService],
-    }),
-  ],
+  imports: [AccountSessionModule, AccountModule, ProfileModule, CryptoModule],
   providers: [
     GoogleResolver,
     GoogleService,

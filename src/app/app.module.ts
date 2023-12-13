@@ -8,9 +8,10 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
+import { JwtModule } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import GraphQLJSON from 'graphql-type-json';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
@@ -104,6 +105,17 @@ import { ProfileModule } from './profile/profile.module';
     EventModule,
     NotificationModule,
     EventApplicationModule,
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.getOrThrow<string>('JWT_SECRET'),
+          signOptions: { expiresIn: '5m' },
+        };
+      },
+      inject: [ConfigService],
+    }),
   ],
   providers: [
     {
