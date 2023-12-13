@@ -1,3 +1,5 @@
+import * as console from 'node:console';
+
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -23,10 +25,17 @@ import { TelegramService } from './telegram/telegram.service';
     CryptoModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.getOrThrow<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '5m' },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        console.log(
+          'configService.getOrThrow<string>(JWT_SECRET)',
+          configService.getOrThrow<string>('JWT_SECRET'),
+        );
+
+        return {
+          secret: configService.getOrThrow<string>('JWT_SECRET'),
+          signOptions: { expiresIn: '5m' },
+        };
+      },
       inject: [ConfigService],
     }),
   ],
