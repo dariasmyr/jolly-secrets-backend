@@ -63,7 +63,7 @@ export class GoogleService {
     );
   }
 
-  async generateUrl(state?: string): Promise<string> {
+  async generateUrl(language?: string, state?: string): Promise<string> {
     return this.oAuth2Client.generateAuthUrl({
       access_type: 'offline',
       state,
