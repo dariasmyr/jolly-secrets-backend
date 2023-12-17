@@ -15,12 +15,6 @@ export class GoogleResolver {
 
   @Query(() => String, { name: 'generateUrlGoogle' })
   async generateUrl(
-    @Args('language', {
-      nullable: true,
-      defaultValue: 'en',
-      type: () => String,
-    })
-    language?: string | undefined,
     @Args('state', {
       nullable: true,
       defaultValue: undefined,
@@ -28,7 +22,7 @@ export class GoogleResolver {
     })
     state?: string | undefined,
   ): Promise<string> {
-    return this.googleService.generateUrl(language, state);
+    return this.googleService.generateUrl(state);
   }
 
   @Mutation(() => AuthResponse, {
