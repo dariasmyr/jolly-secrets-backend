@@ -52,8 +52,8 @@ export class GoogleService {
           'https://www.googleapis.com/oauth2/v1/certs',
         client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
         redirect_uris: [
-          process.env.GOOGLE_REDIRECT_URI_RU as string,
           process.env.GOOGLE_REDIRECT_URI_EN as string,
+          process.env.GOOGLE_REDIRECT_URI_RU as string,
         ],
         javascript_origins: [process.env.GOOGLE_JAVASCRIPT_ORIGINS as string],
       },
@@ -62,31 +62,26 @@ export class GoogleService {
     this.oAuth2Client = new OAuth2Client(
       this.keys.web.client_id,
       this.keys.web.client_secret,
-      this.getRedirectUri(),
     );
   }
 
-  async generateUrl(state?: string, language?: string): Promise<string> {
-    const updatedOAuth2Client = new OAuth2Client(
-      this.keys.web.client_id,
-      this.keys.web.client_secret,
-      this.getRedirectUri(language),
-    );
+  async generateUrl(language?: string, state?: string): Promise<string> {
+    const redirectUri = (): string | undefined => {
+      if (language === 'ru') {
+        return this.keys.web.redirect_uris[1];
+      }
+      return this.keys.web.redirect_uris[0];
+    };
 
-    return updatedOAuth2Client.generateAuthUrl({
+    return this.oAuth2Client.generateAuthUrl({
       access_type: 'offline',
       state,
       scope: [
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/userinfo.email',
       ],
+      redirect_uri: redirectUri!(),
     });
-  }
-
-  private getRedirectUri(language?: string): string {
-    return language === 'ru'
-      ? (process.env.GOOGLE_REDIRECT_URI_RU as string)
-      : (process.env.GOOGLE_REDIRECT_URI_EN as string);
   }
 
   async getAccessToken(code: string): Promise<string> {
