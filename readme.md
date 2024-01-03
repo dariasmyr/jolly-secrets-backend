@@ -1,4 +1,6 @@
-![logo](docs/logo.png)
+<img src="docs/logo.png"
+     alt="Logo"
+     style="float: left; margin-right: 0px;" />
 
 # Jolly Secrets Backend
 
