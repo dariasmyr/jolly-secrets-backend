@@ -1,3 +1,5 @@
+![logo](docs/logo.png)
+
 # Jolly Secrets Backend
 
 ## About The App
