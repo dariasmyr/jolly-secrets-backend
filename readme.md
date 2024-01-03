@@ -1,8 +1,8 @@
-# Secret Santa Backend
+# Jolly Secrets Backend
 
 ## About The App
 
-Welcome to the backend of Secret Santa - an application for secret gift exchange. This README provides a comprehensive guide to the backend structure, technologies, and performance considerations. Explore the innovative architecture, real-time communication features, and ways to contribute.
+**Jolly Secrets** - a TypeScript application for secret gift exchange, written on [**Nest JS**](https://nestjs.com/). [**Prisma.io**](https://www.prisma.io/) and [**PostgreSQL**](https://www.postgresql.org/) for data storage. This app uses [**GraphQL**](https://graphql.org/) API to interact with [**Jolly Secrets Frondend**](https://github.com/dariasmyr/secret-santa-frontend)
 
 ### Stack
 
@@ -14,92 +14,53 @@ Welcome to the backend of Secret Santa - an application for secret gift exchange
 - [**Telegraph**](https://telegra.ph/)
 - [**Jest**](https://jestjs.io/)
 
-### App Usage
+## Prerequisites
+Before you begin, ensure you have the following installed on your machine:
 
-1. Clone the repository.
-2. Install dependencies using `npm install`.
-3. Set up the database using Prisma migrations.
-4. Run the application using `npm run start`.
-5. Access the GraphQL endpoint to interact with the API.
+`Node.js (version >= 14)`
 
-### Implemented Features
+`npm (usually comes with Node.js installation)`
 
-- **Real-time Communication:**
-  - WebSocket-based chat system using Socket.IO library.
-  - Enables instant messaging and notification delivery for a seamless user experience.
+## Getting Started
 
-## Tech Details
+Clone the repository:
 
-### Architecture
-
-#### Server Architecture
-
-- Built on Nest JS framework with modular design for scalability.
-- Each module represents a feature or entity, enhancing maintainability.
-
-#### Database Architecture
-
-- PostgreSQL for robust and relational data storage.
-- Prisma ORM ensures seamless communication between Nest JS and PostgreSQL.
-
-#### GraphQL API
-
-- Flexible and efficient API for clients.
-- Telegraph tool auto-generates GraphQL schema and resolvers based on Prisma schema.
-
-#### Performance Considerations
-
-- **Query Optimization:**
-  - Prisma's type-safe query builder optimizes database queries.
-  - Careful data selection minimizes unnecessary retrieval.
-  
-- **Caching Strategies:**
-  - Implement caching for frequently requested data to reduce database queries.
-
-- **Asynchronous Processing:**
-  - Offload resource-intensive tasks to background jobs using tools like Bull.
-  - Ensures critical processes do not impact immediate response time.
-
-#### Real-time Communication Features
-
-- **WebSocket Integration:**
-  - Configured to handle WebSocket connections for bidirectional communication.
-
-- **Instant Messaging:**
-  - WebSocket-based chat system for instant message exchange.
-
-- **Notification Delivery:**
-  - Real-time communication extends to instant delivery of notifications.
-
-## Used Materials
-
-- List any external references, tutorials, or articles used during development.
-
-## Configuration
-
-- Set environment variables, including the database URL and WebSocket configuration.
-
-## 📃 Get started (TL;DR)
-
-```shell
-# Init project
-$ npx secret-santa-backend-cli new <project-name>
-
-# Deploy database: 
-$ npm run db:migrations:apply
-
-# Seed DB: 
-$ npm run db:seed
-
-# Development run: 
-$ npm run start:dev
-
-# Production build: 
-$ npm run build
-
-# Production run: 
-$ npm start:prod
+```bash
+npx degit dariasmyr/secret-santa-backend my-backend-app
 ```
+
+Install Dependencies:
+
+```bash
+npm install
+```
+
+### Development Mode:
+
+To run the project in development mode with automatic restarts (using Nodemon), use:
+
+```bash
+npm run start:dev
+```
+
+### Production Mode:
+
+To run the project in production mode, use:
+
+```bash
+npm run start:prod
+```
+
+This command will build the project using the TypeScript compiler and then start the application.
+
+### Testing:
+
+Run unit tests using:
+
+```bash
+npm test
+```
+The project has ESLint configured, which checks the code for errors and warnings, and See also tsconfig.json for proper assembly and compilation of types. To check the code for errors and warnings - run the command npm run check. Prettier is also configured to format the code, run npm run format to format the code (but ESLint will still check it).
 
 ## System endpoints
 There are available debug endpoints for viewing project information (e.g., logs and DB data).
@@ -142,18 +103,32 @@ $ npm run db:migrations:apply
 ```
 More info about using Prisma: Prisma Documentation
 
-## Tests
-```shell
-# unit tests
-$ npm run test
+### Linting:
 
-# e2e tests
-$ npm run test:e2e
+To check your code for linting errors:
 
-# test coverage
-$ npm run test:cov
+```bash
+npm run lint
 ```
 
-The project has ESLint configured, which checks the code for errors and warnings, and See also tsconfig.json for proper assembly and compilation of types. To check the code for errors and warnings - run the command npm run check. Prettier is also configured to format the code, run npm run format to format the code (but ESLint will still check it).
+To automatically fix linting errors:
+
+```bash
+npm run lint:fix
+```
+
+Additional Scripts
+
+`npm run ts:check`: Run TypeScript type checking without emitting files.
+`npm run check`: Run TypeScript type checking and linting.
+`npm run test:e2e`: Run end-to-end tests using Jest with a custom configuration.
+`npm run test:debug`: Run tests in debug mode.
+
+### Updating Dependencies
+To update project dependencies, you can use the following command to check for updates and update your package.json:
+
+```bash
+npm run update
+```
 
 In addition, the project has a pre-commit hook configured to check the code for errors and warnings before each commit.
