@@ -1,6 +1,8 @@
-<img src="docs/logo.png"
-     alt="Logo"
-     style="float: left; margin-right: 0px;" />
+<div style="text-align: center;">
+    <img src="docs/logo.png"
+         alt="Logo"
+         style="margin-right: 0px;" />
+</div>
 
 # Jolly Secrets Backend
 
