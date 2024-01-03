@@ -1,7 +1,7 @@
 <div style="text-align: center;">
     <img src="docs/logo.png"
          alt="Logo"
-         style="margin-right: 0px;" />
+         style="width: 50%; height: auto;" />
 </div>
 
 # Jolly Secrets Backend
