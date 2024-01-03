@@ -8,7 +8,7 @@
 
 ## About The App
 
-[**Jolly Secrets**](https://jollysecrets.uxna.me/graphql) - a TypeScript application for secret gift exchange, written on [**Nest JS**](https://nestjs.com/). [**Prisma.io**](https://www.prisma.io/) and [**PostgreSQL**](https://www.postgresql.org/) for data storage. This app uses [**GraphQL**](https://graphql.org/) API to interact with [**Jolly Secrets Frondend**](https://github.com/dariasmyr/secret-santa-frontend)
+[**Jolly Secrets**](https://jollysecrets.uxna.me) - a TypeScript application for secret gift exchange, written on [**Nest JS**](https://nestjs.com/). [**Prisma.io**](https://www.prisma.io/) and [**PostgreSQL**](https://www.postgresql.org/) for data storage. This app uses [**GraphQL**](https://graphql.org/) API to interact with [**Jolly Secrets Frondend**](https://github.com/dariasmyr/secret-santa-frontend)
 
 ### Stack
 
