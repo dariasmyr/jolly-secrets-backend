@@ -2,7 +2,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     tsconfigRootDir: __dirname,
-    project: null, // Hack to make eslint work with typescript
+    project: ['./tsconfig.json'],
     sourceType: 'module',
   },
   plugins: [
@@ -21,7 +21,7 @@ module.exports = {
     '@jetbrains/eslint-config/node',
 
     'plugin:sonarjs/recommended',
-    'plugin:security/recommended',
+    'plugin:security/recommended-legacy',
 
     'plugin:eslint-comments/recommended',
 
@@ -34,8 +34,7 @@ module.exports = {
     'plugin:jest/recommended',
     'plugin:jest/style',
 
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/eslint-recommended"
+    'plugin:@typescript-eslint/recommended',
   ],
   root: true,
   env: {
@@ -77,7 +76,7 @@ module.exports = {
     'comma-dangle': ['error', 'always-multiline'],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
-    'dot-notation': 'off', // TODO: enable
+    'dot-notation': 'error',
     'no-use-before-define': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
