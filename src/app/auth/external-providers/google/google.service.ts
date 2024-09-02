@@ -1,6 +1,5 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable camelcase */
-import * as console from 'node:console';
 import process from 'node:process';
 
 import { Injectable } from '@nestjs/common';
